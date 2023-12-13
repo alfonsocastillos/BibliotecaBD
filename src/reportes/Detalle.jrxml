@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.4.3.final using JasperReports Library version 6.4.3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Detalle de renta" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="a10ac4d2-436a-44fa-93ed-07ac6075481a">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Renta"/>
+	<parameter name="ID_RENTA" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT TITLE, RENTAL_RATE
+FROM CUSTOMER
+JOIN RENTAL USING (CUSTOMER_ID)
+JOIN RENTAL_DETAIL USING (RENTAL_ID)
+JOIN FILM USING (FILM_ID)
+JOIN STORE USING (STORE_ID)
+JOIN STAFF USING (STAFF_ID)
+WHERE RENTAL_ID = $P{ID_RENTA}]]>
+	</queryString>
+	<field name="TITLE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="TITLE"/>
+	</field>
+	<field name="RENTAL_RATE" class="java.lang.Float">
+		<property name="com.jaspersoft.studio.field.label" value="RENTAL_RATE"/>
+	</field>
+	<columnHeader>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="278" height="30" backcolor="#FFEF0F" uuid="970a663f-45ec-4b6b-85fc-b72c6ee48d9a">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="cceedf8e-fb93-46ed-9ae3-e55b0f701114"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="2.75"/>
+					<leftPen lineWidth="2.75"/>
+					<bottomPen lineWidth="2.75"/>
+					<rightPen lineWidth="2.75"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="16" isBold="true"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Película]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="278" y="0" width="277" height="30" backcolor="#FFEF0F" uuid="af696cb5-2cc2-46cf-81a9-7c6abd5f6e48">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f0f3d5de-f340-4c18-bab7-f2f58135b0ed"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="2.75"/>
+					<leftPen lineWidth="2.75"/>
+					<bottomPen lineWidth="2.75"/>
+					<rightPen lineWidth="2.75"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="16" isBold="true"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Costo]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="31" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="278" height="30" uuid="675f021e-fb30-4b25-bf43-45e0885c9984">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="cceedf8e-fb93-46ed-9ae3-e55b0f701114"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="2.75"/>
+					<leftPen lineWidth="2.75"/>
+					<bottomPen lineWidth="2.75"/>
+					<rightPen lineWidth="2.75"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="12"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TITLE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="278" y="0" width="277" height="30" uuid="cfe3226f-69cb-40a1-8a4a-786d007422bf">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f0f3d5de-f340-4c18-bab7-f2f58135b0ed"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="2.75"/>
+					<leftPen lineWidth="2.75"/>
+					<bottomPen lineWidth="2.75"/>
+					<rightPen lineWidth="2.75"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12"/>
+					<paragraph leftIndent="5" rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{RENTAL_RATE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

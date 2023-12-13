@@ -1,0 +1,12 @@
+# Ignorar folders innecesarios
+nbproject/private
+build/
+dist/
+
+# Ignorar archivos generados automaticamente
+*.class
+*.log
+
+# Ignorar bitacoras de crash
+hs_err_pid*
+replay_pid*
