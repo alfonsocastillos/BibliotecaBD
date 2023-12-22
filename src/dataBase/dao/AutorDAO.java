@@ -1,5 +1,5 @@
 /*
- * Clase encargada de consultar, insertar, eliminar  y modificar la tabla Autor
+ * Clase encargada de consultar, insertar, eliminar y modificar la tabla Autor
 */
 
 
@@ -102,7 +102,7 @@ public class AutorDAO extends Conexion {
                             "WHERE LIBRO_ID = ? ";
 
             ps = conn.prepareStatement(sentenciaSQL);   // prepara la sentencia 
-            ps.setString(1, id);            
+            ps.setString(1, String.valueOf(id));
             rs = ps.executeQuery();                     // Ejecuta la sentencia y la asigna al result set    
            
            if (rs.next()){
@@ -117,7 +117,7 @@ public class AutorDAO extends Conexion {
                             "WHERE LIBRO_ID = ? " +
                             "ORDER BY 2";   // Ordenar por la segunda columna     
            ps = conn.prepareStatement(sentenciaSQL);
-           ps.setString(1, id);
+           ps.setString(1, String.valueOf(id));
            rs = ps.executeQuery();
            while (rs.next()){
                autores[i][0]=(rs.getString(1));
@@ -166,7 +166,7 @@ public class AutorDAO extends Conexion {
            
            // Misma consulta, pero ahora puede ser guardada en el arreglo
            autores = new Object[count][2];           
-           sentenciaSQL =   "SELECT COUNT(AUTOR_ID) " +
+           sentenciaSQL =   "SELECT NOMBRE, APELLIDO_PAT " +
                             "FROM " +
                             "(SELECT AUTOR_ID " +
                             "FROM AUTOR " +
@@ -266,7 +266,7 @@ public class AutorDAO extends Conexion {
     }
 
     // Actualiza la informacion de un autor
-    public String Update(Object autor[]){
+    public String UpdateAutor(Object autor[]){
        // se conecta a la base de datos
        conectar();
        try{
@@ -286,7 +286,7 @@ public class AutorDAO extends Conexion {
         }
         catch (SQLException ex){
             System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
-                    "\n\n" + sentenciaSQL + "\n\nUbicación: " + "Update del autor");
+                    "\n\n" + sentenciaSQL + "\n\nUbicación: " + "UpdateAutor");
             return null;
         }
         finally{
@@ -295,7 +295,7 @@ public class AutorDAO extends Conexion {
     }   
 
     // Borra a un autor de la base de datos
-    public int Delete(String id){
+    public int DeleteAutor(String id){
         // Conecta a la base de datos
         conectar();
         try{
@@ -312,7 +312,7 @@ public class AutorDAO extends Conexion {
         }
         catch (SQLException ex){
             System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
-                    "\n\n" + sentenciaSQL + "\n\nUbicación: " + "Delete Autor");
+                    "\n\n" + sentenciaSQL + "\n\nUbicación: " + "DeleteAutor");
             if (ex.getErrorCode() ==  2292)
                 return 1;
             return 2;
@@ -352,34 +352,6 @@ public class AutorDAO extends Conexion {
        }
     }
     
-         public int deleteCastingFromFilm(String idFilm){
-        // Borra un actor 
-        // Conecta a la base de datos
-        conectar();
-        try{
-            sentenciaSQL = "DELETE FROM CASTING " +
-                            "WHERE FILM_ID = ?";
-            ps = conn.prepareStatement(sentenciaSQL);
-            ps.setString(1, idFilm);
-            int res = ps.executeUpdate();
-            if (res == 1){
-                return 0;
-            }
-            
-            return 1;
-        }
-        catch (SQLException ex){
-            System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
-                    "\n\n" + sentenciaSQL + "\n\nUbicación: " + "deleteaCTOR");
-            if (ex.getErrorCode() ==  2292)
-                return 1;
-            return 2;
-        }
-        finally{
-           desconectar();
-       }
-    }
-
     // Borra todos los autores de un libro
     public int DeleteAutoriaFromLibro(int libro_id){
         // Conecta a la base de datos
