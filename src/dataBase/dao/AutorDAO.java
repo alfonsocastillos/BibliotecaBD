@@ -88,7 +88,7 @@ public class AutorDAO extends Conexion {
     }
     
     // Regresa una lista de todos los autores de un libro
-    public Object [][] GetAutoresByLibroId(int id){
+    public Object [][] GetAutoresByLibroId(String id){
        conectar();
        Object [][] autores;
        int i = 0;
@@ -102,7 +102,7 @@ public class AutorDAO extends Conexion {
                             "WHERE LIBRO_ID = ? ";
 
             ps = conn.prepareStatement(sentenciaSQL);   // prepara la sentencia 
-            ps.setString(1, String.valueOf(id));
+            ps.setString(1, id);
             rs = ps.executeQuery();                     // Ejecuta la sentencia y la asigna al result set    
            
            if (rs.next()){
@@ -117,7 +117,7 @@ public class AutorDAO extends Conexion {
                             "WHERE LIBRO_ID = ? " +
                             "ORDER BY 2";   // Ordenar por la segunda columna     
            ps = conn.prepareStatement(sentenciaSQL);
-           ps.setString(1, String.valueOf(id));
+           ps.setString(1, id);
            rs = ps.executeQuery();
            while (rs.next()){
                autores[i][0]=(rs.getString(1));
@@ -323,7 +323,7 @@ public class AutorDAO extends Conexion {
     }
     
     // Borra a un autor de un libro
-    public int DeleteAutoria(int libro_id, String autor_id){
+    public int DeleteAutoria(String libro_id, String autor_id){
         // Conecta a la base de datos
         conectar();
         try{
@@ -331,7 +331,7 @@ public class AutorDAO extends Conexion {
                             "WHERE LIBRO_ID = ? AND " +
                             "AUTOR_ID = ?";
             ps = conn.prepareStatement(sentenciaSQL);
-            ps.setString(1, String.valueOf(libro_id));
+            ps.setString(1, libro_id);
             ps.setString(2, autor_id);
             int res = ps.executeUpdate();
             if (res == 1){
@@ -353,14 +353,14 @@ public class AutorDAO extends Conexion {
     }
     
     // Borra todos los autores de un libro
-    public int DeleteAutoriaFromLibro(int libro_id){
+    public int DeleteAutoriaFromLibro(String libro_id){
         // Conecta a la base de datos
         conectar();
         try{
             sentenciaSQL = "DELETE FROM AUTORIA " +
                             "WHERE LIBRO_ID = ?";
             ps = conn.prepareStatement(sentenciaSQL);
-            ps.setString(1, String.valueOf(libro_id));
+            ps.setString(1, libro_id);
             int res = ps.executeUpdate();
             if (res == 1){
                 return 0;
