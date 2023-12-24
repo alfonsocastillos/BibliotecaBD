@@ -1,5 +1,5 @@
 /*
- * Clase encargada de consultar, insertar, eliminar y modificar la tabla Idioma
+ * Clase encargada de consultar, insertar, eliminar y modificar la tabla Pais
  */
 package dataBase.dao;
 
@@ -12,17 +12,17 @@ import java.sql.*;
  * @author alfonso
  */
 
-public class IdiomaDAO extends Conexion {
+public class PaisDAO extends Conexion {
     
-    // Crear un idioma
-    public String SaveIdioma(String idioma) 
+    // Crear un pais
+    public String SavePais(String pais) 
     {
         // Se conecta a la base de datos
         conectar();
         try{
             String id = "";
             // genera el nuevo id            
-            sentenciaSQL =  "SELECT MAX(IDIOMA_ID) + 1 FROM IDIOMA";
+            sentenciaSQL =  "SELECT MAX(PAIS_ID) + 1 FROM PAIS";
             ps = conn.prepareStatement(sentenciaSQL);            
             rs = ps.executeQuery();
             
@@ -32,17 +32,17 @@ public class IdiomaDAO extends Conexion {
             }
             
             // inserta mandando todos los datos, incluido en nuevo id
-            sentenciaSQL = "INSERT INTO IDIOMA VALUES(?, ?, SYSDATE)";
+            sentenciaSQL = "INSERT INTO PAIS VALUES(?, ?, SYSDATE)";
             ps = conn.prepareStatement(sentenciaSQL);
             // Asigna los valores del arreglo            
             ps.setString(1, id);                    // Id (calculado)
-            ps.setString(2, idioma);                // Idioma (provisto)            
+            ps.setString(2, pais);                  // Pais (provisto)            
             ps.executeUpdate();
             return id;
         }
         catch (SQLException ex){
             System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
-                    "\n\n" + sentenciaSQL + "\n\nUbicación: " + "SaveIdioma");
+                    "\n\n" + sentenciaSQL + "\n\nUbicación: " + "SavePais");
             return null;
         }
         finally{
@@ -51,27 +51,27 @@ public class IdiomaDAO extends Conexion {
 
     }
     
-    // Modificar un idioma
-    public String UpdateIdioma(Object[] idioma)
+    // Modificar un pais
+    public String UpdatePais(Object[] pais)
     {       
         // se conecta a la base de datos
        conectar();
        try{
            // actualiza los datos
-           sentenciaSQL = "UPDATE IDIOMA SET " +
-                          "IDIOMA = ?, " +
+           sentenciaSQL = "UPDATE PAIS SET " +
+                          "PAIS = ?, " +
                           "LAST_UPDATE = SYSDATE " +
-                          "WHERE IDIOMA_ID = ?";
+                          "WHERE PAIS_ID = ?";
             ps = conn.prepareStatement(sentenciaSQL);
             
-            ps.setString(1, idioma[1].toString());  // Nuevo nombre idioma
-            ps.setString(2, idioma[0].toString());  // Id del idioma
+            ps.setString(1, pais[1].toString());    // Nuevo nombre pais
+            ps.setString(2, pais[0].toString());    // Id del pais
             ps.executeUpdate();
-            return idioma[0].toString();            // Regresa el id del idioma
+            return pais[0].toString();            // Regresa el id del pais
         }
         catch (SQLException ex){
             System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
-                    "\n\n" + sentenciaSQL + "\n\nUbicación: " + "UpdateIdioma");
+                    "\n\n" + sentenciaSQL + "\n\nUbicación: " + "UpdatePais");
             return null;
         }
         finally{
@@ -80,13 +80,13 @@ public class IdiomaDAO extends Conexion {
     }
     
     // Consultar todos los idiomas
-    public Object [][] GetAllIdiomas(){
+    public Object [][] GetAllPaises(){
        conectar();
-       Object [][] idiomas;
+       Object [][] paises;
        int i = 0;
        int count = 0;
        try{
-           sentenciaSQL = "SELECT COUNT(*) FROM IDIOMA";    // Numero de idiomas           
+           sentenciaSQL = "SELECT COUNT(*) FROM PAIS";      // Numero de paises           
            ps = conn.prepareStatement(sentenciaSQL);        // Convierte el str a un sentencia utilizable en SQL           
            rs = ps.executeQuery();                          // Resultado de la consulta
            
@@ -95,23 +95,23 @@ public class IdiomaDAO extends Conexion {
                count = rs.getInt(1);
            }
            
-           // Arreglo de todos los idiomas (ID, idioma)
-           idiomas = new Object[count][2];           
-           sentenciaSQL  = "SELECT IDIOMA_ID, IDIOMA FROM IDIOMA ORDER BY 2";           
+           // Arreglo de todos los paises (ID, pais)
+           paises = new Object[count][2];           
+           sentenciaSQL  = "SELECT PAIS_ID, PAIS FROM PAIS ORDER BY 2";           
            ps = conn.prepareStatement(sentenciaSQL);
            rs = ps.executeQuery();
            
-           // Agregar a todos los autores al arreglo (migrar de rs a actores)
+           // Agregar a todos los paises al arreglo (migrar de rs a actores)
            while (rs.next()){
-               idiomas[i][0]=(rs.getString(1));
-               idiomas[i][1]=(rs.getString(2));  
+               paises[i][0]=(rs.getString(1));
+               paises[i][1]=(rs.getString(2));  
                i++;
             }           
-           return idiomas;
+           return paises;
         }
         catch (SQLException ex){
             System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + ConfigDataBase.DB_ERR_QUERY + 
-                    "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "GetAllIdiomas");
+                    "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "GetAllPaises");
             return null;
         }
        finally{
@@ -119,29 +119,29 @@ public class IdiomaDAO extends Conexion {
        }
     }  
 
-    // Consulta el idioma para un id
-    public Object[] GetIdiomaById(String idioma_id)
+    // Consulta el pais para un id
+    public Object[] GetPaisById(String pais_id)
     {
         conectar();
-        Object [] idioma = new Object[2];
+        Object [] pais = new Object[2];
        
         try{
                     
-            sentenciaSQL  = "SELECT IDIOMA_ID, IDIOMA FROM IDIOMA WHERE IDIOMA_ID = ?";           
+            sentenciaSQL  = "SELECT PAIS_ID, PAIS FROM PAIS WHERE PAIS_ID = ?";           
             ps = conn.prepareStatement(sentenciaSQL);
-            ps.setString(1, idioma_id);    // Reemplaza el parámetro index (simbolo ?) con el str x
+            ps.setString(1, pais_id);    // Reemplaza el parámetro index (simbolo ?) con el str x
             rs = ps.executeQuery();
 
-            // Llena el arreglo actor con el resultado
+            // Llena el arreglo pais con el resultado
             while (rs.next()){
-                idioma[0] = (rs.getString(1));
-                idioma[1] = (rs.getString(2));  
+                pais[0] = (rs.getString(1));
+                pais[1] = (rs.getString(2));  
             }           
-            return idioma;
+            return pais;
         }
          catch (SQLException ex){
              System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + ConfigDataBase.DB_ERR_QUERY + 
-                     "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "GetIdiomaById");
+                     "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "GetPaisById");
              return null;
         }
         finally{
@@ -150,52 +150,52 @@ public class IdiomaDAO extends Conexion {
 
     }
     
-    public String GetIdiomaByLibro(String id_libro){
+    // Consulta el pais de un libro
+    public String GetPaisByLibro(String id_libro){
         // Conecta a la base de datos
        conectar();
-       String idioma = "";
+       String pais = "";
        // Contador
        try{
-           sentenciaSQL  =  "SELECT IDIOMA " +
+           sentenciaSQL  =  "SELECT PAIS " +
                             "FROM LIBRO " +
-                            "JOIN IDIOMA USING (IDIOMA_ID) " +
+                            "JOIN PAIS USING (PAIS_ID) " +
                             "WHERE LIBRO_ID = ?";           
            ps = conn.prepareStatement(sentenciaSQL);
            ps.setString(1, id_libro);
            rs = ps.executeQuery();
               
-           // Recorre el result set para obtener los datos y asignarlos
-           // al arreglo
+           // Recorre el result set para obtener los datos y asignarlos al arreglo
            while (rs.next()){
-               idioma = rs.getString(1);
+               pais = rs.getString(1);
            }     
-           return idioma;
+           return pais;
         }
         catch (SQLException ex){
             System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
-                    "\n\n" + sentenciaSQL + "\n\nUbicación: " + "GetIdiomaByLibro");
+                    "\n\n" + sentenciaSQL + "\n\nUbicación: " + "GetPaisByLibro");
             return null;
         }
-       finally{
+        finally{
            desconectar();           
-       }
+        }
     }
     
-    // Consultar todos los libros de un idioma
-    public Object [] GetLibrosByIdioma(String idioma_id){
+    // Consultar todos los libros de un pais
+    public Object [] GetLibrosByPais(String pais_id){
        conectar();
        Object [] libros;
        int i = 0;
        int count = 0;
        try{
            // Primero se cuenta el numero de autores en el libro
-           sentenciaSQL =   "SELECT COUNT (IDIOMA_ID) " +
-                            "FROM IDIOMA " +
-                            "JOIN LIBRO USING (IDIOMA_ID) " +
-                            "WHERE IDIOMA_ID = ? ";
+           sentenciaSQL =   "SELECT COUNT (PAIS_ID) " +
+                            "FROM PAIS " +
+                            "JOIN LIBRO USING (PAIS_ID) " +
+                            "WHERE PAIS_ID = ? ";
 
             ps = conn.prepareStatement(sentenciaSQL);   // prepara la sentencia 
-            ps.setString(1, idioma_id);
+            ps.setString(1, pais_id);
             rs = ps.executeQuery();                     // Ejecuta la sentencia y la asigna al result set    
            
            if (rs.next()){
@@ -205,10 +205,10 @@ public class IdiomaDAO extends Conexion {
            libros = new Object[count];           
            sentenciaSQL  =  "SELECT TITULO " +
                             "FROM LIBRO " +
-                            "WHERE IDIOMA_ID = ? " +
+                            "WHERE PAIS_ID = ? " +
                             "ORDER BY 2";   // Ordenar por la segunda columna     
            ps = conn.prepareStatement(sentenciaSQL);
-           ps.setString(1, idioma_id);
+           ps.setString(1, pais_id);
            rs = ps.executeQuery();
            while (rs.next()){
                libros[i] =(rs.getString(1));  // Titulos del libro
@@ -218,7 +218,7 @@ public class IdiomaDAO extends Conexion {
         }
         catch (SQLException ex){
             System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + ConfigDataBase.DB_ERR_QUERY + 
-                    "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "GetLibrosByIdioma");
+                    "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "GetLibrosByPais");
             return null;
         }
         finally{
@@ -226,22 +226,22 @@ public class IdiomaDAO extends Conexion {
         }
     }
     
-    // Consultar idiomas con nombre parecido
-    public Object [] GetIdiomasByNombre(String idioma){
+    // Consultar paises con nombre parecido
+    public Object [] GetPaisesByNombre(String pais){
        conectar();
-       Object [] idiomas;
+       Object [] paises;
        int i = 0;
        int count = 0;
-       idioma = "%" + idioma + "%";
+       pais = "%" + pais + "%";
        try{
            // Cuenta todos los actores que tengan un nombre parecido
-           sentenciaSQL =   "SELECT COUNT(IDIOMA_ID) " +
-                            "FROM IDIOMA " +
-                            "WHERE UPPER (IDIOMA) LIKE UPPER(?)";   // Todos los idiomas que tengan un nombre parecido
+           sentenciaSQL =   "SELECT COUNT(PAIS_ID) " +
+                            "FROM PAIS " +
+                            "WHERE UPPER (PAIS) LIKE UPPER(?)";   // Todos los paises que tengan un nombre parecido
                             
             
             ps = conn.prepareStatement(sentenciaSQL);   // prepara la sentencia 
-            ps.setString(1, idioma);
+            ps.setString(1, pais);
             rs = ps.executeQuery();                     // Ejecuta la sentencia y la asigna al result set         
            
            if (rs.next()){
@@ -249,24 +249,24 @@ public class IdiomaDAO extends Conexion {
            }
            
            // Misma consulta, pero ahora puede ser guardada en el arreglo
-           idiomas = new Object[count];           
-           sentenciaSQL =   "SELECT IDIOMA " +
-                            "FROM IDIOMA " +
-                            "WHERE UPPER (IDIOMA) LIKE UPPER(?)";
+           paises = new Object[count];           
+           sentenciaSQL =   "SELECT PAIS " +
+                            "FROM PAIS" +
+                            "WHERE UPPER (PAIS) LIKE UPPER(?)";
            
            ps = conn.prepareStatement(sentenciaSQL);
-           ps.setString(1, idioma);
+           ps.setString(1, pais);
            rs = ps.executeQuery();
            
            while (rs.next()){
-               idiomas[i] = (rs.getString(1));
+               paises[i] = (rs.getString(1));
                i++;
            }           
-           return idiomas;
+           return paises;
         }
         catch (SQLException ex){
             System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + ConfigDataBase.DB_ERR_QUERY + 
-                    "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "GetIdiomasByNombre");
+                    "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "GetPaisesByNombre");
             return null;
         }
         finally{
@@ -274,23 +274,23 @@ public class IdiomaDAO extends Conexion {
        }
     }
 
-    // Eliminar un idioma
-    public int DeleteIdioma(String idioma_id){
+    // Eliminar un pais
+    public int DeletePais(String pais_id){
         // Conecta a la base de datos
         conectar();
         try{
-            // Cambiar a NULL el idioma de cualquier libro con el idioma a borrar
+            // Cambiar a NULL el pais de cualquier libro con el pais a borrar
             sentenciaSQL =  "UPDATE LIBRO " +
-                            "SET IDIOMA_ID = NULL " +
-                            "WHERE IDIOMA_ID = ?";
+                            "SET PAIS_ID = NULL " +
+                            "WHERE PAIS_ID = ?";
             ps = conn.prepareStatement(sentenciaSQL);
-            ps.setString(1, idioma_id);
+            ps.setString(1, pais_id);
             
-            // Borrar el idioma
-            sentenciaSQL = "DELETE FROM IDIOMA " +
-                            "WHERE IDIOMA_ID = ?";
+            // Borrar el pais
+            sentenciaSQL = "DELETE FROM PAIS " +
+                            "WHERE PAIS_ID = ?";
             ps = conn.prepareStatement(sentenciaSQL);
-            ps.setString(1, idioma_id);
+            ps.setString(1, pais_id);
             int res = ps.executeUpdate();
             if (res == 1){
                 return 0;
@@ -300,7 +300,7 @@ public class IdiomaDAO extends Conexion {
         }
         catch (SQLException ex){
             System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
-                    "\n\n" + sentenciaSQL + "\n\nUbicación: " + "DeleteIdioma");
+                    "\n\n" + sentenciaSQL + "\n\nUbicación: " + "DeletePais");
             if (ex.getErrorCode() ==  2292)
                 return 1;
             return 2;
