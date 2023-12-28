@@ -1,13 +1,3 @@
-/*
- * Clase: Conexion.java
- * Fecha: 15/08/2013
- *
- * Desarrollador: Carlos Cortés Bazán
- * 
- * Descripción: Realiza la conexión a la base de datos
- *
- */
-
 package dataBase;
 
 import java.sql.*;

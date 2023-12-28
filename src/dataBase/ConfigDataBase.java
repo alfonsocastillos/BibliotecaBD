@@ -1,12 +1,3 @@
-/*
- * Clase: ConfigDataBase.java
- * Fecha: 15/08/2013
- *
- * Desarrollador: Carlos Cortés Bazán
- * 
- * Descripción: Configuración para conectarse a la base de datos
- *
- */
 
 package dataBase;
 

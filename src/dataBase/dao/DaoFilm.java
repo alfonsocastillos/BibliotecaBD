@@ -305,7 +305,7 @@ public class DaoFilm extends Conexion {
         if (res == 1 && resD == 1){
             // Si borro el casting, borra una pelicula 
             // Conecta a la base de datos
-            conectar(); // No se realiza la conexión hasta que sea necesario
+            conectar();
             try{
                 sentenciaSQL = "DELETE FROM FILM " +
                                 "WHERE FILM_ID = ?";

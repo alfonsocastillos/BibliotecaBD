@@ -9,11 +9,7 @@ import net.sf.jasperreports.swing.JRViewerToolbar;
 import net.sf.jasperreports.view.JRSaveContributor;
 import net.sf.jasperreports.view.save.JRPdfSaveContributor;
 
-/**
- *
- * @author Carlos
- * Esta clase permite poner un filtro al guardar el reporte en PDF
- */
+
 public class MyJRViewer extends JRViewer {
     //define the constructor that you use
     public MyJRViewer(JasperPrint jasperPrint) {
