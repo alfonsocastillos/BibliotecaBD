@@ -295,6 +295,7 @@ public class EstadoDAO extends Conexion {
                             "WHERE ESTADO_ID = ?";
             ps = conn.prepareStatement(sentenciaSQL);
             ps.setString(1, estado_id);
+            ps.executeUpdate();
             
             // Borrar el estado
             sentenciaSQL = "DELETE FROM ESTADO " +

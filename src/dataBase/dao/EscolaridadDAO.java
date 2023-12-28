@@ -286,6 +286,7 @@ public class EscolaridadDAO extends Conexion {
                             "WHERE ESCOLARIDAD_ID = ?";
             ps = conn.prepareStatement(sentenciaSQL);
             ps.setString(1, escolaridad_id);
+            ps.executeUpdate();
             
             // Borrar el nivel
             sentenciaSQL = "DELETE FROM ESCOLARIDAD " +

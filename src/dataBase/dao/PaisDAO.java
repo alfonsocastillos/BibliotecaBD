@@ -285,6 +285,7 @@ public class PaisDAO extends Conexion {
                             "WHERE PAIS_ID = ?";
             ps = conn.prepareStatement(sentenciaSQL);
             ps.setString(1, pais_id);
+            ps.executeUpdate();
             
             // Borrar el pais
             sentenciaSQL = "DELETE FROM PAIS " +

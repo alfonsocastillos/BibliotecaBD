@@ -284,6 +284,7 @@ public class GeneroDAO extends Conexion {
                             "WHERE GENERO_ID = ?";
             ps = conn.prepareStatement(sentenciaSQL);
             ps.setString(1, genero_id);
+            ps.executeUpdate();
             
             // Borrar el idioma
             sentenciaSQL = "DELETE FROM GENERO " +

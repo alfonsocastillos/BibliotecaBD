@@ -285,6 +285,7 @@ public class IdiomaDAO extends Conexion {
                             "WHERE IDIOMA_ID = ?";
             ps = conn.prepareStatement(sentenciaSQL);
             ps.setString(1, idioma_id);
+            ps.executeUpdate();
             
             // Borrar el idioma
             sentenciaSQL = "DELETE FROM IDIOMA " +

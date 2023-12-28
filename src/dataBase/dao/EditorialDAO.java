@@ -286,6 +286,7 @@ public class EditorialDAO extends Conexion {
                             "WHERE EDITORIAL_ID = ?";
             ps = conn.prepareStatement(sentenciaSQL);
             ps.setString(1, editorial_id);
+            ps.executeUpdate();
             
             // Borrar el idioma
             sentenciaSQL = "DELETE FROM EDITORIAL " +
