@@ -51,7 +51,7 @@ public class PaisDAO extends Conexion {
 
     }
     
-    // Modificar un pais
+    // Modificar un pais (id, pais)
     public String UpdatePais(Object[] pais)
     {       
         // se conecta a la base de datos
@@ -79,7 +79,7 @@ public class PaisDAO extends Conexion {
        }
     }
     
-    // Consultar todos los idiomas
+    // Consultar todos los paises (id, pais)
     public Object [][] GetAllPaises(){
        conectar();
        Object [][] paises;
@@ -119,7 +119,7 @@ public class PaisDAO extends Conexion {
        }
     }  
 
-    // Consulta el pais para un id
+    // Consulta el pais para un id (id, pais)
     public Object[] GetPaisById(String pais_id)
     {
         conectar();
@@ -226,10 +226,10 @@ public class PaisDAO extends Conexion {
         }
     }
     
-    // Consultar paises con nombre parecido
-    public Object [] GetPaisesByNombre(String pais){
+    // Consultar paises con nombre parecido (id, pais)
+    public Object[][] GetPaisesByNombre(String pais){
        conectar();
-       Object [] paises;
+       Object[][] paises;
        int i = 0;
        int count = 0;
        pais = "%" + pais + "%";
@@ -249,8 +249,8 @@ public class PaisDAO extends Conexion {
            }
            
            // Misma consulta, pero ahora puede ser guardada en el arreglo
-           paises = new Object[count];           
-           sentenciaSQL =   "SELECT PAIS " +
+           paises = new Object[count][2];           
+           sentenciaSQL =   "SELECT PAIS_ID, PAIS " +
                             "FROM PAIS" +
                             "WHERE UPPER (PAIS) LIKE UPPER(?)";
            
@@ -259,7 +259,8 @@ public class PaisDAO extends Conexion {
            rs = ps.executeQuery();
            
            while (rs.next()){
-               paises[i] = (rs.getString(1));
+               paises[i][0] = (rs.getString(1));
+               paises[i][1] = (rs.getString(2));
                i++;
            }           
            return paises;

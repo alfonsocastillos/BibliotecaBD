@@ -6,6 +6,8 @@ import dataBase.dao.AutorDAO;
 import dataBase.dao.GeneroDAO;
 import dataBase.dao.LibroDAO;
 import dataBase.dao.IdiomaDAO;
+import dataBase.dao.PaisDAO;
+import dataBase.dao.EditorialDAO;
 import java.awt.Toolkit;
 import javax.swing.JOptionPane;
 import tools.*;
@@ -17,180 +19,197 @@ import tools.*;
  */
 public class Libros extends javax.swing.JInternalFrame {
     boolean editando = false;
-    String libro_id;
+    int libro_id;
     // Dao´s que traen los datos de la DB
     GeneroDAO genero_dao;
     IdiomaDAO idioma_dao;
     LibroDAO libro_dao;
     AutorDAO autor_dao;
+    PaisDAO pais_dao;
+    EditorialDAO editorial_dao;
     // Objtos que guardaran los datos    
     Object idiomas[][];
     Object generos[][];
     Object libros_lista[][];
-    Object actores_lista[][];
+    Object autores_lista[][];
     
     // Ventanas para agregar autores, editoriales y autorias
     AddAutores add_autores;     // Para agregar (o crear) autores a la autoria 
-    // TODO:    crear ventana para crear, editar y eliminar idiomas
-    //          crear ventana para crear, editar y eliminar paises
-    //          crear ventana para crear, editar y eliminar editoriales
-    //          crear ventana para crear, editar y eliminar generos
+    AddIdioma add_dioma;        // Para crear, editar y eliminar idiomas
+    AddPais add_pais;           // Para crear, editar y eliminar paises
+    AddEditorial add_editorial; // Para crear, editar y eliminar editoriales
+    AddGenero add_genero;       // Para crear, editar y eliminar generos
 
     // TODO: arreglar todo este archivo
     
     public Libros() {
         // Constructor
         initComponents();
-        // Para que escriba en la linea de abajo al llegar al final de la descripción
-        txtDesc.setLineWrap(true);
-        // Para que no corte las palabras en la descripción
-        txtDesc.setWrapStyleWord(true);
+        
+        // Un 0 significa error en el id
+        libro_id = 0;
+        
         // se instancian todos los DAO
-        daoCategory = new DaoCategory();
-        daoLang = new DaoLang();
-        daoFilm = new DaoFilm();
-        daoRate = new DaoRate();
-        daoActor = new DaoActor();
-        // Instanciando ventanas para agregar actores y doblaje
+        genero_dao = new GeneroDAO();
+        idioma_dao = new IdiomaDAO();
+        libro_dao = new LibroDAO();
+        autor_dao = new AutorDAO();
+        pais_dao = new PaisDAO();
+        editorial_dao = new EditorialDAO();
+        
+        // Instanciando ventanas para agregar idiomas, paises, editoriales y generos
         addActores = new AddActores((java.awt.Frame)this.getParent(), true);
         addDoblaje = new AddDoblaje((java.awt.Frame)this.getParent(), true);
         // localización de la ventana
         setLocale(null);
         // llena los datos
-        llenaDatos();
+        LlenaDatos();
     }
     
-    private void llenaDatos(){
+    // Llena de datos las tablas a desplegar y los combo box
+    private void LlenaDatos() {
         // Llena combos y tabla de peliculas
-        llenaLanguage();
-        llenaCategory();
-        llenaRate();
-        llenaTablaPeliculas();
+        LlenadoIdiomas();
+        LlenadoPaises();
+        LlenadoEditoriales();
+        LlenadoGeneros();
+        LlenaTablaLibros();
     }    
     
-    private void llenaLanguage(){
-        // Consulta los datos de idioma
-        lenguajes = daoLang.getLanguages();
-        for (Object[] lenguaje : lenguajes) {
+    // Popula el ComboBox de idiomas disponibles
+    private void LlenadoIdiomas(){        
+        cmbIdioma.removeAllItems();
+        Object[][] idiomas = idioma_dao.GetAllIdiomas();
+        for (Object[] idioma : idiomas) {
             // llena los datos de idioma en el combo 
-            cmbPais.addItem(lenguaje[1].toString());
+            cmbIdioma.addItem(idioma[1].toString());
+        }                             
+    }   
+    
+    // Popula el ComboBox de paises disponibles
+    private void LlenadoPaises() {        
+        cmbPais.removeAllItems();
+        Object[][] paises = pais_dao.GetAllPaises();
+        for (Object[] pais : paises) {
+            // llena los datos de idioma en el combo 
+            cmbPais.addItem(pais[1].toString());
         }
     }
     
-    private void llenaCategory(){
-        // Consulta los datos de categoria
-        categories = daoCategory.getCategories();
-        for (Object[] category : categories) {
-            // llena los datos de categoria en el combo 
-            cmbGenero.addItem(category[1].toString());
+    // Popula el ComboBox de editoriales disponibles
+    private void LlenadoEditoriales() {        
+        cmbEditorial.removeAllItems();
+        Object[][] editoriales = editorial_dao.GetAllEditoriales();
+        for (Object[] editorial : editoriales) {
+            // llena los datos de idioma en el combo 
+            cmbEditorial.addItem(editorial[1].toString());
         }
     }
     
-    private void llenaRate(){
-        // Consulta los datos de clasificación
-        rates = daoRate.getRates();
-        for (Object[] rate : rates) {
-            // llena los datos de clasificación en el combo 
-            cmbClas.addItem(rate[1].toString());
+    // Popula el ComboBox de generos disponibles
+    private void LlenadoGeneros() {        
+        cmbGenero.removeAllItems();
+        Object[][] generos = genero_dao.GetAllGeneros();
+        for (Object[] genero : generos) {
+            // llena los datos de idioma en el combo 
+            cmbGenero.addItem(genero[1].toString());
         }
     }
     
-    private void llenaTablaPeliculas(){       
+    // Llena de datos la tabla que despliega todos los libros
+    private void LlenaTablaLibros(){       
         // consulta los datos de las peliculas
-        filmsLista = daoFilm.getFilmsByTitleDesc(txtFiltro.getText().trim());
+        libros_lista = libro_dao.GetLibrosByDescripcion(txtFiltro.getText().trim()); // LIBRO_ID, TITULO, EDICION, EDITORIAL, GENERO, ANIO, NUM_PAGINAS, IDIOMA
         // configuración de la tabla
-        String[] T_FILMS = {"","Título", "Año", "Minutos", "Clasif.", "Categoría"};
+        String[] T_LIBROS = {"","Libro", "Edicion", "Editorial", "Genero", "Año", "Páginas", "Idioma"};
         int[][] cellAlignment = {{0,javax.swing.SwingConstants.LEFT}};
-        int[][] cellSize = {{0,0},
-                            {1,270},
-                            {2,40},
-                            {3,55},
-                            {4,50},
-                            {4,55}};
+        int[][] cellSize = {{0, 0},     // 
+                            {1, 270},   // Libro
+                            {2, 20},    // Edicion
+                            {3, 180},   // Editorial
+                            {4, 90},    // Genero
+                            {5, 55},    // Año
+                            {6, 55},    // Paginas
+                            {7, 75}};   // Idioma    
         // pone los datos en la tabla
-        UtilsTable.llenaTabla(tableList,filmsLista, T_FILMS, cellAlignment, cellSize);
-        lblCantidad.setText(filmsLista.length + "");
+        UtilsTable.llenaTabla(tableList, libros_lista, T_LIBROS, cellAlignment, cellSize);
+        lblCantidad.setText(libros_lista.length + "");
     }
     
-    private void llenaTablaActores(){       
-        // consulta los datos de los actores de reparto
-        actorsLista = daoActor.getActorsFilm(id);
+    // Llena la tabla de autores en la autoria de un libro
+    private void LlenaTablaAutores(){       
+        // consulta los datos de los autores de autoria
+        autores_lista = autor_dao.GetAutoresByLibroId(libro_id);
         // configuración de la tabla
-        String[] T_ACTORS = {"","Nombre"};
+        String[] T_AUTORES = {"","Nombre"};
         int[][] cellAlignment = {{0,javax.swing.SwingConstants.LEFT}};
         int[][] cellSize = {{0,0},
                             {1,170}};
         // pone los datos en la tabla
-        UtilsTable.llenaTabla(tableListActor,actorsLista, T_ACTORS, cellAlignment, cellSize);        
+        UtilsTable.llenaTabla(tableListActor, autores_lista, T_AUTORES, cellAlignment, cellSize);        
     }
-    
-    private void llenaTablaDoblaje(){       
-        // consulta los datos de doblaje
-        doblajeLista = daoLang.getLanguageByFilm(id);
-        // configuración de la tabla
-        String[] T_DOBLAJE = {"","Idioma"};
-        int[][] cellAlignment = {{0,javax.swing.SwingConstants.LEFT}};
-        int[][] cellSize = {{0,0},
-                            {1,170}};
-        // pone los datos en la tabla
-        UtilsTable.llenaTabla(tableListDoblaje,doblajeLista, T_DOBLAJE, cellAlignment, cellSize);        
-    }    
-    
-    private boolean estanLlenos(){
-        // Valida si se llenaron los datos antes de guardar
+      
+    // Valida si se llenaron los datos del libro antes de guardar
+    private boolean EstanLlenos(){        
         if (txtTitulo.getText().trim().length() == 0){
-            javax.swing.JOptionPane.showMessageDialog(this, "Introdusca el titulo.","Aviso",2);
+            javax.swing.JOptionPane.showMessageDialog(this, "Introduzca el titulo.", "Aviso", 2);
             txtTitulo.requestFocus();
             return false;
         }
-        else if (txtDesc.getText().trim().length() == 0){
-            javax.swing.JOptionPane.showMessageDialog(this, "Introdusca la descripción.","Aviso",2);
-            txtDesc.requestFocus();
+        else if (cmbIdioma.getSelectedIndex() < 1)
+        {
+            javax.swing.JOptionPane.showMessageDialog(this, "Seleccione un idioma.", "Aviso", 2);
+            cmbIdioma.requestFocus();
             return false;
         }
-        else if (txtAnio.getText().trim().length() == 0){
-            javax.swing.JOptionPane.showMessageDialog(this, "Introdusca el año.","Aviso",2);
-            txtAnio.requestFocus();
+        else if (cmbPais.getSelectedIndex() < 1)
+        {
+            javax.swing.JOptionPane.showMessageDialog(this, "Seleccione un pais.", "Aviso", 2);
+            cmbPais.requestFocus();
             return false;
         }
-        else if (txtDuracion.getText().trim().length() == 0){
-            javax.swing.JOptionPane.showMessageDialog(this, "Introdusca la duración.","Aviso",2);
-            txtDuracion.requestFocus();
+        else if (cmbEditorial.getSelectedIndex() < 1)
+        {
+            javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una editorial.", "Aviso", 2);
+            cmbEditorial.requestFocus();
             return false;
         }
-        else if (txtRenta.getText().trim().length() == 0){
-            javax.swing.JOptionPane.showMessageDialog(this, "Introdusca el costo de renta.","Aviso",2);
-            txtRenta.requestFocus();
+        else if (txtEdicion.getText().trim().length() == 0){
+            javax.swing.JOptionPane.showMessageDialog(this, "Introduzca el año.", "Aviso", 2);
+            txtEdicion.requestFocus();
             return false;
         }
-        else if (txtRempl.getText().trim().length() == 0){
-            javax.swing.JOptionPane.showMessageDialog(this, "Introdusca el costo de remplazo.","Aviso",2);
-            txtRempl.requestFocus();
+        else if (cmbGenero.getSelectedIndex() < 1)
+        {
+            javax.swing.JOptionPane.showMessageDialog(this, "Seleccione un genero.", "Aviso", 2);
+            cmbGenero.requestFocus();
             return false;
         }
-        else if (txtDiasR.getText().trim().length() == 0){
-            javax.swing.JOptionPane.showMessageDialog(this, "Introdusca los días de renta.","Aviso",2);
-            txtDiasR.requestFocus();
+        else if (txtEdicion.getText().trim().length() == 0){
+            javax.swing.JOptionPane.showMessageDialog(this, "Introduzca el número de páginas.", "Aviso", 2);
+            txtEdicion.requestFocus();
+            return false;
+        }
+        else if (txtPags.getText().trim().length() == 0){
+            javax.swing.JOptionPane.showMessageDialog(this, "Introduzca el número de páginas.", "Aviso", 2);
+            txtPags.requestFocus();
             return false;
         }
         else
             return true;
     }
     
-    private void cancelaEdit (){
-        // Cancela la edición y reinicia los controles
+    // Cancela la edición y reinicia los controles a su valor predeterminado
+    private void CancelaEdit (){        
         txtTitulo.setText("");
-        txtAnio.setText("");
-        txtDuracion.setText("");
-        txtDesc.setText("");
-        txtRenta.setText("");
-        txtRempl.setText("");
-        txtDiasR.setText("");
-        cmbPais.setSelectedIndex(0);
+        cmbIdioma.setSelectedIndex(-1);
+        cmbPais.setSelectedIndex(-1);
+        cmbEditorial.setSelectedIndex(-1);
+        txtEdicion.setText("");
         cmbGenero.setSelectedIndex(0);
-        cmbClas.setSelectedIndex(0);
+        txtPags.setText("");
         editando = false;
-        id = null;
+        libro_id = 0;
         txtTitulo.requestFocus();
         btnCancela.setEnabled(false);        
     }
@@ -207,8 +226,8 @@ public class Libros extends javax.swing.JInternalFrame {
         pnlPelicula = new javax.swing.JPanel();
         lblTitulo = new javax.swing.JLabel();
         txtTitulo = new javax.swing.JTextField();
-        lblAnio = new javax.swing.JLabel();
-        txtAnio = new javax.swing.JTextField();
+        lblEdicion = new javax.swing.JLabel();
+        txtEdicion = new javax.swing.JTextField();
         lblGenero = new javax.swing.JLabel();
         cmbGenero = new javax.swing.JComboBox<>();
         lblClas = new javax.swing.JLabel();
@@ -216,9 +235,11 @@ public class Libros extends javax.swing.JInternalFrame {
         lblDiasR = new javax.swing.JLabel();
         lblGenero1 = new javax.swing.JLabel();
         cmbPais = new javax.swing.JComboBox<>();
-        txt_pags = new javax.swing.JTextField();
+        txtPags = new javax.swing.JTextField();
         cmbIdioma = new javax.swing.JComboBox<>();
         cmbEditorial = new javax.swing.JComboBox<>();
+        lblAnio = new javax.swing.JLabel();
+        txtAnio = new javax.swing.JTextField();
         pnlTableList = new javax.swing.JPanel();
         scpTableList = new javax.swing.JScrollPane();
         tableList = new javax.swing.JTable();
@@ -240,17 +261,14 @@ public class Libros extends javax.swing.JInternalFrame {
         btnEdit = new javax.swing.JButton();
         btnCancela = new javax.swing.JButton();
         pnlTableList3 = new javax.swing.JPanel();
-        btnCreateIdioma = new javax.swing.JButton();
-        btnDelIdioma = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
         pnlTableList4 = new javax.swing.JPanel();
-        btnCreatePais = new javax.swing.JButton();
-        btnDelPais = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
         pnlTableList5 = new javax.swing.JPanel();
-        btnCreateEditorial = new javax.swing.JButton();
-        btnDelEditorial = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
         pnlTableList6 = new javax.swing.JPanel();
-        btnCreateGenero = new javax.swing.JButton();
-        btnDelGenero = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
+        btnRefresh = new javax.swing.JButton();
 
         setClosable(true);
         setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
@@ -286,20 +304,20 @@ public class Libros extends javax.swing.JInternalFrame {
         txtTitulo.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         pnlPelicula.add(txtTitulo, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 30, 250, 20));
 
-        lblAnio.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        lblAnio.setText("Año:");
-        pnlPelicula.add(lblAnio, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 30, -1, 20));
+        lblEdicion.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        lblEdicion.setText("Edicion:");
+        pnlPelicula.add(lblEdicion, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 110, -1, 20));
 
-        txtAnio.setDocument(new InputType(InputType.TIPO_SOLO_NUMEROS, 4, false, false));
-        txtAnio.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        txtAnio.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        pnlPelicula.add(txtAnio, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 30, 60, 20));
+        txtEdicion.setDocument(new InputType(InputType.TIPO_SOLO_NUMEROS, 4, false, false));
+        txtEdicion.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        txtEdicion.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        pnlPelicula.add(txtEdicion, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 110, 60, 20));
 
         lblGenero.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblGenero.setText("Género:");
-        pnlPelicula.add(lblGenero, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 90, -1, 20));
+        pnlPelicula.add(lblGenero, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 70, -1, 20));
 
-        pnlPelicula.add(cmbGenero, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 90, 150, -1));
+        pnlPelicula.add(cmbGenero, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 70, 150, -1));
 
         lblClas.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblClas.setText("No. páginas");
@@ -320,9 +338,9 @@ public class Libros extends javax.swing.JInternalFrame {
         cmbPais.setNextFocusableComponent(cmbGenero);
         pnlPelicula.add(cmbPais, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 110, 250, -1));
 
-        txt_pags.setFont(new java.awt.Font("C059", 0, 12)); // NOI18N
-        pnlPelicula.add(txt_pags, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 150, -1, -1));
-        txt_pags.getAccessibleContext().setAccessibleName("");
+        txtPags.setFont(new java.awt.Font("C059", 0, 12)); // NOI18N
+        pnlPelicula.add(txtPags, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 150, -1, -1));
+        txtPags.getAccessibleContext().setAccessibleName("");
 
         cmbIdioma.setNextFocusableComponent(cmbGenero);
         cmbIdioma.addActionListener(new java.awt.event.ActionListener() {
@@ -334,6 +352,15 @@ public class Libros extends javax.swing.JInternalFrame {
 
         cmbEditorial.setNextFocusableComponent(cmbGenero);
         pnlPelicula.add(cmbEditorial, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 150, 250, -1));
+
+        lblAnio.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        lblAnio.setText("Año:");
+        pnlPelicula.add(lblAnio, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 30, -1, 20));
+
+        txtAnio.setDocument(new InputType(InputType.TIPO_SOLO_NUMEROS, 4, false, false));
+        txtAnio.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        txtAnio.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        pnlPelicula.add(txtAnio, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 30, 60, 20));
 
         pnlTableList.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Lista de libros", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N
         pnlTableList.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -435,7 +462,7 @@ public class Libros extends javax.swing.JInternalFrame {
         ));
         scpTableList1.setViewportView(tableListActor);
 
-        pnlTableList1.add(scpTableList1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 60, 170, 100));
+        pnlTableList1.add(scpTableList1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, 170, 100));
 
         btnAddAutoria.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/add.png"))); // NOI18N
         btnAddAutoria.setToolTipText("Agregar actor");
@@ -445,7 +472,7 @@ public class Libros extends javax.swing.JInternalFrame {
                 btnAddAutoriaActionPerformed(evt);
             }
         });
-        pnlTableList1.add(btnAddAutoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 20, 30, 30));
+        pnlTableList1.add(btnAddAutoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 40, 30, 30));
 
         btnRmveAutoria.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/quitar.png"))); // NOI18N
         btnRmveAutoria.setToolTipText("Borrar actor");
@@ -455,7 +482,7 @@ public class Libros extends javax.swing.JInternalFrame {
                 btnRmveAutoriaActionPerformed(evt);
             }
         });
-        pnlTableList1.add(btnRmveAutoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 20, 30, 30));
+        pnlTableList1.add(btnRmveAutoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 40, 30, 30));
 
         btnAddFilm.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/add_libro.png"))); // NOI18N
         btnAddFilm.setFocusable(false);
@@ -504,94 +531,35 @@ public class Libros extends javax.swing.JInternalFrame {
         pnlTableList3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Idiomas", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N
         pnlTableList3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        btnCreateIdioma.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/add.png"))); // NOI18N
-        btnCreateIdioma.setToolTipText("Agregar idioma");
-        btnCreateIdioma.setFocusable(false);
-        btnCreateIdioma.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCreateIdiomaActionPerformed(evt);
-            }
-        });
-        pnlTableList3.add(btnCreateIdioma, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 30, 30, 30));
-
-        btnDelIdioma.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/quitar.png"))); // NOI18N
-        btnDelIdioma.setToolTipText("Borrar idioma");
-        btnDelIdioma.setFocusable(false);
-        btnDelIdioma.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDelIdiomaActionPerformed(evt);
-            }
-        });
-        pnlTableList3.add(btnDelIdioma, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 30, 30, 30));
+        jButton2.setText("Editar idiomas");
+        pnlTableList3.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, 140, -1));
 
         pnlTableList4.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Países", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N
         pnlTableList4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        btnCreatePais.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/add.png"))); // NOI18N
-        btnCreatePais.setToolTipText("Agregar idioma");
-        btnCreatePais.setFocusable(false);
-        btnCreatePais.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCreatePaisActionPerformed(evt);
-            }
-        });
-        pnlTableList4.add(btnCreatePais, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 30, 30, 30));
-
-        btnDelPais.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/quitar.png"))); // NOI18N
-        btnDelPais.setToolTipText("Borrar idioma");
-        btnDelPais.setFocusable(false);
-        btnDelPais.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDelPaisActionPerformed(evt);
-            }
-        });
-        pnlTableList4.add(btnDelPais, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 30, 30, 30));
+        jButton3.setText("Editar países");
+        pnlTableList4.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, 140, -1));
 
         pnlTableList5.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Editoriales", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N
         pnlTableList5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        btnCreateEditorial.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/add.png"))); // NOI18N
-        btnCreateEditorial.setToolTipText("Agregar idioma");
-        btnCreateEditorial.setFocusable(false);
-        btnCreateEditorial.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCreateEditorialActionPerformed(evt);
-            }
-        });
-        pnlTableList5.add(btnCreateEditorial, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 30, 30, 30));
-
-        btnDelEditorial.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/quitar.png"))); // NOI18N
-        btnDelEditorial.setToolTipText("Borrar idioma");
-        btnDelEditorial.setFocusable(false);
-        btnDelEditorial.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDelEditorialActionPerformed(evt);
-            }
-        });
-        pnlTableList5.add(btnDelEditorial, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 30, 30, 30));
+        jButton4.setText("Editar editoriales");
+        pnlTableList5.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, -1, -1));
 
         pnlTableList6.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Generos", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N
         pnlTableList6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        btnCreateGenero.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/add.png"))); // NOI18N
-        btnCreateGenero.setToolTipText("Agregar idioma");
-        btnCreateGenero.setFocusable(false);
-        btnCreateGenero.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCreateGeneroActionPerformed(evt);
-            }
-        });
-        pnlTableList6.add(btnCreateGenero, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 30, 30, 30));
+        jButton1.setText("Editar editoriales");
+        pnlTableList6.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, -1, -1));
 
-        btnDelGenero.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/quitar.png"))); // NOI18N
-        btnDelGenero.setToolTipText("Borrar idioma");
-        btnDelGenero.setFocusable(false);
-        btnDelGenero.addActionListener(new java.awt.event.ActionListener() {
+        btnRefresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/refresh.png"))); // NOI18N
+        btnRefresh.setToolTipText("Guardar");
+        btnRefresh.setFocusable(false);
+        btnRefresh.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDelGeneroActionPerformed(evt);
+                btnRefreshActionPerformed(evt);
             }
         });
-        pnlTableList6.add(btnDelGenero, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 30, 30, 30));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -615,9 +583,11 @@ public class Libros extends javax.swing.JInternalFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(btnAddFilm, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(5, 5, 5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnGuarda, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(5, 5, 5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(5, 5, 5)
                         .addComponent(btnCancela, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -631,24 +601,28 @@ public class Libros extends javax.swing.JInternalFrame {
                     .addComponent(btnAddFilm, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnGuarda, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnCancela, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnCancela, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(pnlPelicula, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(pnlTableList3, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(pnlTableList4, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(pnlTableList5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(pnlTableList, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(pnlTableList5, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(pnlTableList6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(pnlTableList1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addGap(2, 2, 2)
+                        .addComponent(pnlTableList6, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(pnlTableList1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(25, 25, 25)
+                        .addComponent(pnlTableList, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
         pack();
@@ -656,36 +630,39 @@ public class Libros extends javax.swing.JInternalFrame {
 
     private void btnGuardaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardaActionPerformed
         //  Guarda y actualiza los datos        
-        if (estanLlenos()){
-            // guarda los valores de los controles en un arreglo de objetos
-            Object [] film = new Object[11];
-            film[1] = txtTitulo.getText().trim();
-            film[2] = txtDesc.getText().trim();
-            film[3] = Integer.parseInt(txtAnio.getText().trim());
-            film[4] = Integer.parseInt(lenguajes[cmbPais.getSelectedIndex()][0].toString());
-            film[5] = Integer.parseInt(txtDiasR.getText().trim());
-            film[6] = Float.parseFloat(txtRenta.getText().trim());            
-            film[7] = Integer.parseInt(txtDuracion.getText().trim());
-            film[8] = Float.parseFloat(txtRempl.getText().trim());
-            film[9] = rates[cmbClas.getSelectedIndex()][0];
-            film[10] = categories[cmbGenero.getSelectedIndex()][0];
+        if (EstanLlenos()){
+            Object idioma_id = idioma_dao.GetIdiomasByNombre(cmbIdioma.getSelectedItem().toString())[0][1];
+            Object genero_id = genero_dao.GetGenerosByNombre(cmbGenero.getSelectedItem().toString())[0][1];
+            Object pais_id = pais_dao.GetPaisesByNombre(cmbPais.getSelectedItem().toString())[0][1];
+            Object editorial_id = editorial_dao.GetEditorialByNombre(cmbEditorial.getSelectedItem().toString())[0][1];
             
-            // Si está actualizando
-            if (editando){
-                film[0] = id;
+            // guarda los valores de los controles en un arreglo de objetos 
+            Object [] libro = new Object[9];                            // (TITULO, EDICION, ANIO, NUM_PAGS, IDIOMA_ID, GENERO_ID, PAIS_ID, EDITORIAL_ID)
+            libro[0] = libro_id;
+            libro[1] = txtTitulo.getText().trim();                      // Titulo
+            libro[2] = Integer.parseInt(txtEdicion.getText().trim());   // Edicion 
+            libro[3] = Integer.parseInt(txtAnio.getText().trim());      // Año
+            libro[4] = Integer.parseInt(txtPags.getText().trim());      // No. paginas
+            libro[5] = Integer.parseInt(idioma_id.toString());          // Id idioma
+            libro[6] = Integer.parseInt(genero_id.toString());          // Id genero
+            libro[7] = Integer.parseInt(pais_id.toString());            // Id pais
+            libro[8] = editorial_id.toString();                         // Id editorial
+                        
+            if (editando){  // Si está actualizando
+                libro[0] = libro_id;
                 // Actualiza los datos y regresa el id
-                id = daoFilm.updateFilm(film);
-                javax.swing.JOptionPane.showMessageDialog(this, "Datos actualizados.","Información",1);
-            }
-            // si está guardando un registro nuevo
-            else{
+                libro_id = libro_dao.UpdateLibro(libro);
+                javax.swing.JOptionPane.showMessageDialog(this, "Datos actualizados.", "Información", 1);
+            }            
+            else{   // si está guardando un registro nuevo
                 // Guarda los datos  y regresa el id
-                id = daoFilm.saveFilm(film);
+                libro_id = libro_dao.SaveLibro(libro);
             }
-            // Si el id n0 es nulo, procesde a llenar los demas datos
-            if (id != null){                
-                llenaTablaPeliculas();
-                UtilsTable.mueveTabla(tableList, UtilsTable.getRow(filmsLista, id));
+            
+            // Si el id no es 0, procesde a llenar los demas datos
+            if (libro_id != 0){                
+                LlenaTablaLibros();
+                UtilsTable.mueveTabla(tableList, UtilsTable.getRow(libros_lista, libro_id));
                 editando = true;
                 btnCancela.setEnabled(true);
                 txtTitulo.requestFocus();
@@ -698,26 +675,25 @@ public class Libros extends javax.swing.JInternalFrame {
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
         // Botón que consulta el registro selecionado de la tabla para editar
         if (tableList.getSelectedRow() < 0)
-            javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila.","Información",1);
+            javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila.", "Información", 1);
         else{
             // Consulta los datos
-            Object[] editFilm = daoFilm.getFilm(tableList.getValueAt(tableList.getSelectedRow(), 0).toString());
-            if (editFilm != null){
-                // Pone los datos consultados en los controles
-                txtTitulo.setText(editFilm[1].toString());  // titulo
-                txtDesc.setText(editFilm[2].toString());    // Desc
-                txtAnio.setText(editFilm[3].toString());    //Año
-                cmbPais.setSelectedItem(editFilm[4].toString());//leng
-                txtDiasR.setText(editFilm[5].toString());    // días de renta            
-                txtDuracion.setText(editFilm[6].toString());//length
-                txtRenta.setText(editFilm[7].toString()); // Costo renta
-                txtRempl.setText(editFilm[8].toString());   //Costo de remplazo
-                cmbClas.setSelectedItem(editFilm[9].toString());//  Rate
-                cmbGenero.setSelectedItem(editFilm[10].toString()); // cat              
-                id = editFilm[0].toString();                        // id de pelicula
-                // llena las tablas de reparto y doblaje
-                llenaTablaActores();
-                llenaTablaDoblaje();
+            Object[] libro_edit = libro_dao.GetLibroById((Integer) tableList.getValueAt(tableList.getSelectedRow(), 0)); 
+            if (libro_edit != null){
+                // LIBRO_ID, TITULO, EDICION, EDITORIAL, GENERO, ANIO, NUM_PAGINAS, IDIOMA, PAIS
+                txtTitulo.setText(libro_edit[1].toString());            // Titulo
+                txtEdicion.setText(libro_edit[2].toString());           // Edicion
+                cmbEditorial.setSelectedItem(libro_edit[3].toString()); // Editorial
+                cmbGenero.setSelectedItem(libro_edit[4].toString());    // Genero
+                txtAnio.setText(libro_edit[5].toString());              // Año
+                txtPags.setText(libro_edit[6].toString());              // No. pags
+                cmbIdioma.setSelectedItem(libro_edit[7].toString());    // Idioma
+                cmbPais.setSelectedItem(libro_edit[8].toString());      // Pais
+                libro_id = (Integer) libro_edit[0];                     // Id
+                
+                // llena las tablas de autoria 
+                LlenaTablaAutores();
+                
                 // indica que está editando
                 editando = true;
                 btnCancela.setEnabled(true);
@@ -727,7 +703,7 @@ public class Libros extends javax.swing.JInternalFrame {
 
     private void btnCancelaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelaActionPerformed
         // Cancela la edición  y reinicia controles y parametros
-        cancelaEdit();
+        CancelaEdit();
         tableList.clearSelection();
         llenaTablaActores();
         llenaTablaDoblaje();
@@ -794,62 +770,6 @@ public class Libros extends javax.swing.JInternalFrame {
         reporte.genReport();
     }//GEN-LAST:event_btnReportePDFActionPerformed
 
-    private void btnAddAutoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddAutoriaActionPerformed
-        // Agregar casting
-        // Verifica si esta editando una pelicula
-        if (!editando){
-            // Suena un beep
-            Toolkit.getDefaultToolkit().beep();
-            // Muestra un mensage de aviso
-            JOptionPane.showMessageDialog(this, "Para agregar actores primero guarde\no edite una pelicula.", "Aviso",2);          
-        }
-        else{           
-            // Abre la ventana para agregar actores
-            // Asigna el id de la pelicula
-            addActores.setIdFilm(id);
-            // Localizacvión de la ventana
-            addActores.setLocationRelativeTo(this);
-            // hace visible la ventana
-            addActores.setVisible(true);        
-            // cuando cierra la ventana agrega el actor seleccionada a la tabla de actores
-            llenaTablaActores();
-        }
-    }//GEN-LAST:event_btnAddAutoriaActionPerformed
-
-    private void btnRmveAutoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRmveAutoriaActionPerformed
-        // Borra reparto
-        // Verifica si se selecciono un elemento de la tabla
-        if (tableListActor.getSelectedRow() < 0){
-            // Suena un beep
-            Toolkit.getDefaultToolkit().beep();
-            // Muestra un mensage de aviso
-            JOptionPane.showMessageDialog(this, "Seleccione un actor.", "Aviso",2);            
-        }
-        else{     
-            // suena un beep
-            java.awt.Toolkit.getDefaultToolkit().beep();
-            // pregunta si quiere eliminar el registro y camtura la respuesta
-            int res = javax.swing.JOptionPane.showConfirmDialog(this, "¿Eliminar " + actorsLista[tableListActor.getSelectedRow()][1].toString() + "?",
-                 "Seleccione", JOptionPane.YES_NO_OPTION);
-            // evalua la respuesta 
-            if (res == 0){
-                String msj = "";
-                // si la respuesta es afirmativa, elimina el registro
-                String idActor = tableListActor.getValueAt(tableListActor.getSelectedRow(), 0).toString();
-                int ret = daoActor.deleteCasting(id,idActor);
-                if (ret == 1){
-                    msj = "No se pudo eliminar por que tiene egistros asignados.";
-                    // suena un beep
-                    java.awt.Toolkit.getDefaultToolkit().beep();
-                    javax.swing.JOptionPane.showMessageDialog(this, msj,"Información",1);
-                }
-                
-                // Reinicia controles y parametros
-                llenaTablaActores();
-            }
-        }
-    }//GEN-LAST:event_btnRmveAutoriaActionPerformed
-
     private void txtFiltroKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFiltroKeyReleased
         // Filtra
         llenaTablaPeliculas();
@@ -886,84 +806,66 @@ public class Libros extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_cmbIdiomaActionPerformed
 
-    private void btnDelIdiomaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelIdiomaActionPerformed
-        // Borra doblaje
+    private void btnRmveAutoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRmveAutoriaActionPerformed
+        // Borra reparto
         // Verifica si se selecciono un elemento de la tabla
-        if (tableListDoblaje.getSelectedRow() < 0){
+        if (tableListActor.getSelectedRow() < 0){
             // Suena un beep
             Toolkit.getDefaultToolkit().beep();
             // Muestra un mensage de aviso
-            JOptionPane.showMessageDialog(this, "Seleccione un idioma.", "Aviso",2);
+            JOptionPane.showMessageDialog(this, "Seleccione un actor.", "Aviso",2);
         }
         else{
             // suena un beep
             java.awt.Toolkit.getDefaultToolkit().beep();
-            // pregunta si quiere eliminar el registro y camtura la tableListDoblaje
-            int res = javax.swing.JOptionPane.showConfirmDialog(this, "¿Eliminar " + doblajeLista[tableListDoblaje.getSelectedRow()][1].toString() + "?",
+            // pregunta si quiere eliminar el registro y camtura la respuesta
+            int res = javax.swing.JOptionPane.showConfirmDialog(this, "¿Eliminar " + actorsLista[tableListActor.getSelectedRow()][1].toString() + "?",
                 "Seleccione", JOptionPane.YES_NO_OPTION);
             // evalua la respuesta
             if (res == 0){
                 String msj = "";
                 // si la respuesta es afirmativa, elimina el registro
-                int idIdioma = Integer.parseInt(tableListDoblaje.getValueAt(tableListDoblaje.getSelectedRow(), 0).toString());
-                int ret = daoLang.deleteLanguageFilm(id,idIdioma);
+                String idActor = tableListActor.getValueAt(tableListActor.getSelectedRow(), 0).toString();
+                int ret = daoActor.deleteCasting(id,idActor);
                 if (ret == 1){
                     msj = "No se pudo eliminar por que tiene egistros asignados.";
                     // suena un beep
                     java.awt.Toolkit.getDefaultToolkit().beep();
                     javax.swing.JOptionPane.showMessageDialog(this, msj,"Información",1);
                 }
+
                 // Reinicia controles y parametros
-                llenaTablaDoblaje();
+                llenaTablaActores();
             }
         }
-    }//GEN-LAST:event_btnDelIdiomaActionPerformed
+    }//GEN-LAST:event_btnRmveAutoriaActionPerformed
 
-    private void btnCreateIdiomaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateIdiomaActionPerformed
-        // Agregar doblaje
-        // verifica si está editando
+    private void btnAddAutoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddAutoriaActionPerformed
+        // Agregar casting
+        // Verifica si esta editando una pelicula
         if (!editando){
             // Suena un beep
             Toolkit.getDefaultToolkit().beep();
             // Muestra un mensage de aviso
-            JOptionPane.showMessageDialog(this, "Para agregar doblaje primero guarde\no edite una pelicula.", "Aviso",2);
+            JOptionPane.showMessageDialog(this, "Para agregar actores primero guarde\no edite una pelicula.", "Aviso",2);
         }
         else{
-            // Abre la ventana para agregar idioma
+            // Abre la ventana para agregar actores
             // Asigna el id de la pelicula
-            addDoblaje.setIdFilm(id);
-            // Localización de la ventana
-            addDoblaje.setLocationRelativeTo(this);
+            addActores.setIdFilm(id);
+            // Localizacvión de la ventana
+            addActores.setLocationRelativeTo(this);
             // hace visible la ventana
-            addDoblaje.setVisible(true);
-            // cuando cierra la ventana y agrega el idioma seleccionada a la tabla de actores
-            llenaTablaDoblaje();
+            addActores.setVisible(true);
+            // cuando cierra la ventana agrega el actor seleccionada a la tabla de actores
+            llenaTablaActores();
         }
-    }//GEN-LAST:event_btnCreateIdiomaActionPerformed
+    }//GEN-LAST:event_btnAddAutoriaActionPerformed
 
-    private void btnCreatePaisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreatePaisActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnCreatePaisActionPerformed
-
-    private void btnDelPaisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelPaisActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnDelPaisActionPerformed
-
-    private void btnCreateEditorialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateEditorialActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnCreateEditorialActionPerformed
-
-    private void btnDelEditorialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelEditorialActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnDelEditorialActionPerformed
-
-    private void btnCreateGeneroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateGeneroActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnCreateGeneroActionPerformed
-
-    private void btnDelGeneroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelGeneroActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnDelGeneroActionPerformed
+    // Recarga todos los combo box para mostrar informacion actualizada
+    private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
+        LlenaDatos();
+    }//GEN-LAST:event_btnRefreshActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddAutoria;
@@ -971,16 +873,9 @@ public class Libros extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnBorrar;
     private javax.swing.JButton btnBorrarFiltro;
     private javax.swing.JButton btnCancela;
-    private javax.swing.JButton btnCreateEditorial;
-    private javax.swing.JButton btnCreateGenero;
-    private javax.swing.JButton btnCreateIdioma;
-    private javax.swing.JButton btnCreatePais;
-    private javax.swing.JButton btnDelEditorial;
-    private javax.swing.JButton btnDelGenero;
-    private javax.swing.JButton btnDelIdioma;
-    private javax.swing.JButton btnDelPais;
     private javax.swing.JButton btnEdit;
     private javax.swing.JButton btnGuarda;
+    private javax.swing.JButton btnRefresh;
     private javax.swing.JButton btnReporte;
     private javax.swing.JButton btnReportePDF;
     private javax.swing.JButton btnRmveAutoria;
@@ -988,11 +883,16 @@ public class Libros extends javax.swing.JInternalFrame {
     private javax.swing.JComboBox<String> cmbGenero;
     private javax.swing.JComboBox<String> cmbIdioma;
     private javax.swing.JComboBox<String> cmbPais;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel lblAnio;
     private javax.swing.JLabel lblCantidad;
     private javax.swing.JLabel lblClas;
     private javax.swing.JLabel lblDiasR;
+    private javax.swing.JLabel lblEdicion;
     private javax.swing.JLabel lblGenero;
     private javax.swing.JLabel lblGenero1;
     private javax.swing.JLabel lblRenta;
@@ -1010,8 +910,9 @@ public class Libros extends javax.swing.JInternalFrame {
     private javax.swing.JTable tableList;
     private javax.swing.JTable tableListActor;
     private javax.swing.JTextField txtAnio;
+    private javax.swing.JTextField txtEdicion;
     private javax.swing.JTextField txtFiltro;
+    private javax.swing.JTextField txtPags;
     private javax.swing.JTextField txtTitulo;
-    private javax.swing.JTextField txt_pags;
     // End of variables declaration//GEN-END:variables
 }

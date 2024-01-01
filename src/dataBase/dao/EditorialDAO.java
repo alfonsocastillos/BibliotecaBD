@@ -81,7 +81,7 @@ public class EditorialDAO extends Conexion {
        }
     }
 
-    // Consultar todas las editoriales
+    // Consultar todas las editoriales (id, editorial)
     public Object [][] GetAllEditoriales(){
        conectar();
        Object [][] editoriales;
@@ -228,9 +228,9 @@ public class EditorialDAO extends Conexion {
     }
 
     // Consultar todas las editoriales con un nombre parecido
-    public Object [] GetEditorialByNombre(String editorial){
+    public Object[][] GetEditorialByNombre(String editorial){
        conectar();
-       Object [] editoriales;
+       Object[][] editoriales;
        int i = 0;
        int count = 0;
        editorial = "%" + editorial + "%";
@@ -250,17 +250,18 @@ public class EditorialDAO extends Conexion {
            }
            
            // Misma consulta, pero ahora puede ser guardada en el arreglo
-           editoriales = new Object[count];           
-           sentenciaSQL =   "SELECT IDIOMA" +
-                            "FROM IDIOMA" +
-                            "WHERE UPPER (IDIOMA) LIKE UPPER(?)";
+           editoriales = new Object[count][2];           
+           sentenciaSQL =   "SELECT EDITORIAL_ID, EDITORIAL " +
+                            "FROM EDITORIAL " +
+                            "WHERE UPPER (EDITORIAL) LIKE UPPER(?)";
            
            ps = conn.prepareStatement(sentenciaSQL);
            ps.setString(1, editorial);
            rs = ps.executeQuery();
            
            while (rs.next()){
-               editoriales[i] = (rs.getString(1));
+               editoriales[i][0] = (rs.getString(1));
+               editoriales[i][1] = (rs.getString(2));
                i++;
            }           
            return editoriales;

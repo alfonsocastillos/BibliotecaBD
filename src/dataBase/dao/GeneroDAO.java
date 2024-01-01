@@ -79,7 +79,7 @@ public class GeneroDAO extends Conexion {
        }
     }
     
-    // Consultar todos los idiomas
+    // Consultar todos los idiomas (id, genero)
     public Object [][] GetAllGeneros(){
        conectar();
        Object [][] generos;
@@ -226,16 +226,16 @@ public class GeneroDAO extends Conexion {
     }
     
     // Consultar generos con nombre parecido
-    public Object [] GetGenerosByNombre(String genero){
+    public Object[][] GetGenerosByNombre(String genero){
        conectar();
-       Object [] generos;
+       Object[][] generos;
        int i = 0;
        int count = 0;
        genero = "%" + genero + "%";
        try{
            // Cuenta todos los actores que tengan un nombre parecido
            sentenciaSQL =   "SELECT COUNT(GENERO_ID)" +
-                            "FROM GENERO" +
+                            "FROM GENERO " +
                             "WHERE UPPER (GENERO) LIKE UPPER(?)";   // Todos los idiomas que tengan un nombre parecido
                             
             
@@ -248,9 +248,9 @@ public class GeneroDAO extends Conexion {
            }
            
            // Misma consulta, pero ahora puede ser guardada en el arreglo
-           generos = new Object[count];           
-           sentenciaSQL =   "SELECT GENERO" +
-                            "FROM GENERO" +
+           generos = new Object[count][2];           
+           sentenciaSQL =   "SELECT GENERO_ID, GENERO " +
+                            "FROM GENERO " +
                             "WHERE UPPER (GENERO) LIKE UPPER(?)";
            
            ps = conn.prepareStatement(sentenciaSQL);
@@ -258,7 +258,8 @@ public class GeneroDAO extends Conexion {
            rs = ps.executeQuery();
            
            while (rs.next()){
-               generos[i] = (rs.getString(1));
+               generos[i][0] = (rs.getString(1));
+               generos[i][1] = (rs.getString(2));
                i++;
            }           
            return generos;

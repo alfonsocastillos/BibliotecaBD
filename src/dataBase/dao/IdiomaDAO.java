@@ -51,7 +51,7 @@ public class IdiomaDAO extends Conexion {
 
     }
     
-    // Modificar un idioma
+    // Modificar un idioma (id, idioma)
     public String UpdateIdioma(Object[] idioma)
     {       
         // se conecta a la base de datos
@@ -79,7 +79,7 @@ public class IdiomaDAO extends Conexion {
        }
     }
     
-    // Consultar todos los idiomas
+    // Consultar todos los idiomas (id, idioma)
     public Object [][] GetAllIdiomas(){
        conectar();
        Object [][] idiomas;
@@ -119,11 +119,11 @@ public class IdiomaDAO extends Conexion {
        }
     }  
 
-    // Consulta el idioma para un id
+    // Consulta el idioma para un id (id, idioma)
     public Object[] GetIdiomaById(String idioma_id)
     {
         conectar();
-        Object [] idioma = new Object[2];
+        Object[] idioma = new Object[2];
        
         try{
                     
@@ -182,7 +182,7 @@ public class IdiomaDAO extends Conexion {
     }
     
     // Consultar todos los libros de un idioma
-    public Object [] GetLibrosByIdioma(String idioma_id){
+    public Object[] GetLibrosByIdioma(String idioma_id){
        conectar();
        Object [] libros;
        int i = 0;
@@ -226,10 +226,10 @@ public class IdiomaDAO extends Conexion {
         }
     }
     
-    // Consultar idiomas con nombre parecido
-    public Object [] GetIdiomasByNombre(String idioma){
+    // Consultar idiomas con nombre parecido (id, idioma)
+    public Object[][] GetIdiomasByNombre(String idioma){
        conectar();
-       Object [] idiomas;
+       Object[][] idiomas;
        int i = 0;
        int count = 0;
        idioma = "%" + idioma + "%";
@@ -249,8 +249,8 @@ public class IdiomaDAO extends Conexion {
            }
            
            // Misma consulta, pero ahora puede ser guardada en el arreglo
-           idiomas = new Object[count];           
-           sentenciaSQL =   "SELECT IDIOMA " +
+           idiomas = new Object[count][2];           
+           sentenciaSQL =   "SELECT IDIOMA_ID, IDIOMA " +
                             "FROM IDIOMA " +
                             "WHERE UPPER (IDIOMA) LIKE UPPER(?)";
            
@@ -259,7 +259,8 @@ public class IdiomaDAO extends Conexion {
            rs = ps.executeQuery();
            
            while (rs.next()){
-               idiomas[i] = (rs.getString(1));
+               idiomas[i][0] = (rs.getString(1));
+               idiomas[i][1] = (rs.getString(2));
                i++;
            }           
            return idiomas;

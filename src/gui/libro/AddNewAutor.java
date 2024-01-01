@@ -192,6 +192,7 @@ public class AddNewAutor extends javax.swing.JDialog {
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         BorrarTextos();
         autor_id = null;
+        dispose();
     }//GEN-LAST:event_formWindowClosed
 
     private void comboPaisesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboPaisesActionPerformed
