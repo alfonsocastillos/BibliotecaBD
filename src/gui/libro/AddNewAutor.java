@@ -1,6 +1,8 @@
-package gui.pelicula;
+package gui.libro;
 
-import dataBase.dao.DaoActor;
+import gui.libro.*;
+import dataBase.dao.AutorDAO;
+import dataBase.dao.PaisDAO;
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import javax.swing.JOptionPane;
@@ -10,43 +12,53 @@ import javax.swing.JOptionPane;
  * @author Carlos
  * Ventana que permite agregar paliculas a la renta
  */
-public class AddNewActor extends javax.swing.JDialog {
+public class AddNewAutor extends javax.swing.JDialog {
     // Para guardar el actor
-    String idActor;
-    DaoActor daoActor;
+    String autor_id;
+    String pais;
+    AutorDAO autor_dao;
 
     /**
      * Creates new form AddPeliculasRentaD
      * @param parent
      * @param modal
      */
-    public AddNewActor(java.awt.Frame parent, boolean modal) {
+    public AddNewAutor(java.awt.Frame parent, boolean modal) {
         // ventana modal
         super(parent, modal);
         // inicia los componentes
         initComponents();
         processWindowEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-        // Crea el daopara consltar las ventanas
-        daoActor = new DaoActor();   
-        getRootPane().setDefaultButton(btnGuardar);        
+        // Crea el dao para acceder a la tabla AUTOR
+        autor_dao = new AutorDAO();   
+        getRootPane().setDefaultButton(btnGuardar);       
+        
+        // Popula el ComboBox de paises disponibles
+        PaisDAO pais_dao = new PaisDAO();    
+        Object[][] all_paises = pais_dao.GetAllPaises();        
+        for (Object[] pais : all_paises) {
+            // llena los datos de idioma en el combo 
+            comboPaises.addItem(pais[1].toString());
+        }
+
     }
     
-    private void borraTextos(){
+    private void BorrarTextos(){
         // Borra los controles
         txtNombre.setText("");
         txtApellido.setText("");
     }
     
-    public void setEditId(String idActor){
+    public void SetEditId(String autor_id){
         // Asigna el id del actor a modificar
-        this.idActor = idActor;
+        this.autor_id = autor_id;
         // Busca el actor
-        Object [] actorEdit = daoActor.getActorById(idActor);
+        Object [] autor_edit = autor_dao.GetAutorById(autor_id);
         // Muestra los datos en los controles
-        txtNombre.setText(actorEdit[1].toString());
+        txtNombre.setText(autor_edit[1].toString());
         // si el apellido es nulo
-        if (actorEdit[2] != null)
-            txtApellido.setText(actorEdit[2].toString());
+        if (autor_edit[2] != null)
+            txtApellido.setText(autor_edit[2].toString());
     }
     
     /**
@@ -64,6 +76,8 @@ public class AddNewActor extends javax.swing.JDialog {
         lblApellido = new javax.swing.JLabel();
         txtApellido = new javax.swing.JTextField();
         btnGuardar = new javax.swing.JButton();
+        lblNombre1 = new javax.swing.JLabel();
+        comboPaises = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Actor");
@@ -86,10 +100,10 @@ public class AddNewActor extends javax.swing.JDialog {
 
         lblApellido.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblApellido.setText("Apellido:");
-        pnlTableList.add(lblApellido, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 90, -1, 25));
+        pnlTableList.add(lblApellido, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 100, -1, 25));
 
         txtApellido.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        pnlTableList.add(txtApellido, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 90, 140, 25));
+        pnlTableList.add(txtApellido, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 100, 140, 25));
 
         btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/guardar.png"))); // NOI18N
         btnGuardar.setToolTipText("Guardar");
@@ -100,6 +114,18 @@ public class AddNewActor extends javax.swing.JDialog {
             }
         });
         pnlTableList.add(btnGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 10, 40, 40));
+
+        lblNombre1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        lblNombre1.setText("Pais:");
+        pnlTableList.add(lblNombre1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 140, -1, 25));
+
+        comboPaises.setFont(new java.awt.Font("C059", 0, 12)); // NOI18N
+        comboPaises.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboPaisesActionPerformed(evt);
+            }
+        });
+        pnlTableList.add(comboPaises, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 140, 150, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -114,7 +140,7 @@ public class AddNewActor extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(pnlTableList, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
+                .addComponent(pnlTableList, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -127,46 +153,57 @@ public class AddNewActor extends javax.swing.JDialog {
             // Suena un beep
             Toolkit.getDefaultToolkit().beep();
             // Muestra un mensage de aviso
-            JOptionPane.showMessageDialog(this, "Escriba el nombre del actor.", "Aviso",2);            
+            JOptionPane.showMessageDialog(this, "Escriba el nombre del autor", "Aviso", 2);
         }
-        else{            
-            // Guarda un nuevo actor
-            if (idActor == null){
-                Object [] actor = new Object[2];
-                actor[0] = txtNombre.getText().trim();
-                actor[1] = txtApellido.getText().trim();
-                idActor =  daoActor.saveActor(actor);
+        else{
+            // Obtiene el NOMBRE del pais seleccionado
+            pais = comboPaises.getSelectedItem().toString();
+          
+            if (autor_id == null){ // Guarda un nuevo actor
+                Object [] autor = new Object[3];
+                autor[0] = txtNombre.getText().trim();
+                autor[1] = txtApellido.getText().trim();
+                autor[2] = pais;    // NOMBRE del pais
+                autor_id = autor_dao.UpdateAutor(autor);
             }
             else{ // Actualiza actor
-                Object [] actor = new Object[3];
-                actor[0] = idActor;
-                actor[1] = txtNombre.getText().trim();
-                actor[2] = txtApellido.getText().trim();
-                idActor =  daoActor.update(actor);
+                Object [] autor = new Object[4];
+                autor[0] = autor_id;
+                autor[1] = txtNombre.getText().trim();
+                autor[2] = txtApellido.getText().trim();
+                PaisDAO pais_dao = new PaisDAO();
+                autor[3] = pais_dao.GetPaisesByNombre(pais);    // ID del pais
+                autor_id =  autor_dao.UpdateAutor(autor);
             }
             
-            if (idActor == null){
+            if (autor_id == null){
                 // Suena un beep
                 Toolkit.getDefaultToolkit().beep();
-                JOptionPane.showMessageDialog(this, "Error al guardar el actor.", "Error",0);                
+                JOptionPane.showMessageDialog(this, "Error al guardar el actor", "Error", 0);                
             }
             else{
-                borraTextos();
+                BorrarTextos();
                 dispose();
             }            
         }                                
     }//GEN-LAST:event_btnGuardarActionPerformed
-
+    
+    // Descartar cambios al cerrar la ventana
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-        // Cuando cerra la ventana
-        borraTextos();
-        idActor = null;
+        BorrarTextos();
+        autor_id = null;
     }//GEN-LAST:event_formWindowClosed
+
+    private void comboPaisesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboPaisesActionPerformed
+        
+    }//GEN-LAST:event_comboPaisesActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGuardar;
+    private javax.swing.JComboBox<String> comboPaises;
     private javax.swing.JLabel lblApellido;
     private javax.swing.JLabel lblNombre;
+    private javax.swing.JLabel lblNombre1;
     private javax.swing.JPanel pnlTableList;
     private javax.swing.JTextField txtApellido;
     private javax.swing.JTextField txtNombre;

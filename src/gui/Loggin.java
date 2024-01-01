@@ -4,7 +4,7 @@
  */
 package gui;
 
-import dataBase.dao.DaoEmployee;
+import dataBase.dao.EmpleadoDAO;
 import java.awt.Toolkit;
 import javax.swing.JOptionPane;
 import tools.UtilsGUI;
@@ -17,12 +17,12 @@ public class Loggin extends javax.swing.JFrame {
     // Variables para guardar los ids y nombres de tienda y empleado
     // para mostrarlos en la interface y ids para guardar los registros
     int intent = 0;
-    String idEmpleado;
-    String idTienda;
-    String store;
-    String employeeName;
+    String id_empleado;
+    String id_sucursal;
+    String sucursal;
+    String empleado_nombre;
     // Dao para la tabla de empleados
-    DaoEmployee daoEmployee;
+    EmpleadoDAO empleado_dao;
 
     /**
      * Creates new form Loggin
@@ -30,7 +30,7 @@ public class Loggin extends javax.swing.JFrame {
     public Loggin() {
         initComponents();   // Generado automáticamente
          // instancia el Dao
-        daoEmployee = new DaoEmployee();
+        empleado_dao = new EmpleadoDAO();
         configComponents();
     }
     
@@ -143,29 +143,30 @@ public class Loggin extends javax.swing.JFrame {
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
         // Busca el usuario y contrasenia
         // Crea un bean para guardar los datos
-        Object employee[] = daoEmployee.getEmployeeByUsr(txtUser.getText().trim(), txtPsw.getPassword());
+        Object employee[] = empleado_dao.GetEmpleadoByUsr(txtUser.getText().trim(), txtPsw.getPassword());
+        //System.out.println(employee[0]);
         // si regresa un id mayor a 0, es válido
-        if (Integer.parseInt(employee [0].toString()) > 0){
+        if (Integer.parseInt(employee[0].toString()) > 0){
             // Guarda los datos encontrados
-            idEmpleado = employee [0].toString();
-            idTienda = employee [1].toString();
-            store = employee[2].toString();
-            employeeName = employee[3] + " " + employee[4];
+            id_empleado = employee[0].toString();
+            id_sucursal = employee[1].toString();
+            sucursal = employee[2].toString();
+            empleado_nombre = employee[3] + " " + employee[4];
             // Cierra la ventana y abre la ventana principal
-            MDIPrincipal principal = new MDIPrincipal(idTienda, idEmpleado, store, employeeName);
+            MDIPrincipal principal = new MDIPrincipal(id_sucursal, id_empleado, sucursal, empleado_nombre);
             principal.setVisible(true);
             dispose();
         }
         else{
             // Si no encuentra el usr manda mensaje de error hasta tres veces
-            intent ++;
+            intent++;
             // Suena un beep
             Toolkit.getDefaultToolkit().beep();
             // Muestra mensaje de error
-            JOptionPane.showMessageDialog(this, "Usuario o contraseña invalidos","Error",0);
+            JOptionPane.showMessageDialog(this, "Usuario o contraseña invalidos", "Error", 0);
             txtUser.requestFocus();
             if (intent > 2)
-            System.exit(0);
+                System.exit(0);
         }
     }//GEN-LAST:event_btnAceptarActionPerformed
 

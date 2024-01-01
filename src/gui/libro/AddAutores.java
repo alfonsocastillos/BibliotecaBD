@@ -1,55 +1,58 @@
-package gui.pelicula;
+package gui.libro;
 
-import dataBase.dao.DaoActor;
+import gui.libro.*;
+import dataBase.dao.AutorDAO;
 import java.awt.Toolkit;
 import javax.swing.JOptionPane;
 import tools.UtilsTable;
 
 /**
  *
- * @author Carlos
- * Ventana que permite agregar paliculas a la renta
+ * @author Alfonso
+ * Ventana que permite agregar autores a un libro
  */
-public class AddActores extends javax.swing.JDialog {
-    // Para agregar el reparto a la pelicula
-    String idActor;
-    String idFilm;
-    DaoActor daoActor;
-    // Para listar todos los actores 
-    Object actorsLista [][];
+public class AddAutores extends javax.swing.JDialog {
+    // Para agregar el autores a un libro
+    String autor_id;
+    String libro_id;
+    AutorDAO autor_dao;
+    // Para listar todos los autores 
+    Object lista_autores [][];  // Id, nombre
    // public Object film[];
     java.awt.Frame parent;    
 
     /**
-     * Creates new form AddPeliculasRentaD
+     * Creates new form ???
      * @param parent
      * @param modal
      */
-    public AddActores(java.awt.Frame parent, boolean modal) {
+    public AddAutores(java.awt.Frame parent, boolean modal) {
         // ventana modal
         super(parent, modal);   // Llama al constructor del padre
         this.parent= parent;
-        setTitle("Actores");
+        setTitle("Autores");
         // inicia los componentes
         initComponents();
         // Crea el dao
-        daoActor = new DaoActor();
+        autor_dao = new AutorDAO();
         // llena la tabla
-        llenaTabla();
+        LlenaTabla();
     }
     
-    public void setIdFilm(String idFilm){   
-        // Asigna el id de la pelicula
-        this.idFilm = idFilm;
+    // ? ? ? 
+    public void SetLibroId(String id_libro){   
+        // Asigna el id del libro
+        this.libro_id = id_libro;
         txtFiltro.setText("");
-        llenaTabla();
+        LlenaTabla();
     }
     
-    private void llenaTabla(){     
-        // Consulta las peliculas y lo guardaen un arreglo
-        actorsLista = daoActor.getActorsByFirstLastName(txtFiltro.getText().trim());
+    // Llena y despliega la tabla de autores 
+    private void LlenaTabla(){     
+        // Consulta todos los autores (id, nombre apellido)
+        lista_autores = autor_dao.GetAutoresByNombreApellido(txtFiltro.getText().trim());
         // Titulos de la tabla
-        String[] T_ACTOR = {"","Nombre"};
+        String[] T_AUTOR = {"","Nombre"};
         // alineación de las celdas
         int[][] cellAlignment = {{0,javax.swing.SwingConstants.LEFT}};
         // Tamaño de las celdas
@@ -60,7 +63,7 @@ public class AddActores extends javax.swing.JDialog {
             la alineación y el tamaño de las celdas
         */
        
-        UtilsTable.llenaTabla(tableList,actorsLista, T_ACTOR, cellAlignment, cellSize);
+        UtilsTable.llenaTabla(tableList,lista_autores, T_AUTOR, cellAlignment, cellSize);
     }
     
     /**
@@ -78,9 +81,9 @@ public class AddActores extends javax.swing.JDialog {
         tableList = new javax.swing.JTable();
         txtFiltro = new javax.swing.JTextField();
         lblFiltro = new javax.swing.JLabel();
-        btnNewActor = new javax.swing.JButton();
-        btnDelActor = new javax.swing.JButton();
-        btnEditActor = new javax.swing.JButton();
+        btnNewAutor = new javax.swing.JButton();
+        btnDelAutor = new javax.swing.JButton();
+        btnEditAutor = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setIconImage(java.awt.Toolkit.getDefaultToolkit().getImage( getClass().getResource("/img/actor.png")));
@@ -130,30 +133,30 @@ public class AddActores extends javax.swing.JDialog {
         lblFiltro.setText("Filtrar:");
         pnlTableList.add(lblFiltro, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, 25));
 
-        btnNewActor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/add.png"))); // NOI18N
-        btnNewActor.setToolTipText("Registrar nuevo actor");
-        btnNewActor.setFocusable(false);
-        btnNewActor.addActionListener(new java.awt.event.ActionListener() {
+        btnNewAutor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/add.png"))); // NOI18N
+        btnNewAutor.setToolTipText("Registrar nuevo actor");
+        btnNewAutor.setFocusable(false);
+        btnNewAutor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnNewActorActionPerformed(evt);
+                btnNewAutorActionPerformed(evt);
             }
         });
 
-        btnDelActor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/borrar.png"))); // NOI18N
-        btnDelActor.setToolTipText("Borrar actor");
-        btnDelActor.setFocusable(false);
-        btnDelActor.addActionListener(new java.awt.event.ActionListener() {
+        btnDelAutor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/borrar.png"))); // NOI18N
+        btnDelAutor.setToolTipText("Borrar actor");
+        btnDelAutor.setFocusable(false);
+        btnDelAutor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDelActorActionPerformed(evt);
+                btnDelAutorActionPerformed(evt);
             }
         });
 
-        btnEditActor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/editar.png"))); // NOI18N
-        btnEditActor.setToolTipText("Editar actor");
-        btnEditActor.setFocusable(false);
-        btnEditActor.addActionListener(new java.awt.event.ActionListener() {
+        btnEditAutor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/editar.png"))); // NOI18N
+        btnEditAutor.setToolTipText("Editar actor");
+        btnEditAutor.setFocusable(false);
+        btnEditAutor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEditActorActionPerformed(evt);
+                btnEditAutorActionPerformed(evt);
             }
         });
 
@@ -168,11 +171,11 @@ public class AddActores extends javax.swing.JDialog {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnNewActor, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnNewAutor, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(btnEditActor, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnEditAutor, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(13, 13, 13)
-                        .addComponent(btnDelActor, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnDelAutor, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -182,16 +185,17 @@ public class AddActores extends javax.swing.JDialog {
                 .addComponent(pnlTableList, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnNewActor, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnNewAutor, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnDelActor, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnEditActor, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnDelAutor, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnEditAutor, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    // Agrega a la tabla de AUTORIA al autor seleccionado para el libro actual
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         // Accion del boton aceptar
         // Verifica si se selecciono un elemento de la tabla
@@ -199,19 +203,19 @@ public class AddActores extends javax.swing.JDialog {
             // Suena un beep
             Toolkit.getDefaultToolkit().beep();
             // Muestra un mensage de aviso
-            JOptionPane.showMessageDialog(this, "Seleccione un actor.", "Aviso",2);            
+            JOptionPane.showMessageDialog(this, "Seleccione un autor", "Aviso", 2);            
         }
         else{      
-            // Toma el id y guarda el actor en a tabla de casting y guarda el casting
-            idActor = actorsLista[tableList.getSelectedRow()][0].toString();
-            Object[] cast = new Object[2];
-            cast[0]= idFilm;
-            cast [1] = idActor;
-            int result = daoActor.saveCasting(cast);
+            // Toma el id y guarda el autor en a tabla de autoria y guarda la autoria
+            autor_id = lista_autores[tableList.getSelectedRow()][0].toString();
+            Object[] autoria = new Object[2];
+            autoria[0]= libro_id;
+            autoria[1] = autor_id;
+            int result = autor_dao.SaveAutoria(autoria);
             if (result == 0){
                 // Suena un beep
                 Toolkit.getDefaultToolkit().beep();
-                JOptionPane.showMessageDialog(this, "Error al guardar el reparto. ", "Error",0);                                
+                JOptionPane.showMessageDialog(this, "Error al guardar la autoria", "Error", 0);                                
             }
             else{
                 // Cierra la ventana
@@ -221,6 +225,7 @@ public class AddActores extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_btnGuardarActionPerformed
 
+    // Agrega al autor selecciona a la AUTORIA al dar doble click en este
     private void tableListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableListMouseClicked
         /* 
             Cuando el usuario da doble click en una fila de la tabla hace la 
@@ -231,82 +236,84 @@ public class AddActores extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_tableListMouseClicked
 
-    private void btnNewActorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewActorActionPerformed
-        // Abre la ventana para agregar actor
-        // Ventana para agregar o editar actor
-        AddNewActor addNewActor = new AddNewActor(parent, true);        
+    // Abre una ventana que posibilida crear un AUTOR
+    private void btnNewAutorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewAutorActionPerformed
+        AddNewAutor add_new_autor = new AddNewAutor(parent, true);        
         // Localizacvión de la ventana        
-        addNewActor.setLocationRelativeTo(this);
+        add_new_autor.setLocationRelativeTo(this);
         // hace visible la ventana
-        addNewActor.setVisible(true);        
-        llenaTabla();
+        add_new_autor.setVisible(true);        
+        LlenaTabla();
         // cuando cierra la ventana agrega el actor a la tabla y lo selecciona
-        UtilsTable.mueveTabla(tableList, UtilsTable.getRow(actorsLista, addNewActor.idActor));
-    }//GEN-LAST:event_btnNewActorActionPerformed
+        UtilsTable.mueveTabla(tableList, UtilsTable.getRow(lista_autores, add_new_autor.autor_id));
+    }//GEN-LAST:event_btnNewAutorActionPerformed
 
+    // Llena la tabla de autores cada que se escribe una letra
     private void txtFiltroKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFiltroKeyReleased
         // Filtra actores  
-        llenaTabla();
+        LlenaTabla();
     }//GEN-LAST:event_txtFiltroKeyReleased
 
-    private void btnDelActorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelActorActionPerformed
+    // Elimina al autor seleccionado de la tabla de AUTOR
+    private void btnDelAutorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelAutorActionPerformed
         // Eliminar un registro
         // si no selecciona fila, le avisa al usuario
         if (tableList.getSelectedRow() < 0){
              // suena un beep
             java.awt.Toolkit.getDefaultToolkit().beep();
-            javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila.","Aviso",2);
+            javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila","Aviso", 2);
         }
         else{
             // suena un beep
             java.awt.Toolkit.getDefaultToolkit().beep();
             // pregunta si quiere eliminar el registro y camtura la respuesta
-            int res = javax.swing.JOptionPane.showConfirmDialog(this, "¿Eliminar " + actorsLista[tableList.getSelectedRow()][1].toString() + "?",
+            int res = javax.swing.JOptionPane.showConfirmDialog(this, "¿Eliminar " + lista_autores[tableList.getSelectedRow()][1].toString() + "?",
                  "Seleccione", JOptionPane.YES_NO_OPTION);
             // evalua la respuesta 
             if (res == 0){
                 String msj = "";
                 // si la respuesta es afirmativa, elimina el registro
-                int ret = daoActor.delete(tableList.getValueAt(tableList.getSelectedRow(), 0).toString());
+                int ret = autor_dao.DeleteAutor(tableList.getValueAt(tableList.getSelectedRow(), 0).toString());
                 if (ret == 1){
                     msj = "No se pudo eliminar por que tiene registros asignados.";
                     javax.swing.JOptionPane.showMessageDialog(this, msj,"Información",1);
                 }                
                 // Reinicia controles y parametros
-                llenaTabla();
+                LlenaTabla();
             }
         }
-    }//GEN-LAST:event_btnDelActorActionPerformed
+    }//GEN-LAST:event_btnDelAutorActionPerformed
 
-    private void btnEditActorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActorActionPerformed
+    // Abre una ventana para poder editar al autor seleccionado
+    private void btnEditAutorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditAutorActionPerformed
         // Botón que edita el registro selecionado de la tabla
         if (tableList.getSelectedRow() < 0){
             // Suena un beep
             Toolkit.getDefaultToolkit().beep();
-            javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila.","Información",1);
+            javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila", "Información", 1);
         }
         else{
             // Obtiene el id del actor seleccionado
-            idActor = tableList.getValueAt(tableList.getSelectedRow(), 0).toString();
+            autor_id = tableList.getValueAt(tableList.getSelectedRow(), 0).toString();
             // Abre la ventana para editar actor
             // Ventana para editar actor
-            AddNewActor editActor = new AddNewActor(parent, true);        
+            AddNewAutor edit_autor = new AddNewAutor(parent, true);        
             // Localización de la ventana
-            editActor.setLocationRelativeTo(this);            
-            editActor.setEditId(idActor);
+            edit_autor.setLocationRelativeTo(this);            
+            edit_autor.SetEditId(autor_id);
             // hace visible la ventana
-            editActor.setVisible(true);
-            llenaTabla();
+            edit_autor.setVisible(true);
+            LlenaTabla();
             // cuando cierra la ventana agrega el actor a la tabla y lo selecciona
-            UtilsTable.mueveTabla(tableList, UtilsTable.getRow(actorsLista, editActor.idActor));
+            UtilsTable.mueveTabla(tableList, UtilsTable.getRow(lista_autores, edit_autor.autor_id));
         }
-    }//GEN-LAST:event_btnEditActorActionPerformed
+    }//GEN-LAST:event_btnEditAutorActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnDelActor;
-    private javax.swing.JButton btnEditActor;
+    private javax.swing.JButton btnDelAutor;
+    private javax.swing.JButton btnEditAutor;
     private javax.swing.JButton btnGuardar;
-    private javax.swing.JButton btnNewActor;
+    private javax.swing.JButton btnNewAutor;
     private javax.swing.JLabel lblFiltro;
     private javax.swing.JPanel pnlTableList;
     private javax.swing.JScrollPane scpTableList;

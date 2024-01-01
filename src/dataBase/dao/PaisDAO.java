@@ -101,10 +101,10 @@ public class PaisDAO extends Conexion {
            ps = conn.prepareStatement(sentenciaSQL);
            rs = ps.executeQuery();
            
-           // Agregar a todos los paises al arreglo (migrar de rs a actores)
+           // Agregar a todos los paises al arreglo (migrar de rs a paises)
            while (rs.next()){
-               paises[i][0]=(rs.getString(1));
-               paises[i][1]=(rs.getString(2));  
+               paises[i][0]=(rs.getString(1));  // Id del pais
+               paises[i][1]=(rs.getString(2));  // Nombre del pais
                i++;
             }           
            return paises;

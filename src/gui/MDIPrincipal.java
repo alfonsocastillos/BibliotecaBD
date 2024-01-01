@@ -14,31 +14,31 @@ import tools.UtilsGUI;
  */
 public class MDIPrincipal extends javax.swing.JFrame {
     // Para guardar los ids y ponerlos en los registros
-    String idEmpleado;
-    String idTienda;
+    String id_empleado;
+    String id_sucursal;
     // Para guardar los nombres de la tienda y empleado para mostralos
     // en la interfaz
-    String store;
-    String employeeName;
+    String sucursal;
+    String empleado_nombre;
     // Declara las ventanas
     Peliculas vtnPeliculas;
     Renta vtnRenta;
 
     /**
      * Creates new form MDIPrincipal
-     * @param idTienda
-     * @param idEmpleado
-     * @param store
-     * @param employeeName
+     * @param id_sucursal
+     * @param id_empleado
+     * @param sucursal
+     * @param empleado_nombre
      */
-    public MDIPrincipal(String idTienda, String idEmpleado, String store, String employeeName) { 
+    public MDIPrincipal(String id_sucursal, String id_empleado, String sucursal, String empleado_nombre) { 
         // Obtiene los valores que consultó la ventana de inicio de sesión 
-        this.idTienda = idTienda;
-        this.idEmpleado = idEmpleado;
-        // Nombre de la tienda
-        this.store = store;
+        this.id_sucursal = id_sucursal;
+        this.id_empleado = id_empleado;
+        // Nombre de la sucursal
+        this.sucursal = sucursal;
         // Nombre del empleado
-        this.employeeName = employeeName;
+        this.empleado_nombre = empleado_nombre;
         
         // inicia todos los componentes
         initComponents();        
@@ -46,8 +46,8 @@ public class MDIPrincipal extends javax.swing.JFrame {
         configComponents();      
         
         // Muestra en nombre de la tienda y de empleado en la parte inferior
-        lblTienda. setText(" Tienda: " + store);
-        lblEmpleado. setText(" Empleado: " + employeeName);
+        lblSucursal. setText(" Sucursal: " + sucursal);
+        lblEmpleado. setText(" Empleado: " + empleado_nombre);
     }
     
     private void configComponents(){
@@ -59,7 +59,7 @@ public class MDIPrincipal extends javax.swing.JFrame {
         setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
         // Instancia las ventanas
         vtnPeliculas = new Peliculas();
-        vtnRenta = new Renta(idEmpleado,idTienda, employeeName);
+        vtnRenta = new Renta(id_empleado,id_sucursal, empleado_nombre);
         // Agrega las ventanas al panel
         desktopPane.add(vtnPeliculas);
         desktopPane.add(vtnRenta);
@@ -111,7 +111,7 @@ public class MDIPrincipal extends javax.swing.JFrame {
         btnPelicula = new javax.swing.JButton();
         barVent = new javax.swing.JToolBar();
         sptDown = new javax.swing.JSplitPane();
-        lblTienda = new javax.swing.JLabel();
+        lblSucursal = new javax.swing.JLabel();
         lblEmpleado = new javax.swing.JLabel();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
@@ -179,9 +179,11 @@ public class MDIPrincipal extends javax.swing.JFrame {
 
         sptDown.setDividerLocation(250);
 
-        lblTienda.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        lblTienda.setText(" Tienda:");
-        sptDown.setLeftComponent(lblTienda);
+        lblSucursal.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        lblSucursal.setText("Sucursal: ");
+        lblSucursal.setToolTipText("");
+        sptDown.setLeftComponent(lblSucursal);
+        lblSucursal.getAccessibleContext().setAccessibleDescription("");
 
         lblEmpleado.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         lblEmpleado.setText(" Empleado:");
@@ -339,7 +341,7 @@ public class MDIPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenu helpMenu;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel lblEmpleado;
-    private javax.swing.JLabel lblTienda;
+    private javax.swing.JLabel lblSucursal;
     private javax.swing.JMenuItem menuAcercaDe;
     private javax.swing.JMenuItem menuActor;
     private javax.swing.JMenuItem menuAyuda;

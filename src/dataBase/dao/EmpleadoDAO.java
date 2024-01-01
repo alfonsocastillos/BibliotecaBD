@@ -13,7 +13,7 @@ import java.sql.*;
 
 public class EmpleadoDAO extends Conexion {
     
-    public Object[] getEmployeeByUsr(String usr, char psw[]){
+    public Object[] GetEmpleadoByUsr(String usr, char psw[]){
         // Busca un empleado usando como parametro su usuario y contraseña
         // Se conecta a la base de datos
        conectar();
@@ -22,7 +22,7 @@ public class EmpleadoDAO extends Conexion {
        try{       
             employee = new Object[5];
             // consulta
-            sentenciaSQL  = "SELECT empleado_id, sucursal_id, sucursal.nombre, empleado.nombre, apellido_pat, apellido_mat " +
+            sentenciaSQL  = "SELECT empleado_id, sucursal_id, sucursal.nombre, empleado.nombre, apellido_pat || ' ' || apellido_mat " +
                             "FROM empleado " +
                             "JOIN sucursal USING (sucursal_id) " +
                             "WHERE usuario LIKE ? " +
@@ -34,24 +34,24 @@ public class EmpleadoDAO extends Conexion {
             rs = ps.executeQuery();
             if (rs.next()){
                 // Recupera los valores
-                employee [0] = rs.getString(1);
-                employee [1] = rs.getString(2);
+                employee [0] = rs.getString(1);                
+                employee [1] = rs.getString(2);               
                 employee [2] = rs.getString(3);
                 employee [3] = rs.getString(4);
                 employee [4] = rs.getString(5);
-                employee [5] = rs.getString(6);
-                
             }
-            else 
+            else {
                 employee [0] = 0;
+            }
+                
             return employee;
-       }
-       catch (SQLException ex){
+        }
+        catch (SQLException ex){
            System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
-                    "\n\n" + sentenciaSQL + "\n\nUbicación: " + "getEmployeeByUsr");
+                    "\n\n" + sentenciaSQL + "\n\nUbicación: " + "GetEmpleadoByUsr");
             return null;
         }
-       finally{
+        finally{
            desconectar();           
        }
     }
