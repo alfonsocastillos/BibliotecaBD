@@ -1,7 +1,6 @@
 package gui.libro;
 
-import gui.pelicula.*;
-import dataBase.ReportePeliculasPDF;
+import dataBase.ReporteLibrosPDF;
 import dataBase.dao.AutorDAO;
 import dataBase.dao.GeneroDAO;
 import dataBase.dao.LibroDAO;
@@ -11,6 +10,8 @@ import dataBase.dao.EditorialDAO;
 import java.awt.Toolkit;
 import javax.swing.JOptionPane;
 import tools.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 /**
  *
@@ -34,7 +35,7 @@ public class Libros extends javax.swing.JInternalFrame {
     Object autores_lista[][];
     
     // Ventanas para agregar autores, editoriales y autorias
-    AddAutores add_autores;     // Para agregar (o crear) autores a la autoria 
+    AddAutores add_autor;     // Para agregar (o crear) autores a la autoria 
     AddIdioma add_dioma;        // Para crear, editar y eliminar idiomas
     AddPais add_pais;           // Para crear, editar y eliminar paises
     AddEditorial add_editorial; // Para crear, editar y eliminar editoriales
@@ -58,8 +59,8 @@ public class Libros extends javax.swing.JInternalFrame {
         editorial_dao = new EditorialDAO();
         
         // Instanciando ventanas para agregar idiomas, paises, editoriales y generos
-        addActores = new AddActores((java.awt.Frame)this.getParent(), true);
-        addDoblaje = new AddDoblaje((java.awt.Frame)this.getParent(), true);
+        add_autor = new AddAutores((java.awt.Frame)this.getParent(), true);
+        // addDoblaje = new AddDoblaje((java.awt.Frame)this.getParent(), true);
         // localización de la ventana
         setLocale(null);
         // llena los datos
@@ -146,7 +147,7 @@ public class Libros extends javax.swing.JInternalFrame {
         int[][] cellSize = {{0,0},
                             {1,170}};
         // pone los datos en la tabla
-        UtilsTable.llenaTabla(tableListActor, autores_lista, T_AUTORES, cellAlignment, cellSize);        
+        UtilsTable.llenaTabla(tableListAutor, autores_lista, T_AUTORES, cellAlignment, cellSize);        
     }
       
     // Valida si se llenaron los datos del libro antes de guardar
@@ -156,30 +157,30 @@ public class Libros extends javax.swing.JInternalFrame {
             txtTitulo.requestFocus();
             return false;
         }
-        else if (cmbIdioma.getSelectedIndex() < 1)
+        else if (cmbIdioma.getSelectedIndex() < 0)
         {
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione un idioma.", "Aviso", 2);
             cmbIdioma.requestFocus();
             return false;
         }
-        else if (cmbPais.getSelectedIndex() < 1)
+        else if (cmbPais.getSelectedIndex() < 0)
         {
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione un pais.", "Aviso", 2);
             cmbPais.requestFocus();
             return false;
         }
-        else if (cmbEditorial.getSelectedIndex() < 1)
+        else if (cmbEditorial.getSelectedIndex() < 0)
         {
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una editorial.", "Aviso", 2);
             cmbEditorial.requestFocus();
             return false;
         }
-        else if (txtEdicion.getText().trim().length() == 0){
-            javax.swing.JOptionPane.showMessageDialog(this, "Introduzca el año.", "Aviso", 2);
-            txtEdicion.requestFocus();
+        else if (txtAnio.getText().trim().length() == 0){            
+            javax.swing.JOptionPane.showMessageDialog(this, "Introduzca el año.", "Aviso", 2);            
+            txtAnio.requestFocus();
             return false;
         }
-        else if (cmbGenero.getSelectedIndex() < 1)
+        else if (cmbGenero.getSelectedIndex() < 0)
         {
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione un genero.", "Aviso", 2);
             cmbGenero.requestFocus();
@@ -205,7 +206,9 @@ public class Libros extends javax.swing.JInternalFrame {
         cmbIdioma.setSelectedIndex(-1);
         cmbPais.setSelectedIndex(-1);
         cmbEditorial.setSelectedIndex(-1);
+        cmbGenero.setSelectedIndex(-1);
         txtEdicion.setText("");
+        txtAnio.setText("");
         cmbGenero.setSelectedIndex(0);
         txtPags.setText("");
         editando = false;
@@ -235,10 +238,10 @@ public class Libros extends javax.swing.JInternalFrame {
         lblDiasR = new javax.swing.JLabel();
         lblGenero1 = new javax.swing.JLabel();
         cmbPais = new javax.swing.JComboBox<>();
-        txtPags = new javax.swing.JTextField();
         cmbIdioma = new javax.swing.JComboBox<>();
         cmbEditorial = new javax.swing.JComboBox<>();
         lblAnio = new javax.swing.JLabel();
+        txtPags = new javax.swing.JTextField();
         txtAnio = new javax.swing.JTextField();
         pnlTableList = new javax.swing.JPanel();
         scpTableList = new javax.swing.JScrollPane();
@@ -253,10 +256,10 @@ public class Libros extends javax.swing.JInternalFrame {
         lblCantidad = new javax.swing.JLabel();
         pnlTableList1 = new javax.swing.JPanel();
         scpTableList1 = new javax.swing.JScrollPane();
-        tableListActor = new javax.swing.JTable();
+        tableListAutor = new javax.swing.JTable();
         btnAddAutoria = new javax.swing.JButton();
         btnRmveAutoria = new javax.swing.JButton();
-        btnAddFilm = new javax.swing.JButton();
+        btnAddLibro = new javax.swing.JButton();
         btnGuarda = new javax.swing.JButton();
         btnEdit = new javax.swing.JButton();
         btnCancela = new javax.swing.JButton();
@@ -338,10 +341,6 @@ public class Libros extends javax.swing.JInternalFrame {
         cmbPais.setNextFocusableComponent(cmbGenero);
         pnlPelicula.add(cmbPais, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 110, 250, -1));
 
-        txtPags.setFont(new java.awt.Font("C059", 0, 12)); // NOI18N
-        pnlPelicula.add(txtPags, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 150, -1, -1));
-        txtPags.getAccessibleContext().setAccessibleName("");
-
         cmbIdioma.setNextFocusableComponent(cmbGenero);
         cmbIdioma.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -356,6 +355,11 @@ public class Libros extends javax.swing.JInternalFrame {
         lblAnio.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblAnio.setText("Año:");
         pnlPelicula.add(lblAnio, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 30, -1, 20));
+
+        txtPags.setDocument(new InputType(InputType.TIPO_SOLO_NUMEROS, 4, false, false));
+        txtPags.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        txtPags.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        pnlPelicula.add(txtPags, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 150, 60, 20));
 
         txtAnio.setDocument(new InputType(InputType.TIPO_SOLO_NUMEROS, 4, false, false));
         txtAnio.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -451,8 +455,8 @@ public class Libros extends javax.swing.JInternalFrame {
 
         scpTableList1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-        tableListActor.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        tableListActor.setModel(new javax.swing.table.DefaultTableModel(
+        tableListAutor.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        tableListAutor.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -460,7 +464,7 @@ public class Libros extends javax.swing.JInternalFrame {
 
             }
         ));
-        scpTableList1.setViewportView(tableListActor);
+        scpTableList1.setViewportView(tableListAutor);
 
         pnlTableList1.add(scpTableList1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, 170, 100));
 
@@ -484,19 +488,19 @@ public class Libros extends javax.swing.JInternalFrame {
         });
         pnlTableList1.add(btnRmveAutoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 40, 30, 30));
 
-        btnAddFilm.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/add_libro.png"))); // NOI18N
-        btnAddFilm.setFocusable(false);
-        btnAddFilm.addMouseListener(new java.awt.event.MouseAdapter() {
+        btnAddLibro.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/add_libro.png"))); // NOI18N
+        btnAddLibro.setFocusable(false);
+        btnAddLibro.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnAddFilmMouseEntered(evt);
+                btnAddLibroMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnAddFilmMouseExited(evt);
+                btnAddLibroMouseExited(evt);
             }
         });
-        btnAddFilm.addActionListener(new java.awt.event.ActionListener() {
+        btnAddLibro.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAddFilmActionPerformed(evt);
+                btnAddLibroActionPerformed(evt);
             }
         });
 
@@ -582,7 +586,7 @@ public class Libros extends javax.swing.JInternalFrame {
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btnAddFilm, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnAddLibro, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnGuarda, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -598,7 +602,7 @@ public class Libros extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(7, 7, 7)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnAddFilm, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAddLibro, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnGuarda, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnCancela, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -631,21 +635,21 @@ public class Libros extends javax.swing.JInternalFrame {
     private void btnGuardaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardaActionPerformed
         //  Guarda y actualiza los datos        
         if (EstanLlenos()){
-            Object idioma_id = idioma_dao.GetIdiomasByNombre(cmbIdioma.getSelectedItem().toString())[0][1];
-            Object genero_id = genero_dao.GetGenerosByNombre(cmbGenero.getSelectedItem().toString())[0][1];
-            Object pais_id = pais_dao.GetPaisesByNombre(cmbPais.getSelectedItem().toString())[0][1];
-            Object editorial_id = editorial_dao.GetEditorialByNombre(cmbEditorial.getSelectedItem().toString())[0][1];
+            Object idioma_id = idioma_dao.GetIdiomasByNombre(cmbIdioma.getSelectedItem().toString())[0][0];
+            Object genero_id = genero_dao.GetGenerosByNombre(cmbGenero.getSelectedItem().toString())[0][0];
+            Object pais_id = pais_dao.GetPaisesByNombre(cmbPais.getSelectedItem().toString())[0][0];
+            Object editorial_id = editorial_dao.GetEditorialByNombre(cmbEditorial.getSelectedItem().toString())[0][0];
             
             // guarda los valores de los controles en un arreglo de objetos 
             Object [] libro = new Object[9];                            // (TITULO, EDICION, ANIO, NUM_PAGS, IDIOMA_ID, GENERO_ID, PAIS_ID, EDITORIAL_ID)
             libro[0] = libro_id;
             libro[1] = txtTitulo.getText().trim();                      // Titulo
-            libro[2] = Integer.parseInt(txtEdicion.getText().trim());   // Edicion 
-            libro[3] = Integer.parseInt(txtAnio.getText().trim());      // Año
-            libro[4] = Integer.parseInt(txtPags.getText().trim());      // No. paginas
-            libro[5] = Integer.parseInt(idioma_id.toString());          // Id idioma
-            libro[6] = Integer.parseInt(genero_id.toString());          // Id genero
-            libro[7] = Integer.parseInt(pais_id.toString());            // Id pais
+            libro[2] = Integer.valueOf(txtEdicion.getText().trim());    // Edicion 
+            libro[3] = Integer.valueOf(txtAnio.getText().trim());       // Año
+            libro[4] = Integer.valueOf(txtPags.getText().trim());       // No. paginas
+            libro[5] = (Integer) idioma_id;                             // Id idioma
+            libro[6] = (Integer) genero_id;                             // Id genero
+            libro[7] = (Integer) pais_id;                               // Id pais
             libro[8] = editorial_id.toString();                         // Id editorial
                         
             if (editando){  // Si está actualizando
@@ -659,13 +663,15 @@ public class Libros extends javax.swing.JInternalFrame {
                 libro_id = libro_dao.SaveLibro(libro);
             }
             
-            // Si el id no es 0, procesde a llenar los demas datos
+            // Si el id no es 0, procede a llenar los demas datos
             if (libro_id != 0){                
+                javax.swing.JOptionPane.showMessageDialog(this, "Datos guardados con éxito.", "Información", 1);
                 LlenaTablaLibros();
                 UtilsTable.mueveTabla(tableList, UtilsTable.getRow(libros_lista, libro_id));
                 editando = true;
                 btnCancela.setEnabled(true);
                 txtTitulo.requestFocus();
+                CancelaEdit();
             }
             else
                 javax.swing.JOptionPane.showMessageDialog(this, "Error al guardar.","Error",1);
@@ -701,145 +707,148 @@ public class Libros extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_btnEditActionPerformed
 
+    // Cancela la edición y reinicia controles y parametros
     private void btnCancelaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelaActionPerformed
-        // Cancela la edición  y reinicia controles y parametros
         CancelaEdit();
         tableList.clearSelection();
-        llenaTablaActores();
-        llenaTablaDoblaje();
+        LlenaTablaAutores();
     }//GEN-LAST:event_btnCancelaActionPerformed
 
+    // Borra el libro seleccionado
     private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
-        // Eliminar un registro
-        // si no selecciona fila, le avisa al usuario
         if (tableList.getSelectedRow() < 0)
-            javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila.","Aviso",2);
+            javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila.", "Aviso", 2);
         else{
             // suena un beep
             java.awt.Toolkit.getDefaultToolkit().beep();
             // pregunta si quiere eliminar el registro y camtura la respuesta
-            int res = javax.swing.JOptionPane.showConfirmDialog(this, "¿Eliminar " + filmsLista[tableList.getSelectedRow()][1].toString() + "?",
+            int res = javax.swing.JOptionPane.showConfirmDialog(this, "¿Eliminar " + libros_lista[tableList.getSelectedRow()][1].toString() + "?",
                  "Seleccione", JOptionPane.YES_NO_OPTION);
             // evalua la respuesta 
             if (res == 0){
                 String msj = "";
                 // si la respuesta es afirmativa, elimina el registro
-                int ret = daoFilm.deleteFilm(tableList.getValueAt(tableList.getSelectedRow(), 0).toString());
+                int ret = libro_dao.DeleteLibro(libro_id);
                 if (ret == 0){
-                    msj = "Se eliminó la pelicula.";
+                    msj = "Se eliminó el libro.";
                 }
                 else if (ret == 1){
                     msj = "No se pudo eliminar por que tiene registros asignados.";
                 }
                 // suena un beep
                 java.awt.Toolkit.getDefaultToolkit().beep();
-                javax.swing.JOptionPane.showMessageDialog(this, msj,"Información",1);
+                javax.swing.JOptionPane.showMessageDialog(this, msj, "Información", 1);
                 // Reinicia controles y parametros
-                llenaTablaPeliculas();
-                llenaTablaActores();
-                llenaTablaDoblaje();
-                cancelaEdit();
+                LlenaTablaLibros();
+                LlenaTablaAutores();                
+                CancelaEdit();
                 txtTitulo.requestFocus();
-            }        }
+            }        
+        }
     }//GEN-LAST:event_btnBorrarActionPerformed
 
-    private void btnAddFilmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddFilmActionPerformed
-        // Limpia para agragar un alumno
-        cancelaEdit();
+    // Limpia los campos del libro para poder escribir
+    private void btnAddLibroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddLibroActionPerformed
+        CancelaEdit();
         tableList.clearSelection();
-        llenaTablaActores();
-        llenaTablaDoblaje();
-    }//GEN-LAST:event_btnAddFilmActionPerformed
+        LlenaTablaAutores();        
+    }//GEN-LAST:event_btnAddLibroActionPerformed
 
+    // Llena los campos con el libro seleccionado
     private void tableListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableListMouseClicked
-        // Muestra el alumno seleccionado con dos click en la tabla
         // Muestra un ballon si es necesarios
         if (evt.getClickCount() == 2)
             btnEditActionPerformed(null);
     }//GEN-LAST:event_tableListMouseClicked
 
+    // Abre una ventana con el reporte de los libros dentro de la app
+    // TODO: implementar el reporte Libros
     private void btnReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteActionPerformed
         // genera reporte de peliculas
-        VentanaReportePeliculas reportePeliculas = new VentanaReportePeliculas();
-        reportePeliculas.setVisible(true);
+        VentanaReporteLibros reporte_libros = new VentanaReporteLibros();
+        reporte_libros.setVisible(true);
     }//GEN-LAST:event_btnReporteActionPerformed
 
+    // Crea un docuemento PDF con el reporte de los libros en el lector PDF
+    // TODO: implementar el reporte Libros
     private void btnReportePDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportePDFActionPerformed
         // genera y ejecuta el reporte en PDF
-        ReportePeliculasPDF reporte = new ReportePeliculasPDF();
+        ReporteLibrosPDF reporte = new ReporteLibrosPDF();
         reporte.genReport();
     }//GEN-LAST:event_btnReportePDFActionPerformed
-
+    
+    // Llena la tabla de libros cada que se presiona una tecla en el filtro
     private void txtFiltroKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFiltroKeyReleased
-        // Filtra
-        llenaTablaPeliculas();
+        LlenaTablaLibros();
     }//GEN-LAST:event_txtFiltroKeyReleased
 
+    // Borra el texto del filtro y llena la tabla
     private void btnBorrarFiltroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarFiltroActionPerformed
-        // Borra el filtro de busqyeda
         txtFiltro.setText("");
-        llenaTablaPeliculas();
+        LlenaTablaLibros();
     }//GEN-LAST:event_btnBorrarFiltroActionPerformed
 
-    private void btnAddFilmMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAddFilmMouseEntered
+    // Despliega un texto cuando se pone el mouse encima del botón
+    private void btnAddLibroMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAddLibroMouseEntered
         // Tool tip text de la librería ballontip
-        UtilsGUI.showBallonAviso(btnAddFilm, "Agregar nueva pelicula.", false);
-    }//GEN-LAST:event_btnAddFilmMouseEntered
+        UtilsGUI.showBallonAviso(btnAddLibro, "Agregar nuevo libro.", false);
+    }//GEN-LAST:event_btnAddLibroMouseEntered
 
-    private void btnAddFilmMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAddFilmMouseExited
+    // Oculta el texto cuando el mouse deja de estar encima
+    private void btnAddLibroMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAddLibroMouseExited
         // Quitar ballontip
         UtilsGUI.hideBallonTxt();
-    }//GEN-LAST:event_btnAddFilmMouseExited
+    }//GEN-LAST:event_btnAddLibroMouseExited
 
+    // Cancela edición, reinicia los parámetros y limpia al cerrar la ventana
     private void formInternalFrameClosing(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameClosing
-        // limpia todo al cerrar la ventana
-        // Cancela la edición  y reinicia controles y parametros
-        cancelaEdit();
+        CancelaEdit();
         tableList.clearSelection();
         txtFiltro.setText("");
-        llenaTablaPeliculas();
-        llenaTablaActores();
-        llenaTablaDoblaje();       
+        LlenaTablaLibros();
+        LlenaTablaAutores();               
     }//GEN-LAST:event_formInternalFrameClosing
-
+    
+    // No se usa
     private void cmbIdiomaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbIdiomaActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_cmbIdiomaActionPerformed
 
+    // Borra a un autor de un libro
     private void btnRmveAutoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRmveAutoriaActionPerformed
-        // Borra reparto
         // Verifica si se selecciono un elemento de la tabla
-        if (tableListActor.getSelectedRow() < 0){
+        if (tableListAutor.getSelectedRow() < 0){
             // Suena un beep
             Toolkit.getDefaultToolkit().beep();
             // Muestra un mensage de aviso
-            JOptionPane.showMessageDialog(this, "Seleccione un actor.", "Aviso",2);
+            JOptionPane.showMessageDialog(this, "Seleccione un autor.", "Aviso", 2);
         }
         else{
             // suena un beep
             java.awt.Toolkit.getDefaultToolkit().beep();
             // pregunta si quiere eliminar el registro y camtura la respuesta
-            int res = javax.swing.JOptionPane.showConfirmDialog(this, "¿Eliminar " + actorsLista[tableListActor.getSelectedRow()][1].toString() + "?",
+            int res = javax.swing.JOptionPane.showConfirmDialog(this, "¿Eliminar " + autores_lista[tableListAutor.getSelectedRow()][1].toString() + "?",
                 "Seleccione", JOptionPane.YES_NO_OPTION);
             // evalua la respuesta
             if (res == 0){
                 String msj = "";
                 // si la respuesta es afirmativa, elimina el registro
-                String idActor = tableListActor.getValueAt(tableListActor.getSelectedRow(), 0).toString();
-                int ret = daoActor.deleteCasting(id,idActor);
+                String autor_id = tableListAutor.getValueAt(tableListAutor.getSelectedRow(), 0).toString();
+                int ret = autor_dao.DeleteAutoria(autor_id, libro_id);
                 if (ret == 1){
                     msj = "No se pudo eliminar por que tiene egistros asignados.";
                     // suena un beep
                     java.awt.Toolkit.getDefaultToolkit().beep();
-                    javax.swing.JOptionPane.showMessageDialog(this, msj,"Información",1);
+                    javax.swing.JOptionPane.showMessageDialog(this, msj, "Información", 1);
                 }
 
                 // Reinicia controles y parametros
-                llenaTablaActores();
+                LlenaTablaAutores();
             }
         }
     }//GEN-LAST:event_btnRmveAutoriaActionPerformed
 
+    // Abre una ventana para agregar a un autor a la autoria de un libro
     private void btnAddAutoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddAutoriaActionPerformed
         // Agregar casting
         // Verifica si esta editando una pelicula
@@ -847,18 +856,17 @@ public class Libros extends javax.swing.JInternalFrame {
             // Suena un beep
             Toolkit.getDefaultToolkit().beep();
             // Muestra un mensage de aviso
-            JOptionPane.showMessageDialog(this, "Para agregar actores primero guarde\no edite una pelicula.", "Aviso",2);
+            JOptionPane.showMessageDialog(this, "Para agregar actores primero guarde\nNo edite un libro.", "Aviso", 2);
         }
-        else{
-            // Abre la ventana para agregar actores
-            // Asigna el id de la pelicula
-            addActores.setIdFilm(id);
-            // Localizacvión de la ventana
-            addActores.setLocationRelativeTo(this);
+        else{   // Abre la ventana para agregar autores            
+            // Asigna el id de la pelicula            
+            add_autor.SetLibroId(libro_id);                                   
+            // Localización de la ventana
+            add_autor.setLocationRelativeTo(this);
             // hace visible la ventana
-            addActores.setVisible(true);
+            add_autor.setVisible(true);
             // cuando cierra la ventana agrega el actor seleccionada a la tabla de actores
-            llenaTablaActores();
+            LlenaTablaAutores();
         }
     }//GEN-LAST:event_btnAddAutoriaActionPerformed
 
@@ -869,7 +877,7 @@ public class Libros extends javax.swing.JInternalFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddAutoria;
-    private javax.swing.JButton btnAddFilm;
+    private javax.swing.JButton btnAddLibro;
     private javax.swing.JButton btnBorrar;
     private javax.swing.JButton btnBorrarFiltro;
     private javax.swing.JButton btnCancela;
@@ -908,7 +916,7 @@ public class Libros extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane scpTableList;
     private javax.swing.JScrollPane scpTableList1;
     private javax.swing.JTable tableList;
-    private javax.swing.JTable tableListActor;
+    private javax.swing.JTable tableListAutor;
     private javax.swing.JTextField txtAnio;
     private javax.swing.JTextField txtEdicion;
     private javax.swing.JTextField txtFiltro;

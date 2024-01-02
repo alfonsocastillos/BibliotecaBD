@@ -1,7 +1,7 @@
 package gui;
 
-import gui.renta.Renta;
-import gui.pelicula.Peliculas;
+// import gui.renta.Renta;
+import gui.libro.Libros;
 import java.awt.Dimension;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
@@ -21,8 +21,8 @@ public class MDIPrincipal extends javax.swing.JFrame {
     String sucursal;
     String empleado_nombre;
     // Declara las ventanas
-    Peliculas vtnPeliculas;
-    Renta vtnRenta;
+    Libros vtn_libros;
+    // Renta vtnRenta;
 
     /**
      * Creates new form MDIPrincipal
@@ -55,14 +55,14 @@ public class MDIPrincipal extends javax.swing.JFrame {
         UtilsGUI.setLookAndFeel(this);
         // Localización de la ventana en la pantalla 
         setLocationRelativeTo(this.getParent());    
-        //Ventana maximizada
+        // Ventana maximizada
         setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
         // Instancia las ventanas
-        vtnPeliculas = new Peliculas();
-        vtnRenta = new Renta(id_empleado,id_sucursal, empleado_nombre);
+        vtn_libros = new Libros();
+        //vtnRenta = new Renta(id_empleado,id_sucursal, empleado_nombre);
         // Agrega las ventanas al panel
-        desktopPane.add(vtnPeliculas);
-        desktopPane.add(vtnRenta);
+        desktopPane.add(vtn_libros);
+        //desktopPane.add(vtnRenta);
         pack(); // Ajusta el tamaño de la ventana al preferido por sus componentes internos
     }
       
@@ -73,7 +73,7 @@ public class MDIPrincipal extends javax.swing.JFrame {
         frame.setLocation((desktopSize.width - frameSize.width)/2, (desktopSize.height- frameSize.height)/2);
     }
        
-    private void abreRenta (){        
+    /*private void abreRenta (){        
         if (!vtnRenta.isVisible()){
             // Posiciona la ventana
             setLocation(vtnRenta);
@@ -82,17 +82,21 @@ public class MDIPrincipal extends javax.swing.JFrame {
         }// Si ya está abierta, la pone adelante
         else 
             vtnRenta.moveToFront();
-    }
+    }*/
     
-    private void abrePelicula(){
-        if (!vtnPeliculas.isVisible()){
+    private void AbreLibros(){
+        if (vtn_libros == null) {
+            vtn_libros = new Libros();
+        }
+        
+        if (!vtn_libros.isVisible()){
             // Posiciona la ventana
-            setLocation(vtnPeliculas);
+            setLocation(vtn_libros);
             //Abre la ventana pelicula
-            vtnPeliculas.setVisible(true);
+            vtn_libros.setVisible(true);
         }// Si ya está abierta, la pone adelante
         else
-            vtnPeliculas.moveToFront();
+            vtn_libros.moveToFront();
     }
 
     /**
@@ -108,7 +112,7 @@ public class MDIPrincipal extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         barraDeAcceso = new javax.swing.JToolBar();
         btnRenta = new javax.swing.JButton();
-        btnPelicula = new javax.swing.JButton();
+        btnLibros = new javax.swing.JButton();
         barVent = new javax.swing.JToolBar();
         sptDown = new javax.swing.JSplitPane();
         lblSucursal = new javax.swing.JLabel();
@@ -136,7 +140,7 @@ public class MDIPrincipal extends javax.swing.JFrame {
         desktopPane.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/fondo videoclub.png"))); // NOI18N
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/biblioteca_fondo.png"))); // NOI18N
 
         desktopPane.setLayer(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
@@ -153,7 +157,7 @@ public class MDIPrincipal extends javax.swing.JFrame {
 
         barraDeAcceso.setRollover(true);
 
-        btnRenta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/renta.png"))); // NOI18N
+        btnRenta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/prestamo_libro.png"))); // NOI18N
         btnRenta.setFocusable(false);
         btnRenta.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnRenta.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -164,16 +168,16 @@ public class MDIPrincipal extends javax.swing.JFrame {
         });
         barraDeAcceso.add(btnRenta);
 
-        btnPelicula.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/peliculas.png"))); // NOI18N
-        btnPelicula.setFocusable(false);
-        btnPelicula.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnPelicula.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btnPelicula.addActionListener(new java.awt.event.ActionListener() {
+        btnLibros.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/libros.png"))); // NOI18N
+        btnLibros.setFocusable(false);
+        btnLibros.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnLibros.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnLibros.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPeliculaActionPerformed(evt);
+                btnLibrosActionPerformed(evt);
             }
         });
-        barraDeAcceso.add(btnPelicula);
+        barraDeAcceso.add(btnLibros);
 
         barVent.setRollover(true);
 
@@ -183,7 +187,6 @@ public class MDIPrincipal extends javax.swing.JFrame {
         lblSucursal.setText("Sucursal: ");
         lblSucursal.setToolTipText("");
         sptDown.setLeftComponent(lblSucursal);
-        lblSucursal.getAccessibleContext().setAccessibleDescription("");
 
         lblEmpleado.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         lblEmpleado.setText(" Empleado:");
@@ -300,9 +303,9 @@ public class MDIPrincipal extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_menuExitActionPerformed
 
+    // Abrir la ventana de libros
     private void menuPeliculaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuPeliculaActionPerformed
-        // Accion del menu pelucula
-        abrePelicula();
+        AbreLibros();
     }//GEN-LAST:event_menuPeliculaActionPerformed
 
     private void menuActorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuActorActionPerformed
@@ -312,18 +315,18 @@ public class MDIPrincipal extends javax.swing.JFrame {
 
     private void menuRentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuRentaActionPerformed
         // Accion del menu renta
-        abreRenta();
+        // abreRenta();
     }//GEN-LAST:event_menuRentaActionPerformed
 
     private void btnRentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRentaActionPerformed
         // Accion del boton renta de la barra de accesos rapidos 
-        abreRenta();
+        // abreRenta();
     }//GEN-LAST:event_btnRentaActionPerformed
 
-    private void btnPeliculaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPeliculaActionPerformed
+    private void btnLibrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLibrosActionPerformed
         // Accion del boton pelicula de la barra de accesos rapidos 
-        abrePelicula();
-    }//GEN-LAST:event_btnPeliculaActionPerformed
+        AbreLibros();
+    }//GEN-LAST:event_btnLibrosActionPerformed
 
     /**
      * @param args the command line arguments
@@ -333,7 +336,7 @@ public class MDIPrincipal extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToolBar barVent;
     private javax.swing.JToolBar barraDeAcceso;
-    private javax.swing.JButton btnPelicula;
+    private javax.swing.JButton btnLibros;
     private javax.swing.JButton btnRenta;
     private javax.swing.JDesktopPane desktopPane;
     private javax.swing.JMenu editMenu;

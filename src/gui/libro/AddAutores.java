@@ -14,7 +14,7 @@ import tools.UtilsTable;
 public class AddAutores extends javax.swing.JDialog {
     // Para agregar el autores a un libro
     String autor_id;
-    String libro_id;
+    int libro_id;
     AutorDAO autor_dao;
     // Para listar todos los autores 
     Object lista_autores [][];  // Id, nombre
@@ -40,7 +40,7 @@ public class AddAutores extends javax.swing.JDialog {
     }
     
     // ? ? ? 
-    public void SetLibroId(String id_libro){   
+    public void SetLibroId(int id_libro){   
         // Asigna el id del libro
         this.libro_id = id_libro;
         txtFiltro.setText("");

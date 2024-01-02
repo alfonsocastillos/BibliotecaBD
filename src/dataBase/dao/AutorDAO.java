@@ -39,8 +39,8 @@ public class AutorDAO extends Conexion {
            
            // Agregar a todos los autores al arreglo (migrar de rs a actores)
            while (rs.next()){
-               autores[i][0]=(rs.getString(1));
-               autores[i][1]=(rs.getString(2));  
+               autores[i][0] = (rs.getString(1));
+               autores[i][1] = (rs.getString(2));  
                i++;
            }           
            return autores;
@@ -70,9 +70,9 @@ public class AutorDAO extends Conexion {
            
            // Llena el arreglo actor con el resultado
            while (rs.next()){
-               autor[0]=(rs.getString(1));
-               autor[1]=(rs.getString(2));  
-               autor[2]=(rs.getString(3));  
+               autor[0] = (rs.getString(1));
+               autor[1] = (rs.getString(2));  
+               autor[2] = (rs.getString(3));  
                i++;
            }           
            return autor;
@@ -160,13 +160,13 @@ public class AutorDAO extends Conexion {
             ps.setString(2, nombre_apellido);
             rs = ps.executeQuery();                     // Ejecuta la sentencia y la asigna al result set         
            
-           if (rs.next()){
-               count = rs.getInt(1);
-           }
+            if (rs.next()){
+                count = rs.getInt(1);
+            }
            
-           // Misma consulta, pero ahora puede ser guardada en el arreglo
-           autores = new Object[count][2];                      
-            sentenciaSQL =  "SELECT AUTOR_ID, NOMBRE || ' ' || APELLIDO_PAT" +
+            // Misma consulta, pero ahora puede ser guardada en el arreglo
+            autores = new Object[count][2];                      
+            sentenciaSQL =  "SELECT AUTOR_ID, NOMBRE || ' ' || APELLIDO_PAT " +
                             "FROM AUTOR " +
                             "WHERE UPPER (NOMBRE) LIKE UPPER(?) " +             // Todos los que tengan un nombre parecido
                             "UNION " +                                          // O
@@ -181,8 +181,8 @@ public class AutorDAO extends Conexion {
            rs = ps.executeQuery();
            
            while (rs.next()){
-               autores[i][0]=(rs.getString(1));     // Id del autor
-               autores[i][1]=(rs.getString(2));     // Nombre y apellido del autor
+               autores[i][0] = (rs.getString(1));     // Id del autor
+               autores[i][1] = (rs.getString(2));     // Nombre y apellido del autor
                i++;
            }           
            return autores;
@@ -225,7 +225,7 @@ public class AutorDAO extends Conexion {
             ps.setString(1, id);                    // Id (calculado)
             ps.setString(2, autor[0].toString());   // Nombre (provisto)
             ps.setString(3, autor[1].toString());   // Apellido (provisto)
-            ps.setString(5, autor[2].toString());   // Pais (provisto)
+            ps.setInt(4, (Integer) autor[2]);       // Pais id (provisto)
             ps.executeUpdate();
             return id;
         }
@@ -245,11 +245,11 @@ public class AutorDAO extends Conexion {
         // Se conecta a la base de datos
         conectar();
         try{                                    
-            sentenciaSQL = "INSERT INTO AUTORIA VALUES(?,?)";   // inserta mandando todos los datos, incluido en nuevo id
+            sentenciaSQL = "INSERT INTO AUTORIA VALUES(?, ?)";   // inserta mandando todos los datos, incluido en nuevo id
             ps = conn.prepareStatement(sentenciaSQL);
             // Asigna los valores del arreglo            
-            ps.setString(1, autoria[0].toString());
-            ps.setString(2, autoria[1].toString());
+            ps.setString(1, autoria[0].toString()); // Autor id
+            ps.setInt(2, (Integer) autoria[1]);     // Libro id
             ps.executeUpdate();
             return 1;
         }
@@ -279,7 +279,7 @@ public class AutorDAO extends Conexion {
             
             ps.setString(1, autor[1].toString());   // Nuevo nombre del autor
             ps.setString(2, autor[2].toString());   // Nuevo apellido del autor
-            ps.setString(3, autor[3].toString());   // Nuevo pais del autor
+            ps.setInt(3, (Integer) autor[3]);       // Nuevo pais del autor
             ps.setString(4, autor[0].toString());   // Id del autor
             ps.executeUpdate();
             return autor[0].toString();
@@ -323,7 +323,7 @@ public class AutorDAO extends Conexion {
     }
     
     // Borra a un autor de un libro
-    public int DeleteAutoria(String libro_id, String autor_id){
+    public int DeleteAutoria(String autor_id, int libro_id){
         // Conecta a la base de datos
         conectar();
         try{
@@ -331,7 +331,7 @@ public class AutorDAO extends Conexion {
                             "WHERE LIBRO_ID = ? AND " +
                             "AUTOR_ID = ?";
             ps = conn.prepareStatement(sentenciaSQL);
-            ps.setString(1, libro_id);
+            ps.setInt(1, libro_id);
             ps.setString(2, autor_id);
             int res = ps.executeUpdate();
             if (res == 1){
@@ -353,14 +353,14 @@ public class AutorDAO extends Conexion {
     }
     
     // Borra todos los autores de un libro
-    public int DeleteAutoriaFromLibro(String libro_id){
+    public int DeleteAutoriaFromLibro(int libro_id){
         // Conecta a la base de datos
         conectar();
         try{
             sentenciaSQL = "DELETE FROM AUTORIA " +
                             "WHERE LIBRO_ID = ?";
             ps = conn.prepareStatement(sentenciaSQL);
-            ps.setString(1, libro_id);
+            ps.setInt(1, libro_id);
             int res = ps.executeUpdate();
             if (res == 1){
                 return 0;

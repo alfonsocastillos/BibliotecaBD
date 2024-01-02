@@ -5,7 +5,7 @@ package dataBase.dao;
 
 import dataBase.Conexion;
 import java.sql.*;
-import oracle.jdbc.OracleTypes;
+import java.util.Calendar;
 
 /* 
     Clase que realiza todas las transacciones a la base de datos, hereda de la
@@ -47,14 +47,16 @@ public class LibroDAO extends Conexion {
             rs = ps.executeQuery();
             // Recorre el result set para obtener los datos y asignarlos al arreglo de beans
             while (rs.next()){
-                libros[i][0] = rs.getString(1);      // Id del libro
-                libros[i][1] = rs.getString(2);      // Titulo del libro
-                libros[i][2] = rs.getInt(3);         // Edicion del libro
-                libros[i][3] = rs.getString(4);      // Editorial del libro
-                libros[i][4] = rs.getString(5);      // Genero del libro
-                libros[i][5] = rs.getInt(6);         // Año de publicacion del libro
-                libros[i][6] = rs.getInt(7);         // Numero de paginas 
-                libros[i][7] = rs.getString(8);      // Idioma del libro
+                libros[i][0] = rs.getInt(1);                    // Id del libro
+                libros[i][1] = rs.getString(2);                 // Titulo del libro
+                libros[i][2] = rs.getInt(3);                    // Edicion del libro
+                libros[i][3] = rs.getString(4);                 // Editorial del libro
+                libros[i][4] = rs.getString(5);                 // Genero del libro
+                Calendar calendar = Calendar.getInstance();     // Año de publicacion del libro
+                calendar.setTime(rs.getDate(6));
+                libros[i][5] = calendar.get(Calendar.YEAR);
+                libros[i][6] = rs.getInt(7);                    // Numero de paginas 
+                libros[i][7] = rs.getString(8);                 // Idioma del libro
                 i++;
             }           
             return libros;
@@ -88,14 +90,14 @@ public class LibroDAO extends Conexion {
                             "    JOIN IDIOMA USING (IDIOMA_ID) " +
                             "    JOIN EDITORIAL USING (EDITORIAL_ID) " +
                             "    JOIN GENERO USING (GENERO_ID) " +
-                            "    WHERE UPPER(TITULO) LIKE UPPER('?') " +
+                            "    WHERE UPPER(TITULO) LIKE UPPER(?) " +
                             "UNION " +
                             "    SELECT LIBRO_ID " +
                             "    FROM LIBRO " +
                             "    JOIN IDIOMA USING (IDIOMA_ID) " +
                             "    JOIN EDITORIAL USING (EDITORIAL_ID) " +
                             "    JOIN GENERO USING (GENERO_ID) " +
-                            "    WHERE UPPER(GENERO) LIKE UPPER('?'))";
+                            "    WHERE UPPER(GENERO) LIKE UPPER(?))";
                         
             ps = conn.prepareStatement(sentenciaSQL);
             ps.setString(1, descripcion);
@@ -106,7 +108,7 @@ public class LibroDAO extends Conexion {
                 count = rs.getInt(1);
             }
             // Consulta los registros 
-            libros = new Object[count][7];          
+            libros = new Object[count][8];          
             sentenciaSQL =  "SELECT LIBRO_ID, TITULO, EDICION, EDITORIAL, GENERO, ANIO, NUM_PAGINAS, IDIOMA " +
                             "FROM LIBRO " +
                             "JOIN IDIOMA USING (IDIOMA_ID) " +
@@ -123,14 +125,16 @@ public class LibroDAO extends Conexion {
             rs = ps.executeQuery();
             // Recorre el result set para obtener los datos y asignarlos al arreglo de beans
             while (rs.next()){
-                libros[i][0] = rs.getString(1);      // Id del libro
-                libros[i][1] = rs.getString(2);      // Titulo del libro
-                libros[i][2] = rs.getInt(3);         // Edicion del libro
-                libros[i][3] = rs.getString(4);      // Editorial del libro
-                libros[i][4] = rs.getString(5);      // Genero del libro
-                libros[i][5] = rs.getInt(6);         // Año de publicacion del libro
-                libros[i][6] = rs.getInt(7);         // Numero de paginas 
-                libros[i][7] = rs.getString(8);      // Idioma del libro  
+                libros[i][0] = rs.getInt(1);                    // Id del libro
+                libros[i][1] = rs.getString(2);                 // Titulo del libro
+                libros[i][2] = rs.getInt(3);                    // Edicion del libro
+                libros[i][3] = rs.getString(4);                 // Editorial del libro
+                libros[i][4] = rs.getString(5);                 // Genero del libro
+                Calendar calendar = Calendar.getInstance();     // Año de publicacion
+                calendar.setTime(rs.getDate(6));
+                libros[i][5] = calendar.get(Calendar.YEAR);
+                libros[i][6] = rs.getInt(7);                    // Numero de paginas 
+                libros[i][7] = rs.getString(8);                 // Idioma del libro  
                 i++;
             }           
             return libros;
@@ -159,7 +163,7 @@ public class LibroDAO extends Conexion {
                             "JOIN EDITORIAL USING (EDITORIAL_ID) " +
                             "JOIN GENERO USING (GENERO_ID) " +
                             "JOIN PAIS USING (PAIS_ID) " +
-                            "WHERE LIBRO_ID = ?;";
+                            "WHERE LIBRO_ID = ?";
             // prepara la sentencia 
             ps = conn.prepareStatement(sentenciaSQL);
             ps.setInt(1, libro_id);
@@ -167,15 +171,17 @@ public class LibroDAO extends Conexion {
             rs = ps.executeQuery();
             rs.next();
             // Recupera los valores
-            libro[0] = rs.getInt(1);    // Id
-            libro[1] = rs.getString(2); // Titulo 
-            libro[2] = rs.getInt(3);    // Edicion
-            libro[3] = rs.getString(4); // Editorial 
-            libro[4] = rs.getString(5); // Genero
-            libro[5] = rs.getInt(6);    // Año
-            libro[6] = rs.getInt(7);    // No. pags
-            libro[7] = rs.getString(8); // Idioma 
-            libro[8] = rs.getString(9); // Pais      
+            libro[0] = rs.getInt(1);                    // Id
+            libro[1] = rs.getString(2);                 // Titulo 
+            libro[2] = rs.getInt(3);                    // Edicion
+            libro[3] = rs.getString(4);                 // Editorial 
+            libro[4] = rs.getString(5);                 // Genero
+            Calendar calendar = Calendar.getInstance(); // Año
+            calendar.setTime(rs.getDate(6));
+            libro[5] = calendar.get(Calendar.YEAR);
+            libro[6] = rs.getInt(7);                    // No. pags
+            libro[7] = rs.getString(8);                 // Idioma 
+            libro[8] = rs.getString(9);                 // Pais      
             return libro;
        }
        catch (SQLException ex){
@@ -196,7 +202,7 @@ public class LibroDAO extends Conexion {
         try{
             int id = 0;
             // genera el nuevo id
-            sentenciaSQL =  "SELECT LPAD(SUBSTR(EXTRACT(YEAR FROM SYSDATE), 3, 2), 2, '0') || LPAD(EXTRACT(MONTH FROM SYSDATE), 2, '0') || LPAD(NVL(MAX(TO_NUMBER(SUBSTR(LIBRO_ID, 5, 3))) + 1, 1), 3, '0') " +
+            sentenciaSQL =  "SELECT LPAD(SUBSTR(EXTRACT(YEAR FROM SYSDATE), 3, 2), 2, '0') || LPAD(EXTRACT(MONTH FROM SYSDATE), 2, '0') || LPAD(NVL(MAX(TO_NUMBER(SUBSTR(LIBRO_ID, 5, 3))) + 1, 1), 2, '0') " +
                             "FROM LIBRO " +
                             "WHERE SUBSTR(LIBRO_ID, 1, 4) = LPAD(SUBSTR(EXTRACT(YEAR FROM SYSDATE), 3, 2), 2, '0') || LPAD(EXTRACT(MONTH FROM SYSDATE), 2, '0')";
             ps = conn.prepareStatement(sentenciaSQL);
@@ -209,15 +215,17 @@ public class LibroDAO extends Conexion {
             sentenciaSQL = "Insert INTO LIBRO VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
             ps = conn.prepareStatement(sentenciaSQL);
             // Asigna los valores del arreglo  
-            ps.setInt(1, id);                       // Id del libro
-            ps.setString(2, libro[1].toString());   // Titulo
-            ps.setInt(3, (Integer) libro[2]);       // Edicion
-            ps.setInt(4, (Integer) libro[3]);       // Año 
-            ps.setInt(5, (Integer) libro[4]);       // No. paginas
-            ps.setInt(6, (Integer) libro[5]);       // Idioma_id
-            ps.setInt(7, (Integer) libro[6]);       // Genero_id
-            ps.setInt(8, (Integer) libro[7]);       // Pais_id
-            ps.setString(9, libro[8].toString());   // Editorial_id
+            ps.setInt(1, id);                           // Id del libro
+            ps.setString(2, libro[1].toString());       // Titulo
+            ps.setInt(3, (Integer) libro[2]);           // Edicion
+            String date = ((Integer) libro[3]).toString() + "-01-01";
+            ps.setDate(4, java.sql.Date.valueOf(date)); // Año 
+            ps.setInt(5, (Integer) libro[4]);           // No. paginas
+            ps.setInt(6, (Integer) libro[5]);           // Idioma_id
+            ps.setInt(7, (Integer) libro[6]);           // Genero_id
+            ps.setInt(8, (Integer) libro[7]);           // Pais_id
+            ps.setString(9, libro[8].toString());       // Editorial_id
+            System.out.println(libro[8].toString());
             ps.executeUpdate();
             return id;
         }
@@ -248,19 +256,20 @@ public class LibroDAO extends Conexion {
                           "EDITORIAL_ID = ?, " +                          
                           "WHERE LIBRO_ID = ?";
             ps = conn.prepareStatement(sentenciaSQL);
-            
-            ps.setString(1, libro[1].toString());   // Titulo
-            ps.setInt(2, (Integer) libro[2]);       // Edicion
-            ps.setInt(3, (Integer) libro[3]);       // Año 
-            ps.setInt(4, (Integer) libro[4]);       // No. paginas
-            ps.setInt(5, (Integer) libro[5]);       // Idioma_id
-            ps.setInt(6, (Integer) libro[6]);       // Genero_id
-            ps.setInt(7, (Integer) libro[7]);       // Pais_id
-            ps.setString(8, libro[8].toString());   // Editorial_id
-            ps.setInt(9, (Integer) libro[0]);       // Id del libro
+                       
+            ps.setString(1, libro[1].toString());       // Titulo
+            ps.setInt(2, (Integer) libro[2]);           // Edicion
+            String date = ((Integer) libro[3]).toString() + "-01-01";
+            ps.setDate(3, java.sql.Date.valueOf(date)); // Año 
+            ps.setInt(4, (Integer) libro[4]);           // No. paginas
+            ps.setInt(5, (Integer) libro[5]);           // Idioma_id
+            ps.setInt(6, (Integer) libro[6]);           // Genero_id
+            ps.setInt(7, (Integer) libro[7]);           // Pais_id
+            ps.setString(8, libro[8].toString());       // Editorial_id
+            ps.setInt(9, (Integer) libro[0]);           // Id del libro
             ps.executeUpdate();
             
-            return (Integer) libro[0];              // Regresar el id
+            return (Integer) libro[0];                  // Regresar el id
         }
         catch (SQLException ex){
             System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
@@ -272,7 +281,7 @@ public class LibroDAO extends Conexion {
        }
     }   
     
-    public int DeleteLibro(String libro_id){
+    public int DeleteLibro(int libro_id){
         // Borra primero su autoria
         AutorDAO autor_dao = new AutorDAO();
         int res = autor_dao.DeleteAutoriaFromLibro(libro_id);
@@ -285,7 +294,7 @@ public class LibroDAO extends Conexion {
                 sentenciaSQL = "DELETE FROM LIBRO " +
                                 "WHERE LIBRO_ID = ?";
                 ps = conn.prepareStatement(sentenciaSQL);
-                ps.setString(1, libro_id);
+                ps.setInt(1, libro_id);
                 res = ps.executeUpdate();
                 if (res == 1){
                     return 0;

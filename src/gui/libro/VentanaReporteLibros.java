@@ -1,6 +1,6 @@
-package gui.pelicula;
+package gui.libro;
 
-import dataBase.ReportePeliculasView;
+import dataBase.ReporteLibrosView;
 import java.awt.BorderLayout;
 import java.awt.Toolkit;
 
@@ -9,25 +9,23 @@ import java.awt.Toolkit;
  * @author Carlos
  * Ventana que muestra el reporte de peliculas
  */
-public class VentanaReportePeliculas extends javax.swing.JFrame {
-    int id;
+public class VentanaReporteLibros extends javax.swing.JFrame {
 
-
-    public VentanaReportePeliculas() {
+    public VentanaReporteLibros() {
         initComponents();
         conf();
         // configuración para cargar el reporte
         pnlReporte.setLayout(new BorderLayout());
         // ejecuta el reporte y lo muestra en la ventana
-        ReportePeliculasView reportePeliculas = new ReportePeliculasView();    
-        pnlReporte.add(reportePeliculas.getReport()); 
+        ReporteLibrosView reporte_libros = new ReporteLibrosView();    
+        pnlReporte.add(reporte_libros.getReport()); 
     }
     
     private void conf(){      
         // localización de la ventana
         setLocationRelativeTo(null);	
         // titulo de la ventana
-        setTitle("Peliculas");
+        setTitle("Libros");
     }
     /**
      * This method is called from within the constructor to initialize the form.

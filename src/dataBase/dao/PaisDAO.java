@@ -15,12 +15,12 @@ import java.sql.*;
 public class PaisDAO extends Conexion {
     
     // Crear un pais
-    public String SavePais(String pais) 
+    public int SavePais(String pais) 
     {
         // Se conecta a la base de datos
         conectar();
         try{
-            String id = "";
+            int id = 0;
             // genera el nuevo id            
             sentenciaSQL =  "SELECT MAX(PAIS_ID) + 1 FROM PAIS";
             ps = conn.prepareStatement(sentenciaSQL);            
@@ -28,22 +28,22 @@ public class PaisDAO extends Conexion {
             
             // guarda el nuevo id
             if (rs.next()){
-                id = rs.getString(1);
+                id = rs.getInt(1);
             }
             
             // inserta mandando todos los datos, incluido en nuevo id
             sentenciaSQL = "INSERT INTO PAIS VALUES(?, ?, SYSDATE)";
             ps = conn.prepareStatement(sentenciaSQL);
             // Asigna los valores del arreglo            
-            ps.setString(1, id);                    // Id (calculado)
-            ps.setString(2, pais);                  // Pais (provisto)            
+            ps.setInt(1, id);       // Id (calculado)
+            ps.setString(2, pais);  // Pais (provisto)            
             ps.executeUpdate();
             return id;
         }
         catch (SQLException ex){
             System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
                     "\n\n" + sentenciaSQL + "\n\nUbicación: " + "SavePais");
-            return null;
+            return 0;
         }
         finally{
            desconectar();
@@ -52,7 +52,7 @@ public class PaisDAO extends Conexion {
     }
     
     // Modificar un pais (id, pais)
-    public String UpdatePais(Object[] pais)
+    public int UpdatePais(Object[] pais)
     {       
         // se conecta a la base de datos
        conectar();
@@ -65,14 +65,14 @@ public class PaisDAO extends Conexion {
             ps = conn.prepareStatement(sentenciaSQL);
             
             ps.setString(1, pais[1].toString());    // Nuevo nombre pais
-            ps.setString(2, pais[0].toString());    // Id del pais
+            ps.setInt(2, (Integer) pais[0]);        // Id del pais
             ps.executeUpdate();
-            return pais[0].toString();            // Regresa el id del pais
+            return (Integer) pais[0];               // Regresa el id del pais
         }
         catch (SQLException ex){
             System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
                     "\n\n" + sentenciaSQL + "\n\nUbicación: " + "UpdatePais");
-            return null;
+            return 0;
         }
         finally{
            desconectar();
@@ -81,60 +81,59 @@ public class PaisDAO extends Conexion {
     
     // Consultar todos los paises (id, pais)
     public Object [][] GetAllPaises(){
-       conectar();
-       Object [][] paises;
-       int i = 0;
-       int count = 0;
-       try{
-           sentenciaSQL = "SELECT COUNT(*) FROM PAIS";      // Numero de paises           
-           ps = conn.prepareStatement(sentenciaSQL);        // Convierte el str a un sentencia utilizable en SQL           
-           rs = ps.executeQuery();                          // Resultado de la consulta
-           
-           // Numero de idiomas (COUNT)
-           if (rs.next()){
-               count = rs.getInt(1);
-           }
-           
-           // Arreglo de todos los paises (ID, pais)
-           paises = new Object[count][2];           
-           sentenciaSQL  = "SELECT PAIS_ID, PAIS FROM PAIS ORDER BY 2";           
-           ps = conn.prepareStatement(sentenciaSQL);
-           rs = ps.executeQuery();
-           
-           // Agregar a todos los paises al arreglo (migrar de rs a paises)
-           while (rs.next()){
-               paises[i][0]=(rs.getString(1));  // Id del pais
-               paises[i][1]=(rs.getString(2));  // Nombre del pais
-               i++;
+        conectar();
+        Object [][] paises;
+        int i = 0;
+        int count = 0;
+        try{
+            sentenciaSQL = "SELECT COUNT(*) FROM PAIS";      // Numero de paises           
+            ps = conn.prepareStatement(sentenciaSQL);        // Convierte el str a un sentencia utilizable en SQL           
+            rs = ps.executeQuery();                          // Resultado de la consulta
+
+            // Numero de idiomas (COUNT)
+            if (rs.next()){
+                count = rs.getInt(1);
+            }
+
+            // Arreglo de todos los paises (ID, pais)
+            paises = new Object[count][2];           
+            sentenciaSQL  = "SELECT PAIS_ID, PAIS FROM PAIS ORDER BY 2";           
+            ps = conn.prepareStatement(sentenciaSQL);
+            rs = ps.executeQuery();
+
+            // Agregar a todos los paises al arreglo (migrar de rs a paises)
+            while (rs.next()){
+                paises[i][0] = (rs.getInt(1));      // Id del pais
+                paises[i][1] = (rs.getString(2));   // Nombre del pais
+                i++;
             }           
-           return paises;
+            return paises;
         }
         catch (SQLException ex){
             System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + ConfigDataBase.DB_ERR_QUERY + 
                     "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "GetAllPaises");
             return null;
         }
-       finally{
+        finally{
            desconectar();           
        }
     }  
 
     // Consulta el pais para un id (id, pais)
-    public Object[] GetPaisById(String pais_id)
+    public Object[] GetPaisById(int pais_id)
     {
         conectar();
         Object [] pais = new Object[2];
        
-        try{
-                    
+        try{                    
             sentenciaSQL  = "SELECT PAIS_ID, PAIS FROM PAIS WHERE PAIS_ID = ?";           
             ps = conn.prepareStatement(sentenciaSQL);
-            ps.setString(1, pais_id);    // Reemplaza el parámetro index (simbolo ?) con el str x
+            ps.setInt(1, pais_id);    // Reemplaza el parámetro index (simbolo ?) con el str x
             rs = ps.executeQuery();
 
             // Llena el arreglo pais con el resultado
             while (rs.next()){
-                pais[0] = (rs.getString(1));
+                pais[0] = (rs.getInt(1));
                 pais[1] = (rs.getString(2));  
             }           
             return pais;
@@ -151,25 +150,26 @@ public class PaisDAO extends Conexion {
     }
     
     // Consulta el pais de un libro
-    public String GetPaisByLibro(String id_libro){
+    public Object[] GetPaisByLibro(int id_libro){
         // Conecta a la base de datos
-       conectar();
-       String pais = "";
-       // Contador
-       try{
-           sentenciaSQL  =  "SELECT PAIS " +
+        conectar();
+        Object[] pais = new Object[2];
+        // Contador
+        try{
+            sentenciaSQL  = "SELECT PAIS_ID, PAIS " +
                             "FROM LIBRO " +
                             "JOIN PAIS USING (PAIS_ID) " +
                             "WHERE LIBRO_ID = ?";           
-           ps = conn.prepareStatement(sentenciaSQL);
-           ps.setString(1, id_libro);
-           rs = ps.executeQuery();
-              
-           // Recorre el result set para obtener los datos y asignarlos al arreglo
-           while (rs.next()){
-               pais = rs.getString(1);
-           }     
-           return pais;
+            ps = conn.prepareStatement(sentenciaSQL);
+            ps.setInt(1, id_libro);
+            rs = ps.executeQuery();
+
+            // Recorre el result set para obtener los datos y asignarlos al arreglo
+            while (rs.next()){
+                pais[0] = rs.getInt(1);     // Id del pais
+                pais[1] = rs.getInt(2);     // Pais
+            }     
+            return pais;
         }
         catch (SQLException ex){
             System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
@@ -182,9 +182,9 @@ public class PaisDAO extends Conexion {
     }
     
     // Consultar todos los libros de un pais
-    public Object [] GetLibrosByPais(String pais_id){
+    public Object[][] GetLibrosByPais(int pais_id){
        conectar();
-       Object [] libros;
+       Object[][] libros;
        int i = 0;
        int count = 0;
        try{
@@ -195,23 +195,24 @@ public class PaisDAO extends Conexion {
                             "WHERE PAIS_ID = ? ";
 
             ps = conn.prepareStatement(sentenciaSQL);   // prepara la sentencia 
-            ps.setString(1, pais_id);
+            ps.setInt(1, pais_id);
             rs = ps.executeQuery();                     // Ejecuta la sentencia y la asigna al result set    
            
            if (rs.next()){
                count = rs.getInt(1);
             }
            
-           libros = new Object[count];           
-           sentenciaSQL  =  "SELECT TITULO " +
+           libros = new Object[count][2];           
+           sentenciaSQL  =  "SELECT LIBRO_ID, TITULO " +
                             "FROM LIBRO " +
                             "WHERE PAIS_ID = ? " +
                             "ORDER BY 2";   // Ordenar por la segunda columna     
            ps = conn.prepareStatement(sentenciaSQL);
-           ps.setString(1, pais_id);
+           ps.setInt(1, pais_id);
            rs = ps.executeQuery();
            while (rs.next()){
-               libros[i] =(rs.getString(1));  // Titulos del libro
+               libros[i][0] = (rs.getInt(1));       // Id del libro
+               libros[i][1] = (rs.getString(2));    // Titulos del libro
                i++;
            }           
            return libros;
@@ -234,32 +235,32 @@ public class PaisDAO extends Conexion {
        int count = 0;
        pais = "%" + pais + "%";
        try{
-           // Cuenta todos los actores que tengan un nombre parecido
-           sentenciaSQL =   "SELECT COUNT(PAIS_ID) " +
+            // Cuenta todos los actores que tengan un nombre parecido
+            sentenciaSQL =  "SELECT COUNT(PAIS_ID) " +
                             "FROM PAIS " +
                             "WHERE UPPER (PAIS) LIKE UPPER(?)";   // Todos los paises que tengan un nombre parecido
-                            
-            
-            ps = conn.prepareStatement(sentenciaSQL);   // prepara la sentencia 
-            ps.setString(1, pais);
-            rs = ps.executeQuery();                     // Ejecuta la sentencia y la asigna al result set         
+
+
+             ps = conn.prepareStatement(sentenciaSQL);   // prepara la sentencia 
+             ps.setString(1, pais);
+             rs = ps.executeQuery();                     // Ejecuta la sentencia y la asigna al result set         
+
+            if (rs.next()){
+                count = rs.getInt(1);
+            }
            
-           if (rs.next()){
-               count = rs.getInt(1);
-           }
-           
-           // Misma consulta, pero ahora puede ser guardada en el arreglo
-           paises = new Object[count][2];           
-           sentenciaSQL =   "SELECT PAIS_ID, PAIS " +
-                            "FROM PAIS" +
+            // Misma consulta, pero ahora puede ser guardada en el arreglo
+            paises = new Object[count][2];           
+            sentenciaSQL =  "SELECT PAIS_ID, PAIS " +
+                            "FROM PAIS " +
                             "WHERE UPPER (PAIS) LIKE UPPER(?)";
+
+            ps = conn.prepareStatement(sentenciaSQL);
+            ps.setString(1, pais);
+            rs = ps.executeQuery();
            
-           ps = conn.prepareStatement(sentenciaSQL);
-           ps.setString(1, pais);
-           rs = ps.executeQuery();
-           
-           while (rs.next()){
-               paises[i][0] = (rs.getString(1));
+            while (rs.next()){
+               paises[i][0] = (rs.getInt(1));
                paises[i][1] = (rs.getString(2));
                i++;
            }           
@@ -276,7 +277,7 @@ public class PaisDAO extends Conexion {
     }
 
     // Eliminar un pais
-    public int DeletePais(String pais_id){
+    public int DeletePais(int pais_id){
         // Conecta a la base de datos
         conectar();
         try{
@@ -285,14 +286,14 @@ public class PaisDAO extends Conexion {
                             "SET PAIS_ID = NULL " +
                             "WHERE PAIS_ID = ?";
             ps = conn.prepareStatement(sentenciaSQL);
-            ps.setString(1, pais_id);
+            ps.setInt(1, pais_id);
             ps.executeUpdate();
             
             // Borrar el pais
             sentenciaSQL = "DELETE FROM PAIS " +
                             "WHERE PAIS_ID = ?";
             ps = conn.prepareStatement(sentenciaSQL);
-            ps.setString(1, pais_id);
+            ps.setInt(1, pais_id);
             int res = ps.executeUpdate();
             if (res == 1){
                 return 0;

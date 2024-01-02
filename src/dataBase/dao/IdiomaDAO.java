@@ -15,12 +15,12 @@ import java.sql.*;
 public class IdiomaDAO extends Conexion {
     
     // Crear un idioma
-    public String SaveIdioma(String idioma) 
+    public int SaveIdioma(String idioma) 
     {
         // Se conecta a la base de datos
         conectar();
         try{
-            String id = "";
+            int id = 0;
             // genera el nuevo id            
             sentenciaSQL =  "SELECT MAX(IDIOMA_ID) + 1 FROM IDIOMA";
             ps = conn.prepareStatement(sentenciaSQL);            
@@ -28,22 +28,22 @@ public class IdiomaDAO extends Conexion {
             
             // guarda el nuevo id
             if (rs.next()){
-                id = rs.getString(1);
+                id = rs.getInt(1);
             }
             
             // inserta mandando todos los datos, incluido en nuevo id
             sentenciaSQL = "INSERT INTO IDIOMA VALUES(?, ?, SYSDATE)";
             ps = conn.prepareStatement(sentenciaSQL);
             // Asigna los valores del arreglo            
-            ps.setString(1, id);                    // Id (calculado)
-            ps.setString(2, idioma);                // Idioma (provisto)            
+            ps.setInt(1, id);           // Id (calculado)
+            ps.setString(2, idioma);    // Idioma (provisto)            
             ps.executeUpdate();
             return id;
         }
         catch (SQLException ex){
             System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
                     "\n\n" + sentenciaSQL + "\n\nUbicación: " + "SaveIdioma");
-            return null;
+            return 0;
         }
         finally{
            desconectar();
@@ -52,7 +52,7 @@ public class IdiomaDAO extends Conexion {
     }
     
     // Modificar un idioma (id, idioma)
-    public String UpdateIdioma(Object[] idioma)
+    public int UpdateIdioma(Object[] idioma)
     {       
         // se conecta a la base de datos
        conectar();
@@ -65,14 +65,14 @@ public class IdiomaDAO extends Conexion {
             ps = conn.prepareStatement(sentenciaSQL);
             
             ps.setString(1, idioma[1].toString());  // Nuevo nombre idioma
-            ps.setString(2, idioma[0].toString());  // Id del idioma
+            ps.setInt(2, (Integer) idioma[0]);      // Id del idioma
             ps.executeUpdate();
-            return idioma[0].toString();            // Regresa el id del idioma
+            return (Integer) idioma[0];             // Regresa el id del idioma
         }
         catch (SQLException ex){
             System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
                     "\n\n" + sentenciaSQL + "\n\nUbicación: " + "UpdateIdioma");
-            return null;
+            return 0;
         }
         finally{
            desconectar();
@@ -81,30 +81,30 @@ public class IdiomaDAO extends Conexion {
     
     // Consultar todos los idiomas (id, idioma)
     public Object [][] GetAllIdiomas(){
-       conectar();
-       Object [][] idiomas;
-       int i = 0;
-       int count = 0;
-       try{
-           sentenciaSQL = "SELECT COUNT(*) FROM IDIOMA";    // Numero de idiomas           
-           ps = conn.prepareStatement(sentenciaSQL);        // Convierte el str a un sentencia utilizable en SQL           
-           rs = ps.executeQuery();                          // Resultado de la consulta
+        conectar();
+        Object [][] idiomas;
+        int i = 0;
+        int count = 0;
+        try{
+            sentenciaSQL = "SELECT COUNT(*) FROM IDIOMA";    // Numero de idiomas           
+            ps = conn.prepareStatement(sentenciaSQL);        // Convierte el str a un sentencia utilizable en SQL           
+            rs = ps.executeQuery();                          // Resultado de la consulta
            
-           // Numero de idiomas (COUNT)
-           if (rs.next()){
-               count = rs.getInt(1);
-           }
+            // Numero de idiomas (COUNT)
+            if (rs.next()){
+                count = rs.getInt(1);
+            }
+
+            // Arreglo de todos los idiomas (ID, idioma)
+            idiomas = new Object[count][2];           
+            sentenciaSQL  = "SELECT IDIOMA_ID, IDIOMA FROM IDIOMA ORDER BY 2";           
+            ps = conn.prepareStatement(sentenciaSQL);
+            rs = ps.executeQuery();
            
-           // Arreglo de todos los idiomas (ID, idioma)
-           idiomas = new Object[count][2];           
-           sentenciaSQL  = "SELECT IDIOMA_ID, IDIOMA FROM IDIOMA ORDER BY 2";           
-           ps = conn.prepareStatement(sentenciaSQL);
-           rs = ps.executeQuery();
-           
-           // Agregar a todos los autores al arreglo (migrar de rs a actores)
-           while (rs.next()){
-               idiomas[i][0]=(rs.getString(1));
-               idiomas[i][1]=(rs.getString(2));  
+            // Agregar a todos los autores al arreglo (migrar de rs a actores)
+            while (rs.next()){
+               idiomas[i][0] = (rs.getInt(1));
+               idiomas[i][1] = (rs.getString(2));  
                i++;
             }           
            return idiomas;
@@ -114,13 +114,13 @@ public class IdiomaDAO extends Conexion {
                     "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "GetAllIdiomas");
             return null;
         }
-       finally{
+        finally{
            desconectar();           
        }
     }  
 
     // Consulta el idioma para un id (id, idioma)
-    public Object[] GetIdiomaById(String idioma_id)
+    public Object[] GetIdiomaById(int idioma_id)
     {
         conectar();
         Object[] idioma = new Object[2];
@@ -129,12 +129,12 @@ public class IdiomaDAO extends Conexion {
                     
             sentenciaSQL  = "SELECT IDIOMA_ID, IDIOMA FROM IDIOMA WHERE IDIOMA_ID = ?";           
             ps = conn.prepareStatement(sentenciaSQL);
-            ps.setString(1, idioma_id);    // Reemplaza el parámetro index (simbolo ?) con el str x
+            ps.setInt(1, idioma_id);    // Reemplaza el parámetro index (simbolo ?) con el str x
             rs = ps.executeQuery();
 
             // Llena el arreglo actor con el resultado
             while (rs.next()){
-                idioma[0] = (rs.getString(1));
+                idioma[0] = (rs.getInt(1));
                 idioma[1] = (rs.getString(2));  
             }           
             return idioma;
@@ -150,26 +150,27 @@ public class IdiomaDAO extends Conexion {
 
     }
     
-    public String GetIdiomaByLibro(String id_libro){
+    // Regresa el idioma (ID, idioma) de un libro
+    public Object[] GetIdiomaByLibro(int id_libro){
         // Conecta a la base de datos
-       conectar();
-       String idioma = "";
-       // Contador
+       conectar();        
        try{
-           sentenciaSQL  =  "SELECT IDIOMA " +
-                            "FROM LIBRO " +
-                            "JOIN IDIOMA USING (IDIOMA_ID) " +
-                            "WHERE LIBRO_ID = ?";           
-           ps = conn.prepareStatement(sentenciaSQL);
-           ps.setString(1, id_libro);
-           rs = ps.executeQuery();
-              
-           // Recorre el result set para obtener los datos y asignarlos
-           // al arreglo
-           while (rs.next()){
-               idioma = rs.getString(1);
-           }     
-           return idioma;
+            Object[] idioma = new Object[2];
+            sentenciaSQL  =  "SELECT IDIOMA_ID, IDIOMA " +
+                             "FROM LIBRO " +
+                             "JOIN IDIOMA USING (IDIOMA_ID) " +
+                             "WHERE LIBRO_ID = ?";           
+            ps = conn.prepareStatement(sentenciaSQL);
+            ps.setInt(1, id_libro);
+            rs = ps.executeQuery();
+
+            // Recorre el result set para obtener los datos y asignarlos
+            // al arreglo
+            while (rs.next()){
+                idioma[0] = rs.getInt(1);
+                idioma[1] = rs.getString(2);
+            }     
+            return idioma;
         }
         catch (SQLException ex){
             System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
@@ -182,9 +183,9 @@ public class IdiomaDAO extends Conexion {
     }
     
     // Consultar todos los libros de un idioma
-    public Object[] GetLibrosByIdioma(String idioma_id){
+    public Object[][] GetLibrosByIdioma(int idioma_id){
        conectar();
-       Object [] libros;
+       Object[][] libros;
        int i = 0;
        int count = 0;
        try{
@@ -195,26 +196,27 @@ public class IdiomaDAO extends Conexion {
                             "WHERE IDIOMA_ID = ? ";
 
             ps = conn.prepareStatement(sentenciaSQL);   // prepara la sentencia 
-            ps.setString(1, idioma_id);
+            ps.setInt(1, idioma_id);
             rs = ps.executeQuery();                     // Ejecuta la sentencia y la asigna al result set    
            
-           if (rs.next()){
-               count = rs.getInt(1);
-            }
-           
-           libros = new Object[count];           
-           sentenciaSQL  =  "SELECT TITULO " +
-                            "FROM LIBRO " +
-                            "WHERE IDIOMA_ID = ? " +
-                            "ORDER BY 2";   // Ordenar por la segunda columna     
-           ps = conn.prepareStatement(sentenciaSQL);
-           ps.setString(1, idioma_id);
-           rs = ps.executeQuery();
-           while (rs.next()){
-               libros[i] =(rs.getString(1));  // Titulos del libro
-               i++;
-           }           
-           return libros;
+            if (rs.next()){
+                count = rs.getInt(1);
+             }
+
+            libros = new Object[count][2];           
+            sentenciaSQL  =  "SELECT LIBRO_ID, TITULO " +
+                             "FROM LIBRO " +
+                             "WHERE IDIOMA_ID = ? " +
+                             "ORDER BY 2";   // Ordenar por la segunda columna     
+            ps = conn.prepareStatement(sentenciaSQL);
+            ps.setInt(1, idioma_id);
+            rs = ps.executeQuery();
+            while (rs.next()){
+                libros[i][0] = (rs.getInt(1));       // Id del libro
+                libros[i][1] = (rs.getString(2));    // Titulos del libro
+                i++;
+            }           
+            return libros;
         }
         catch (SQLException ex){
             System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + ConfigDataBase.DB_ERR_QUERY + 
@@ -228,41 +230,41 @@ public class IdiomaDAO extends Conexion {
     
     // Consultar idiomas con nombre parecido (id, idioma)
     public Object[][] GetIdiomasByNombre(String idioma){
-       conectar();
-       Object[][] idiomas;
-       int i = 0;
-       int count = 0;
-       idioma = "%" + idioma + "%";
-       try{
-           // Cuenta todos los actores que tengan un nombre parecido
-           sentenciaSQL =   "SELECT COUNT(IDIOMA_ID) " +
-                            "FROM IDIOMA " +
-                            "WHERE UPPER (IDIOMA) LIKE UPPER(?)";   // Todos los idiomas que tengan un nombre parecido
-                            
-            
-            ps = conn.prepareStatement(sentenciaSQL);   // prepara la sentencia 
+        conectar();
+        Object[][] idiomas;
+        int i = 0;
+        int count = 0;
+        idioma = "%" + idioma + "%";
+        try{
+            // Cuenta todos los actores que tengan un nombre parecido
+            sentenciaSQL =   "SELECT COUNT(IDIOMA_ID) " +
+                             "FROM IDIOMA " +
+                             "WHERE UPPER (IDIOMA) LIKE UPPER(?)";   // Todos los idiomas que tengan un nombre parecido
+
+
+             ps = conn.prepareStatement(sentenciaSQL);   // prepara la sentencia 
+             ps.setString(1, idioma);
+             rs = ps.executeQuery();                     // Ejecuta la sentencia y la asigna al result set         
+
+            if (rs.next()){
+                count = rs.getInt(1);
+            }
+
+            // Misma consulta, pero ahora puede ser guardada en el arreglo
+            idiomas = new Object[count][2];           
+            sentenciaSQL =   "SELECT IDIOMA_ID, IDIOMA " +
+                             "FROM IDIOMA " +
+                             "WHERE UPPER (IDIOMA) LIKE UPPER(?)";
+
+            ps = conn.prepareStatement(sentenciaSQL);
             ps.setString(1, idioma);
-            rs = ps.executeQuery();                     // Ejecuta la sentencia y la asigna al result set         
-           
-           if (rs.next()){
-               count = rs.getInt(1);
-           }
-           
-           // Misma consulta, pero ahora puede ser guardada en el arreglo
-           idiomas = new Object[count][2];           
-           sentenciaSQL =   "SELECT IDIOMA_ID, IDIOMA " +
-                            "FROM IDIOMA " +
-                            "WHERE UPPER (IDIOMA) LIKE UPPER(?)";
-           
-           ps = conn.prepareStatement(sentenciaSQL);
-           ps.setString(1, idioma);
-           rs = ps.executeQuery();
-           
-           while (rs.next()){
-               idiomas[i][0] = (rs.getString(1));
-               idiomas[i][1] = (rs.getString(2));
-               i++;
-           }           
+            rs = ps.executeQuery();
+
+            while (rs.next()){
+                idiomas[i][0] = (rs.getInt(1));
+                idiomas[i][1] = (rs.getString(2));
+                i++;
+            }           
            return idiomas;
         }
         catch (SQLException ex){
@@ -276,7 +278,7 @@ public class IdiomaDAO extends Conexion {
     }
 
     // Eliminar un idioma
-    public int DeleteIdioma(String idioma_id){
+    public int DeleteIdioma(int idioma_id){
         // Conecta a la base de datos
         conectar();
         try{
@@ -285,14 +287,14 @@ public class IdiomaDAO extends Conexion {
                             "SET IDIOMA_ID = NULL " +
                             "WHERE IDIOMA_ID = ?";
             ps = conn.prepareStatement(sentenciaSQL);
-            ps.setString(1, idioma_id);
+            ps.setInt(1, idioma_id);
             ps.executeUpdate();
             
             // Borrar el idioma
             sentenciaSQL = "DELETE FROM IDIOMA " +
                             "WHERE IDIOMA_ID = ?";
             ps = conn.prepareStatement(sentenciaSQL);
-            ps.setString(1, idioma_id);
+            ps.setInt(1, idioma_id);
             int res = ps.executeUpdate();
             if (res == 1){
                 return 0;
