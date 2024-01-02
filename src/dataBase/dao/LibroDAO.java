@@ -253,7 +253,7 @@ public class LibroDAO extends Conexion {
                           "IDIOMA_ID = ?, " +
                           "GENERO_ID = ?, " +
                           "PAIS_ID = ?, " +
-                          "EDITORIAL_ID = ?, " +                          
+                          "EDITORIAL_ID = ? " +                          
                           "WHERE LIBRO_ID = ?";
             ps = conn.prepareStatement(sentenciaSQL);
                        

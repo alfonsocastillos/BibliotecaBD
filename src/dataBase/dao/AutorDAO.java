@@ -2,7 +2,6 @@
  * Clase encargada de consultar, insertar, eliminar y modificar la tabla Autor
 */
 
-
 package dataBase.dao;
 
 import dataBase.Conexion;
@@ -55,15 +54,18 @@ public class AutorDAO extends Conexion {
        }
     }  
     
-    // Obtiene un autor mediante su ID
-    public Object [] GetAutorById(String id){
+    // Obtiene un autor mediante su ID (id, nombre, apellido, pais)
+    public Object[] GetAutorById(String id){
        conectar();
-       Object [] autor = new Object[3];
+       Object [] autor = new Object[4];
        int i = 0;
        
        try{
                     
-           sentenciaSQL  = "SELECT AUTOR_ID, NOMBRE, APELLIDO_PAT FROM AUTOR WHERE AUTOR_ID = ?";           
+           sentenciaSQL =   "SELECT AUTOR_ID, NOMBRE, APELLIDO_PAT, PAIS " +
+                            "FROM AUTOR " +
+                            "JOIN PAIS USING (PAIS_ID) " +
+                            "WHERE AUTOR_ID = ?";           
            ps = conn.prepareStatement(sentenciaSQL);
            ps.setString(1, id); // Reemplaza el parámetro index (simbolo ?) con el str x
            rs = ps.executeQuery();
@@ -73,6 +75,7 @@ public class AutorDAO extends Conexion {
                autor[0] = (rs.getString(1));
                autor[1] = (rs.getString(2));  
                autor[2] = (rs.getString(3));  
+               autor[3] = (rs.getString(4));
                i++;
            }           
            return autor;
@@ -205,12 +208,12 @@ public class AutorDAO extends Conexion {
             String id = "";
             // genera el nuevo id            
             // Primera letra de su pais + (el numero mas alto + 1)
-            sentenciaSQL =  "SELECT SUBSTR (?, 1, 1) || LPAD(NVL(MAX(TO_NUMBER(SUBSTR(AUTOR_ID, 2, 3))) + 1, 1), 3, '0')" +
-                            "FROM AUTOR" +
+            sentenciaSQL =  "SELECT SUBSTR (?, 1, 1) || LPAD(NVL(MAX(TO_NUMBER(SUBSTR(AUTOR_ID, 2, 3))) + 1, 1), 3, '0') " +
+                            "FROM AUTOR " +
                             "WHERE SUBSTR (AUTOR_ID, 1, 1) LIKE SUBSTR (?, 1, 1)";
             ps = conn.prepareStatement(sentenciaSQL);
-            ps.setString(1, autor[2].toString());   // Pais del autor
-            ps.setString(2, autor[2].toString());   // Pais del autor                                   
+            ps.setInt(1, (Integer) autor[2]);   // Pais del autor
+            ps.setInt(2, (Integer) autor[2]);   // Pais del autor                                   
             rs = ps.executeQuery();
             
             // guarda el nuevo id
@@ -239,7 +242,7 @@ public class AutorDAO extends Conexion {
        }
     }
 
-    // Asocia a un autor con un libro
+    // Asocia a un autor con un libro (autor, libro)
     public int SaveAutoria(Object[] autoria){
         // Guarda el par autor_id, libro_id
         // Se conecta a la base de datos
@@ -263,7 +266,7 @@ public class AutorDAO extends Conexion {
        }
     }
 
-    // Actualiza la informacion de un autor
+    // Actualiza la informacion de un autor (Id, Nombre, Apellido, Pais ID)
     public String UpdateAutor(Object autor[]){
        // se conecta a la base de datos
        conectar();

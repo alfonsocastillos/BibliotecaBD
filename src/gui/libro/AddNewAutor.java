@@ -1,6 +1,5 @@
 package gui.libro;
 
-import gui.libro.*;
 import dataBase.dao.AutorDAO;
 import dataBase.dao.PaisDAO;
 import java.awt.Toolkit;
@@ -17,6 +16,7 @@ public class AddNewAutor extends javax.swing.JDialog {
     String autor_id;
     String pais;
     AutorDAO autor_dao;
+    PaisDAO pais_dao;
 
     /**
      * Creates new form AddPeliculasRentaD
@@ -34,11 +34,11 @@ public class AddNewAutor extends javax.swing.JDialog {
         getRootPane().setDefaultButton(btnGuardar);       
         
         // Popula el ComboBox de paises disponibles
-        PaisDAO pais_dao = new PaisDAO();    
+        pais_dao = new PaisDAO();    
         Object[][] all_paises = pais_dao.GetAllPaises();        
         for (Object[] pais : all_paises) {
             // llena los datos de idioma en el combo 
-            comboPaises.addItem(pais[1].toString());
+            cmbPaises.addItem(pais[1].toString());
         }
 
     }
@@ -47,18 +47,43 @@ public class AddNewAutor extends javax.swing.JDialog {
         // Borra los controles
         txtNombre.setText("");
         txtApellido.setText("");
+        cmbPaises.setSelectedIndex(-1);
     }
     
+    private boolean EstanLlenos() {
+        if (txtNombre.getText().trim().length() == 0){
+            javax.swing.JOptionPane.showMessageDialog(this, "Introduzca el nombre.", "Aviso", 2);
+            txtNombre.requestFocus();
+            return false;
+        }
+        else if (txtApellido.getText().trim().length() == 0){
+            javax.swing.JOptionPane.showMessageDialog(this, "Introduzca el apellido.", "Aviso", 2);
+            txtApellido.requestFocus();
+            return false;
+        }
+        else if (cmbPaises.getSelectedIndex() < 0) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Seleccione un pais de origen.", "Aviso", 2);
+            cmbPaises.requestFocus();
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+    
+    // Llena los datos del autor a editar (Id, nombre, apellido, pais_id)
     public void SetEditId(String autor_id){
         // Asigna el id del actor a modificar
         this.autor_id = autor_id;
         // Busca el actor
-        Object [] autor_edit = autor_dao.GetAutorById(autor_id);
+        Object[] autor_edit = autor_dao.GetAutorById(autor_id);
         // Muestra los datos en los controles
         txtNombre.setText(autor_edit[1].toString());
-        // si el apellido es nulo
+        // si el apellido no es nulo
         if (autor_edit[2] != null)
             txtApellido.setText(autor_edit[2].toString());
+        if (autor_edit[3] != null)
+            cmbPaises.setSelectedItem(autor_edit[3].toString());
     }
     
     /**
@@ -77,7 +102,7 @@ public class AddNewAutor extends javax.swing.JDialog {
         txtApellido = new javax.swing.JTextField();
         btnGuardar = new javax.swing.JButton();
         lblNombre1 = new javax.swing.JLabel();
-        comboPaises = new javax.swing.JComboBox<>();
+        cmbPaises = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Actor");
@@ -119,13 +144,13 @@ public class AddNewAutor extends javax.swing.JDialog {
         lblNombre1.setText("Pais:");
         pnlTableList.add(lblNombre1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 140, -1, 25));
 
-        comboPaises.setFont(new java.awt.Font("C059", 0, 12)); // NOI18N
-        comboPaises.addActionListener(new java.awt.event.ActionListener() {
+        cmbPaises.setFont(new java.awt.Font("C059", 0, 12)); // NOI18N
+        cmbPaises.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                comboPaisesActionPerformed(evt);
+                cmbPaisesActionPerformed(evt);
             }
         });
-        pnlTableList.add(comboPaises, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 140, 150, -1));
+        pnlTableList.add(cmbPaises, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 140, 150, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -148,6 +173,11 @@ public class AddNewAutor extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        // Revisa que todos los campos estan llenos
+        if (!EstanLlenos()) {
+            return;
+        }
+
         // Accion del boton Guardar
         if (txtNombre.getText().trim().length() == 0){
             // Suena un beep
@@ -157,22 +187,21 @@ public class AddNewAutor extends javax.swing.JDialog {
         }
         else{
             // Obtiene el NOMBRE del pais seleccionado
-            pais = comboPaises.getSelectedItem().toString();
+            pais = cmbPaises.getSelectedItem().toString();
           
             if (autor_id == null){ // Guarda un nuevo actor
                 Object [] autor = new Object[3];
                 autor[0] = txtNombre.getText().trim();
                 autor[1] = txtApellido.getText().trim();
-                autor[2] = pais;    // NOMBRE del pais
-                autor_id = autor_dao.UpdateAutor(autor);
+                autor[2] = pais_dao.GetPaisesByNombre(pais)[0][0];  // ID del pais
+                autor_id = autor_dao.SaveAutor(autor);
             }
             else{ // Actualiza actor
                 Object [] autor = new Object[4];
                 autor[0] = autor_id;
                 autor[1] = txtNombre.getText().trim();
                 autor[2] = txtApellido.getText().trim();
-                PaisDAO pais_dao = new PaisDAO();
-                autor[3] = pais_dao.GetPaisesByNombre(pais);    // ID del pais
+                autor[3] = pais_dao.GetPaisesByNombre(pais)[0][0];  // ID del pais
                 autor_id =  autor_dao.UpdateAutor(autor);
             }
             
@@ -192,16 +221,15 @@ public class AddNewAutor extends javax.swing.JDialog {
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         BorrarTextos();
         autor_id = null;
-        dispose();
     }//GEN-LAST:event_formWindowClosed
 
-    private void comboPaisesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboPaisesActionPerformed
+    private void cmbPaisesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbPaisesActionPerformed
         
-    }//GEN-LAST:event_comboPaisesActionPerformed
+    }//GEN-LAST:event_cmbPaisesActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGuardar;
-    private javax.swing.JComboBox<String> comboPaises;
+    private javax.swing.JComboBox<String> cmbPaises;
     private javax.swing.JLabel lblApellido;
     private javax.swing.JLabel lblNombre;
     private javax.swing.JLabel lblNombre1;

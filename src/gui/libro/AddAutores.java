@@ -208,9 +208,9 @@ public class AddAutores extends javax.swing.JDialog {
         else{      
             // Toma el id y guarda el autor en a tabla de autoria y guarda la autoria
             autor_id = lista_autores[tableList.getSelectedRow()][0].toString();
-            Object[] autoria = new Object[2];
-            autoria[0]= libro_id;
-            autoria[1] = autor_id;
+            Object[] autoria = new Object[2];            
+            autoria[0] = autor_id;
+            autoria[1]= libro_id;
             int result = autor_dao.SaveAutoria(autoria);
             if (result == 0){
                 // Suena un beep

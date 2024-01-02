@@ -63,8 +63,10 @@ public class Libros extends javax.swing.JInternalFrame {
         // addDoblaje = new AddDoblaje((java.awt.Frame)this.getParent(), true);
         // localización de la ventana
         setLocale(null);
-        // llena los datos
+        // llena los datos      
         LlenaDatos();
+        // Vacia las selecciones de campos
+        CancelaEdit();
     }
     
     // Llena de datos las tablas a desplegar y los combo box
@@ -126,7 +128,7 @@ public class Libros extends javax.swing.JInternalFrame {
         int[][] cellAlignment = {{0,javax.swing.SwingConstants.LEFT}};
         int[][] cellSize = {{0, 0},     // 
                             {1, 270},   // Libro
-                            {2, 20},    // Edicion
+                            {2, 40},    // Edicion
                             {3, 180},   // Editorial
                             {4, 90},    // Genero
                             {5, 55},    // Año
@@ -209,7 +211,7 @@ public class Libros extends javax.swing.JInternalFrame {
         cmbGenero.setSelectedIndex(-1);
         txtEdicion.setText("");
         txtAnio.setText("");
-        cmbGenero.setSelectedIndex(0);
+        cmbGenero.setSelectedIndex(-1);
         txtPags.setText("");
         editando = false;
         libro_id = 0;
@@ -320,7 +322,7 @@ public class Libros extends javax.swing.JInternalFrame {
         lblGenero.setText("Género:");
         pnlPelicula.add(lblGenero, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 70, -1, 20));
 
-        pnlPelicula.add(cmbGenero, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 70, 150, -1));
+        pnlPelicula.add(cmbGenero, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 70, 140, -1));
 
         lblClas.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblClas.setText("No. páginas");
@@ -656,7 +658,9 @@ public class Libros extends javax.swing.JInternalFrame {
                 libro[0] = libro_id;
                 // Actualiza los datos y regresa el id
                 libro_id = libro_dao.UpdateLibro(libro);
-                javax.swing.JOptionPane.showMessageDialog(this, "Datos actualizados.", "Información", 1);
+                if (libro_id != 0) {
+                    javax.swing.JOptionPane.showMessageDialog(this, "Datos actualizados.", "Información", 1);
+                }                
             }            
             else{   // si está guardando un registro nuevo
                 // Guarda los datos  y regresa el id
@@ -872,6 +876,7 @@ public class Libros extends javax.swing.JInternalFrame {
 
     // Recarga todos los combo box para mostrar informacion actualizada
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
+        CancelaEdit();
         LlenaDatos();
     }//GEN-LAST:event_btnRefreshActionPerformed
 
