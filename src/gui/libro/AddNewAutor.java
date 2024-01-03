@@ -12,7 +12,7 @@ import javax.swing.JOptionPane;
  * Ventana que permite agregar paliculas a la renta
  */
 public class AddNewAutor extends javax.swing.JDialog {
-    // Para guardar el actor
+    // Para guardar el autor
     String autor_id;
     String pais;
     AutorDAO autor_dao;
@@ -30,7 +30,7 @@ public class AddNewAutor extends javax.swing.JDialog {
         initComponents();
         processWindowEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
         // Crea el dao para acceder a la tabla AUTOR
-        autor_dao = new AutorDAO();   
+        autor_dao = new AutorDAO();               
         getRootPane().setDefaultButton(btnGuardar);       
         
         // Popula el ComboBox de paises disponibles
@@ -39,8 +39,7 @@ public class AddNewAutor extends javax.swing.JDialog {
         for (Object[] pais : all_paises) {
             // llena los datos de idioma en el combo 
             cmbPaises.addItem(pais[1].toString());
-        }
-
+        }        
     }
     
     private void BorrarTextos(){
@@ -72,18 +71,21 @@ public class AddNewAutor extends javax.swing.JDialog {
     }
     
     // Llena los datos del autor a editar (Id, nombre, apellido, pais_id)
-    public void SetEditId(String autor_id){
-        // Asigna el id del actor a modificar
-        this.autor_id = autor_id;
-        // Busca el actor
+    public void SetEditId(String id){
+        // Asigna el id del autor a modificar
+        this.autor_id = id;
+        // Busca el autor
         Object[] autor_edit = autor_dao.GetAutorById(autor_id);
         // Muestra los datos en los controles
         txtNombre.setText(autor_edit[1].toString());
         // si el apellido no es nulo
-        if (autor_edit[2] != null)
+        if (autor_edit[2] != null) {
             txtApellido.setText(autor_edit[2].toString());
-        if (autor_edit[3] != null)
-            cmbPaises.setSelectedItem(autor_edit[3].toString());
+        }            
+        // si el pais no es nulo
+        if (autor_edit[3] != null) {
+            cmbPaises.setSelectedItem(autor_edit[3].toString()); 
+        }                   
     }
     
     /**
@@ -105,7 +107,7 @@ public class AddNewAutor extends javax.swing.JDialog {
         cmbPaises = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Actor");
+        setTitle("Autor");
         setIconImage(java.awt.Toolkit.getDefaultToolkit().getImage( getClass().getResource("/img/actor.png")));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {
@@ -178,49 +180,40 @@ public class AddNewAutor extends javax.swing.JDialog {
             return;
         }
 
-        // Accion del boton Guardar
-        if (txtNombre.getText().trim().length() == 0){
+        // Obtiene el NOMBRE del pais seleccionado
+        pais = cmbPaises.getSelectedItem().toString();
+
+        if (autor_id == null){ // Guarda un nuevo autor
+            Object [] autor = new Object[3];
+            autor[0] = txtNombre.getText().trim();
+            autor[1] = txtApellido.getText().trim();
+            autor[2] = pais_dao.GetPaisesByNombre(pais)[0][0];  // ID del pais
+            autor_id = autor_dao.SaveAutor(autor);
+        }
+        else{ // Actualiza autor
+            Object [] autor = new Object[4];
+            autor[0] = autor_id;
+            autor[1] = txtNombre.getText().trim();
+            autor[2] = txtApellido.getText().trim();
+            autor[3] = pais_dao.GetPaisesByNombre(pais)[0][0];  // ID del pais
+            autor_id =  autor_dao.UpdateAutor(autor);
+        }
+
+        if (autor_id == null){
             // Suena un beep
             Toolkit.getDefaultToolkit().beep();
-            // Muestra un mensage de aviso
-            JOptionPane.showMessageDialog(this, "Escriba el nombre del autor", "Aviso", 2);
+            JOptionPane.showMessageDialog(this, "Error al guardar el autor", "Error", 0);                
         }
         else{
-            // Obtiene el NOMBRE del pais seleccionado
-            pais = cmbPaises.getSelectedItem().toString();
-          
-            if (autor_id == null){ // Guarda un nuevo actor
-                Object [] autor = new Object[3];
-                autor[0] = txtNombre.getText().trim();
-                autor[1] = txtApellido.getText().trim();
-                autor[2] = pais_dao.GetPaisesByNombre(pais)[0][0];  // ID del pais
-                autor_id = autor_dao.SaveAutor(autor);
-            }
-            else{ // Actualiza actor
-                Object [] autor = new Object[4];
-                autor[0] = autor_id;
-                autor[1] = txtNombre.getText().trim();
-                autor[2] = txtApellido.getText().trim();
-                autor[3] = pais_dao.GetPaisesByNombre(pais)[0][0];  // ID del pais
-                autor_id =  autor_dao.UpdateAutor(autor);
-            }
-            
-            if (autor_id == null){
-                // Suena un beep
-                Toolkit.getDefaultToolkit().beep();
-                JOptionPane.showMessageDialog(this, "Error al guardar el actor", "Error", 0);                
-            }
-            else{
-                BorrarTextos();
-                dispose();
-            }            
-        }                                
+            BorrarTextos();
+            autor_id = null;
+            dispose();
+        }                    
     }//GEN-LAST:event_btnGuardarActionPerformed
     
     // Descartar cambios al cerrar la ventana
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-        BorrarTextos();
-        autor_id = null;
+        
     }//GEN-LAST:event_formWindowClosed
 
     private void cmbPaisesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbPaisesActionPerformed

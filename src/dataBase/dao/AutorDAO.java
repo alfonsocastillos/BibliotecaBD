@@ -212,8 +212,9 @@ public class AutorDAO extends Conexion {
                             "FROM AUTOR " +
                             "WHERE SUBSTR (AUTOR_ID, 1, 1) LIKE SUBSTR (?, 1, 1)";
             ps = conn.prepareStatement(sentenciaSQL);
-            ps.setInt(1, (Integer) autor[2]);   // Pais del autor
-            ps.setInt(2, (Integer) autor[2]);   // Pais del autor                                   
+            PaisDAO pais_dao = new PaisDAO();
+            ps.setString(1, pais_dao.GetPaisById((Integer) autor[2])[1].toString());   // Pais del autor
+            ps.setString(2, pais_dao.GetPaisById((Integer) autor[2])[1].toString());   // Pais del autor
             rs = ps.executeQuery();
             
             // guarda el nuevo id
@@ -274,8 +275,8 @@ public class AutorDAO extends Conexion {
            // actualiza los datos
            sentenciaSQL = "UPDATE AUTOR SET " +
                           "NOMBRE = ?, " +
-                          "APELLIDO_PAT = ? " +
-                          "PAIS_ID = ? " +
+                          "APELLIDO_PAT = ?, " +
+                          "PAIS_ID = ?, " +
                           "LAST_UPDATE = SYSDATE " +
                           "WHERE AUTOR_ID = ?";
             ps = conn.prepareStatement(sentenciaSQL);

@@ -3,6 +3,8 @@ package gui.libro;
 import gui.libro.*;
 import dataBase.dao.AutorDAO;
 import java.awt.Toolkit;
+import java.util.HashSet;
+import java.util.Set;
 import javax.swing.JOptionPane;
 import tools.UtilsTable;
 
@@ -192,6 +194,10 @@ public class AddAutores extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        btnNewAutor.getAccessibleContext().setAccessibleDescription("Registrar nuevo autor");
+        btnDelAutor.getAccessibleContext().setAccessibleDescription("Borrar autor");
+        btnEditAutor.getAccessibleContext().setAccessibleDescription("Editar autor");
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -244,13 +250,13 @@ public class AddAutores extends javax.swing.JDialog {
         // hace visible la ventana
         add_new_autor.setVisible(true);        
         LlenaTabla();
-        // cuando cierra la ventana agrega el actor a la tabla y lo selecciona
+        // cuando cierra la ventana agrega el autor a la tabla y lo selecciona
         UtilsTable.mueveTabla(tableList, UtilsTable.getRow(lista_autores, add_new_autor.autor_id));
     }//GEN-LAST:event_btnNewAutorActionPerformed
 
     // Llena la tabla de autores cada que se escribe una letra
     private void txtFiltroKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFiltroKeyReleased
-        // Filtra actores  
+        // Filtra autores  
         LlenaTabla();
     }//GEN-LAST:event_txtFiltroKeyReleased
 
@@ -293,18 +299,20 @@ public class AddAutores extends javax.swing.JDialog {
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila", "Información", 1);
         }
         else{
-            // Obtiene el id del actor seleccionado
+            // Obtiene el id del autor seleccionado
             autor_id = tableList.getValueAt(tableList.getSelectedRow(), 0).toString();
-            // Abre la ventana para editar actor
-            // Ventana para editar actor
-            AddNewAutor edit_autor = new AddNewAutor(parent, true);        
+            // Abre la ventana para editar autor
+            // Ventana para editar autor
+            AddNewAutor edit_autor = new AddNewAutor(parent, true);                  
+            edit_autor.SetEditId(autor_id);
+
             // Localización de la ventana
             edit_autor.setLocationRelativeTo(this);            
-            edit_autor.SetEditId(autor_id);
             // hace visible la ventana
             edit_autor.setVisible(true);
+            
+            // cuando cierra la ventana agrega el autor a la tabla y lo selecciona
             LlenaTabla();
-            // cuando cierra la ventana agrega el actor a la tabla y lo selecciona
             UtilsTable.mueveTabla(tableList, UtilsTable.getRow(lista_autores, edit_autor.autor_id));
         }
     }//GEN-LAST:event_btnEditAutorActionPerformed
