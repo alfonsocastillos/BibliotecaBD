@@ -195,13 +195,13 @@ public class MDIPrincipal extends javax.swing.JFrame {
         barVent.add(sptDown);
 
         fileMenu.setMnemonic('f');
-        fileMenu.setText("Rentas");
+        fileMenu.setText("Prestamos");
         fileMenu.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
 
         menuRenta.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         menuRenta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/renta.png"))); // NOI18N
         menuRenta.setMnemonic('o');
-        menuRenta.setText("Rentas");
+        menuRenta.setText("Prestamos");
         menuRenta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuRentaActionPerformed(evt);
@@ -227,9 +227,9 @@ public class MDIPrincipal extends javax.swing.JFrame {
         editMenu.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
 
         menuPelicula.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        menuPelicula.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/peliculas.png"))); // NOI18N
+        menuPelicula.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/libros.png"))); // NOI18N
         menuPelicula.setMnemonic('t');
-        menuPelicula.setText("Peliculas");
+        menuPelicula.setText("Libros");
         menuPelicula.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuPeliculaActionPerformed(evt);
