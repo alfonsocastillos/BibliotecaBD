@@ -8,13 +8,13 @@ import tools.UtilsTable;
 /**
  *
  * @author Alfonso
- * Ventana que permite agregar autores a un libro
+ * Ventana que permite agregar paises
  */
 public class AddPais extends javax.swing.JDialog {
-    // Para agregar el autores a un libro
-    String pais_id;
+    // Para agregar el paises
+    int pais_id;
     PaisDAO pais_dao;
-    // Para listar todos los autores 
+    // Para listar todos los paises 
     Object lista_paises [][];  // Id, pais
    // public Object film[];
     java.awt.Frame parent;    
@@ -28,7 +28,7 @@ public class AddPais extends javax.swing.JDialog {
         // ventana modal
         super(parent, modal);   // Llama al constructor del padre
         this.parent= parent;
-        setTitle("Autores");
+        setTitle("Paises");
         // inicia los componentes
         initComponents();
         // Crea el dao
@@ -38,7 +38,7 @@ public class AddPais extends javax.swing.JDialog {
     }
     
     // ? ? ? 
-    public void SetPaisId(String id_pais){   
+    public void SetPaisId(int id_pais){   
         // Asigna el id del libro
         this.pais_id = id_pais;
         txtFiltro.setText("");
@@ -122,7 +122,7 @@ public class AddPais extends javax.swing.JDialog {
         pnlTableList.add(lblFiltro, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, 25));
 
         btnNewPais.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/add.png"))); // NOI18N
-        btnNewPais.setToolTipText("Registrar nuevo actor");
+        btnNewPais.setToolTipText("Registrar nuevo idioma");
         btnNewPais.setFocusable(false);
         btnNewPais.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -131,7 +131,7 @@ public class AddPais extends javax.swing.JDialog {
         });
 
         btnDelPais.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/borrar.png"))); // NOI18N
-        btnDelPais.setToolTipText("Borrar actor");
+        btnDelPais.setToolTipText("Borrar idioma");
         btnDelPais.setFocusable(false);
         btnDelPais.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -140,7 +140,7 @@ public class AddPais extends javax.swing.JDialog {
         });
 
         btnEditPais.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/editar.png"))); // NOI18N
-        btnEditPais.setToolTipText("Editar actor");
+        btnEditPais.setToolTipText("Editar idioma");
         btnEditPais.setFocusable(false);
         btnEditPais.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -193,13 +193,13 @@ public class AddPais extends javax.swing.JDialog {
         // hace visible la ventana
         add_new_pais.setVisible(true);        
         LlenaTabla();
-        // cuando cierra la ventana agrega el actor a la tabla y lo selecciona
+        // cuando cierra la ventana agrega el pais a la tabla y lo selecciona
         UtilsTable.mueveTabla(tableList, UtilsTable.getRow(lista_paises, add_new_pais.pais_id));
     }//GEN-LAST:event_btnNewPaisActionPerformed
 
-    // Llena la tabla de autores cada que se escribe una letra
+    // Llena la tabla de paises cada que se escribe una letra
     private void txtFiltroKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFiltroKeyReleased
-        // Filtra actores  
+        // Filtra paises  
         LlenaTabla();
     }//GEN-LAST:event_txtFiltroKeyReleased
 
@@ -222,7 +222,7 @@ public class AddPais extends javax.swing.JDialog {
             if (res == 0){
                 String msj = "";
                 // si la respuesta es afirmativa, elimina el registro
-                int ret = pais_dao.DeletePais(tableList.getValueAt(tableList.getSelectedRow(), 0).toString());
+                int ret = pais_dao.DeletePais((Integer) tableList.getValueAt(tableList.getSelectedRow(), 0));
                 if (ret == 1){
                     msj = "No se pudo eliminar por que tiene registros asignados.";
                     javax.swing.JOptionPane.showMessageDialog(this, msj, "Información", 1);
@@ -233,7 +233,7 @@ public class AddPais extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_btnDelPaisActionPerformed
 
-    // Abre una ventana para poder editar al autor seleccionado
+    // Abre una ventana para poder editar al pais seleccionado
     private void btnEditPaisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditPaisActionPerformed
         // Botón que edita el registro selecionado de la tabla
         if (tableList.getSelectedRow() < 0){
@@ -242,10 +242,10 @@ public class AddPais extends javax.swing.JDialog {
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila", "Información", 1);
         }
         else{
-            // Obtiene el id del actor seleccionado
-            pais_id = tableList.getValueAt(tableList.getSelectedRow(), 0).toString();
-            // Abre la ventana para editar actor
-            // Ventana para editar actor
+            // Obtiene el id del pais seleccionado
+            pais_id = (Integer) tableList.getValueAt(tableList.getSelectedRow(), 0);
+            // Abre la ventana para editar pais
+            // Ventana para editar pais
             AddNewPais edit_pais = new AddNewPais(parent, true);        
             // Localización de la ventana
             edit_pais.setLocationRelativeTo(this);            
@@ -253,7 +253,7 @@ public class AddPais extends javax.swing.JDialog {
             // hace visible la ventana
             edit_pais.setVisible(true);
             LlenaTabla();
-            // cuando cierra la ventana agrega el actor a la tabla y lo selecciona
+            // cuando cierra la ventana agrega el pais a la tabla y lo selecciona
             UtilsTable.mueveTabla(tableList, UtilsTable.getRow(lista_paises, edit_pais.pais_id));
         }
     }//GEN-LAST:event_btnEditPaisActionPerformed

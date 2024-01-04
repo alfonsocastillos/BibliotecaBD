@@ -236,7 +236,7 @@ public class GeneroDAO extends Conexion {
        genero = "%" + genero + "%";
        try{
             // Cuenta todos los actores que tengan un nombre parecido
-            sentenciaSQL =   "SELECT COUNT(GENERO_ID)" +
+            sentenciaSQL =   "SELECT COUNT(GENERO_ID) " +
                              "FROM GENERO " +
                              "WHERE UPPER (GENERO) LIKE UPPER(?)";   // Todos los idiomas que tengan un nombre parecido
 
@@ -251,9 +251,10 @@ public class GeneroDAO extends Conexion {
 
             // Misma consulta, pero ahora puede ser guardada en el arreglo
             generos = new Object[count][2];           
-            sentenciaSQL =   "SELECT GENERO_ID, GENERO " +
-                             "FROM GENERO " +
-                             "WHERE UPPER (GENERO) LIKE UPPER(?)";
+            sentenciaSQL =  "SELECT GENERO_ID, GENERO " +
+                            "FROM GENERO " +
+                            "WHERE UPPER (GENERO) LIKE UPPER(?) " +
+                            "ORDER BY GENERO";
 
             ps = conn.prepareStatement(sentenciaSQL);
             ps.setString(1, genero);
@@ -280,16 +281,8 @@ public class GeneroDAO extends Conexion {
     public int DeleteGenero(int genero_id){
         // Conecta a la base de datos
         conectar();
-        try{
-            // Cambiar a NULL el genero de cualquier libro con el genero a borrar
-            sentenciaSQL =  "UPDATE LIBRO " +
-                            "SET GENERO_ID = NULL " +
-                            "WHERE GENERO_ID = ?";
-            ps = conn.prepareStatement(sentenciaSQL);
-            ps.setInt(1, genero_id);
-            ps.executeUpdate();
-            
-            // Borrar el idioma
+        try{            
+            // Borrar el genero
             sentenciaSQL = "DELETE FROM GENERO " +
                             "WHERE GENERO_ID = ?";
             ps = conn.prepareStatement(sentenciaSQL);

@@ -8,13 +8,13 @@ import tools.UtilsTable;
 /**
  *
  * @author Alfonso
- * Ventana que permite agregar autores a un libro
+ * Ventana que permite agregar idiomas
  */
 public class AddIdioma extends javax.swing.JDialog {
-    // Para agregar el autores a un libro
-    String idioma_id;
+    // Para agregar el idiomas
+    int idioma_id;
     IdiomaDAO idioma_dao;
-    // Para listar todos los autores 
+    // Para listar todos los idiomas 
     Object lista_idiomas [][];  // Id, idioma
    // public Object film[];
     java.awt.Frame parent;    
@@ -28,7 +28,7 @@ public class AddIdioma extends javax.swing.JDialog {
         // ventana modal
         super(parent, modal);   // Llama al constructor del padre
         this.parent= parent;
-        setTitle("Autores");
+        setTitle("Idiomas");
         // inicia los componentes
         initComponents();
         // Crea el dao
@@ -38,16 +38,16 @@ public class AddIdioma extends javax.swing.JDialog {
     }
     
     // ? ? ? 
-    public void SetIdiomaId(String id_idioma){   
+    public void SetIdiomaId(int id_idioma){   
         // Asigna el id del libro
         this.idioma_id = id_idioma;
         txtFiltro.setText("");
         LlenaTabla();
     }
     
-    // Llena y despliega la tabla de autores 
+    // Llena y despliega la tabla de idiomas 
     private void LlenaTabla(){     
-        // Consulta todos los autores (id, nombre apellido)
+        // Consulta todos los idioma (id, idioma)
         lista_idiomas = idioma_dao.GetIdiomasByNombre(txtFiltro.getText().trim());
         // Titulos de la tabla
         String[] T_IDIOMA = {"","Idioma"};
@@ -122,7 +122,7 @@ public class AddIdioma extends javax.swing.JDialog {
         pnlTableList.add(lblFiltro, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, 25));
 
         btnNewIdioma.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/add.png"))); // NOI18N
-        btnNewIdioma.setToolTipText("Registrar nuevo actor");
+        btnNewIdioma.setToolTipText("Registrar nuevo idioma");
         btnNewIdioma.setFocusable(false);
         btnNewIdioma.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -131,7 +131,7 @@ public class AddIdioma extends javax.swing.JDialog {
         });
 
         btnDelIdioma.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/borrar.png"))); // NOI18N
-        btnDelIdioma.setToolTipText("Borrar actor");
+        btnDelIdioma.setToolTipText("Borrar idioma");
         btnDelIdioma.setFocusable(false);
         btnDelIdioma.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -140,7 +140,7 @@ public class AddIdioma extends javax.swing.JDialog {
         });
 
         btnEditIdioma.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/editar.png"))); // NOI18N
-        btnEditIdioma.setToolTipText("Editar actor");
+        btnEditIdioma.setToolTipText("Editar idioma");
         btnEditIdioma.setFocusable(false);
         btnEditIdioma.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -193,17 +193,17 @@ public class AddIdioma extends javax.swing.JDialog {
         // hace visible la ventana
         add_new_idioma.setVisible(true);        
         LlenaTabla();
-        // cuando cierra la ventana agrega el actor a la tabla y lo selecciona
+        // cuando cierra la ventana agrega el idioma a la tabla y lo selecciona
         UtilsTable.mueveTabla(tableList, UtilsTable.getRow(lista_idiomas, add_new_idioma.idioma_id));
     }//GEN-LAST:event_btnNewIdiomaActionPerformed
 
-    // Llena la tabla de autores cada que se escribe una letra
+    // Llena la tabla de idiomas cada que se escribe una letra
     private void txtFiltroKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFiltroKeyReleased
-        // Filtra actores  
+        // Filtra idiomas  
         LlenaTabla();
     }//GEN-LAST:event_txtFiltroKeyReleased
 
-    // Elimina al autor seleccionado de la tabla de AUTOR
+    // Elimina al idioma seleccionado de la tabla de IDIOMA
     private void btnDelIdiomaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelIdiomaActionPerformed
         // Eliminar un registro
         // si no selecciona fila, le avisa al usuario
@@ -222,7 +222,7 @@ public class AddIdioma extends javax.swing.JDialog {
             if (res == 0){
                 String msj = "";
                 // si la respuesta es afirmativa, elimina el registro
-                int ret = idioma_dao.DeleteIdioma(tableList.getValueAt(tableList.getSelectedRow(), 0).toString());
+                int ret = idioma_dao.DeleteIdioma((Integer) tableList.getValueAt(tableList.getSelectedRow(), 0));
                 if (ret == 1){
                     msj = "No se pudo eliminar por que tiene registros asignados.";
                     javax.swing.JOptionPane.showMessageDialog(this, msj, "Información", 1);
@@ -233,7 +233,7 @@ public class AddIdioma extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_btnDelIdiomaActionPerformed
 
-    // Abre una ventana para poder editar al autor seleccionado
+    // Abre una ventana para poder editar al idioma seleccionado
     private void btnEditIdiomaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditIdiomaActionPerformed
         // Botón que edita el registro selecionado de la tabla
         if (tableList.getSelectedRow() < 0){
@@ -242,10 +242,10 @@ public class AddIdioma extends javax.swing.JDialog {
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila", "Información", 1);
         }
         else{
-            // Obtiene el id del actor seleccionado
-            idioma_id = tableList.getValueAt(tableList.getSelectedRow(), 0).toString();
-            // Abre la ventana para editar actor
-            // Ventana para editar actor
+            // Obtiene el id del idioma seleccionado
+            idioma_id = (Integer) tableList.getValueAt(tableList.getSelectedRow(), 0);
+            // Abre la ventana para editar idioma
+            // Ventana para editar idioma
             AddNewIdioma edit_idioma = new AddNewIdioma(parent, true);        
             // Localización de la ventana
             edit_idioma.setLocationRelativeTo(this);            
@@ -253,7 +253,7 @@ public class AddIdioma extends javax.swing.JDialog {
             // hace visible la ventana
             edit_idioma.setVisible(true);
             LlenaTabla();
-            // cuando cierra la ventana agrega el actor a la tabla y lo selecciona
+            // cuando cierra la ventana agrega el idioma a la tabla y lo selecciona
             UtilsTable.mueveTabla(tableList, UtilsTable.getRow(lista_idiomas, edit_idioma.idioma_id));
         }
     }//GEN-LAST:event_btnEditIdiomaActionPerformed

@@ -12,7 +12,7 @@ import javax.swing.JOptionPane;
  */
 public class AddNewIdioma extends javax.swing.JDialog {
     // Para guardar el idioma
-    String idioma_id;
+    int idioma_id;
     IdiomaDAO idioma_dao;
 
     /**
@@ -26,7 +26,7 @@ public class AddNewIdioma extends javax.swing.JDialog {
         // inicia los componentes
         initComponents();
         processWindowEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-        // Crea el dao para acceder a la tabla AUTOR
+        // Crea el dao para acceder a la tabla IDIOMA
         idioma_dao = new IdiomaDAO();
         getRootPane().setDefaultButton(btnGuardar);                      
     }
@@ -36,7 +36,7 @@ public class AddNewIdioma extends javax.swing.JDialog {
         txtIdioma.setText("");
     }
     
-    public void SetEditId(String idioma_id){
+    public void SetEditId(int idioma_id){
         // Asigna el id del actor a modificar
         this.idioma_id = idioma_id;
         // Busca el actor
@@ -60,7 +60,7 @@ public class AddNewIdioma extends javax.swing.JDialog {
         btnGuardar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Actor");
+        setTitle("Idioma");
         setIconImage(java.awt.Toolkit.getDefaultToolkit().getImage( getClass().getResource("/img/actor.png")));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {
@@ -104,14 +104,14 @@ public class AddNewIdioma extends javax.swing.JDialog {
                 .addComponent(pnlTableList, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
+        getAccessibleContext().setAccessibleName("Idioma");
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
     
     // Descartar cambios al cerrar la ventana
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-        BorrarTextos();
-        idioma_id = null;
-        dispose();
+        
     }//GEN-LAST:event_formWindowClosed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
@@ -124,7 +124,7 @@ public class AddNewIdioma extends javax.swing.JDialog {
         }
         else{                      
             String idioma = txtIdioma.getText().trim();
-            if (idioma_id == null){ // Guarda un nuevo idioma                
+            if (idioma_id == 0){ // Guarda un nuevo idioma                
                 idioma_id = idioma_dao.SaveIdioma(idioma);                
             }
             else{ // Actualiza idioma                
@@ -134,7 +134,7 @@ public class AddNewIdioma extends javax.swing.JDialog {
                 idioma_id = idioma_dao.UpdateIdioma(idioma_obj);                
             }
             
-            if (idioma_id == null){
+            if (idioma_id == 0){
                 // Suena un beep
                 Toolkit.getDefaultToolkit().beep();
                 JOptionPane.showMessageDialog(this, "Error al guardar el idioma", "Error", 0);                

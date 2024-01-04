@@ -8,13 +8,13 @@ import tools.UtilsTable;
 /**
  *
  * @author Alfonso
- * Ventana que permite agregar autores a un libro
+ * Ventana que permite agregar editoriales
  */
 public class AddEditorial extends javax.swing.JDialog {
-    // Para agregar el autores a un libro
+    // Para agregar una editorial
     String editorial_id;
     EditorialDAO editorial_dao;
-    // Para listar todos los autores 
+    // Para listar todos los editorial 
     Object lista_editoriales [][];  // Id, pais
    // public Object film[];
     java.awt.Frame parent;    
@@ -28,7 +28,7 @@ public class AddEditorial extends javax.swing.JDialog {
         // ventana modal
         super(parent, modal);   // Llama al constructor del padre
         this.parent= parent;
-        setTitle("Autores");
+        setTitle("Editoriales");
         // inicia los componentes
         initComponents();
         // Crea el dao
@@ -197,7 +197,7 @@ public class AddEditorial extends javax.swing.JDialog {
         UtilsTable.mueveTabla(tableList, UtilsTable.getRow(lista_editoriales, add_new_editorial.editorial_id));
     }//GEN-LAST:event_btnNewEditorialActionPerformed
 
-    // Llena la tabla de autores cada que se escribe una letra
+    // Llena la tabla de editoriales cada que se escribe una letra
     private void txtFiltroKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFiltroKeyReleased
         // Filtra actores  
         LlenaTabla();
@@ -233,7 +233,7 @@ public class AddEditorial extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_btnDelEditorialActionPerformed
 
-    // Abre una ventana para poder editar al autor seleccionado
+    // Abre una ventana para poder editar al editorial seleccionado
     private void btnEditEditorialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditEditorialActionPerformed
         // Botón que edita el registro selecionado de la tabla
         if (tableList.getSelectedRow() < 0){

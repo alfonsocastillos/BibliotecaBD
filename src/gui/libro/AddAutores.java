@@ -136,7 +136,7 @@ public class AddAutores extends javax.swing.JDialog {
         pnlTableList.add(lblFiltro, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, 25));
 
         btnNewAutor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/add.png"))); // NOI18N
-        btnNewAutor.setToolTipText("Registrar nuevo actor");
+        btnNewAutor.setToolTipText("Registrar nuevo autor");
         btnNewAutor.setFocusable(false);
         btnNewAutor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -145,7 +145,7 @@ public class AddAutores extends javax.swing.JDialog {
         });
 
         btnDelAutor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/borrar.png"))); // NOI18N
-        btnDelAutor.setToolTipText("Borrar actor");
+        btnDelAutor.setToolTipText("Borrar autor");
         btnDelAutor.setFocusable(false);
         btnDelAutor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -154,7 +154,7 @@ public class AddAutores extends javax.swing.JDialog {
         });
 
         btnEditAutor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/editar.png"))); // NOI18N
-        btnEditAutor.setToolTipText("Editar actor");
+        btnEditAutor.setToolTipText("Editar autor");
         btnEditAutor.setFocusable(false);
         btnEditAutor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

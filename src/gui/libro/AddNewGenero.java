@@ -8,11 +8,11 @@ import javax.swing.JOptionPane;
 /**
  *
  * @author Carlos
- * Ventana que permite crear, editar y eliminar idiomas del catálogo
+ * Ventana que permite crear, editar y eliminar generos del catálogo
  */
 public class AddNewGenero extends javax.swing.JDialog {
-    // Para guardar el idioma
-    String genero_id;
+    // Para guardar el genero
+    int genero_id;
     GeneroDAO genero_dao;
 
     /**
@@ -26,7 +26,7 @@ public class AddNewGenero extends javax.swing.JDialog {
         // inicia los componentes
         initComponents();
         processWindowEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-        // Crea el dao para acceder a la tabla AUTOR
+        // Crea el dao para acceder a la tabla GENERO
         genero_dao = new GeneroDAO();
         getRootPane().setDefaultButton(btnGuardar);                      
     }
@@ -36,10 +36,10 @@ public class AddNewGenero extends javax.swing.JDialog {
         txtGenero.setText("");
     }
     
-    public void SetEditId(String genero_id){
-        // Asigna el id del actor a modificar
+    public void SetEditId(int genero_id){
+        // Asigna el id del genero a modificar
         this.genero_id = genero_id;
-        // Busca el actor
+        // Busca el genero
         Object[] genero_edit = genero_dao.GetGeneroById(genero_id);
         // Muestra los datos en los controles
         txtGenero.setText(genero_edit[1].toString());        
@@ -60,7 +60,7 @@ public class AddNewGenero extends javax.swing.JDialog {
         btnGuardar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Actor");
+        setTitle("Genero");
         setIconImage(java.awt.Toolkit.getDefaultToolkit().getImage( getClass().getResource("/img/actor.png")));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {
@@ -109,9 +109,7 @@ public class AddNewGenero extends javax.swing.JDialog {
     
     // Descartar cambios al cerrar la ventana
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-        BorrarTextos();
-        genero_id = null;
-        dispose();
+
     }//GEN-LAST:event_formWindowClosed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
@@ -120,21 +118,21 @@ public class AddNewGenero extends javax.swing.JDialog {
             // Suena un beep
             Toolkit.getDefaultToolkit().beep();
             // Muestra un mensage de aviso
-            JOptionPane.showMessageDialog(this, "Escriba el idioma", "Aviso", 2);
+            JOptionPane.showMessageDialog(this, "Escriba el genero", "Aviso", 2);
         }
         else{                      
             String genero = txtGenero.getText().trim();
-            if (genero_id == null){ // Guarda un nuevo idioma                
+            if (genero_id == 0){ // Guarda un nuevo genero                
                 genero_id = genero_dao.SaveGenero(genero);
             }
-            else{ // Actualiza idioma                
+            else{ // Actualiza genero                
                 Object[] genero_obj = new Object[2];
                 genero_obj[0] = genero_id;              // Id del genero
                 genero_obj[1] = genero;                 // genero
                 genero_id = genero_dao.UpdateGenero(genero_obj);                
             }
             
-            if (genero_id == null){
+            if (genero_id == 0){
                 // Suena un beep
                 Toolkit.getDefaultToolkit().beep();
                 JOptionPane.showMessageDialog(this, "Error al guardar el genero", "Error", 0);                

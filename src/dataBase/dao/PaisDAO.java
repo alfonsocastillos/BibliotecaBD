@@ -253,7 +253,8 @@ public class PaisDAO extends Conexion {
             paises = new Object[count][2];           
             sentenciaSQL =  "SELECT PAIS_ID, PAIS " +
                             "FROM PAIS " +
-                            "WHERE UPPER (PAIS) LIKE UPPER(?)";
+                            "WHERE UPPER (PAIS) LIKE UPPER(?) " +
+                            "ORDER BY PAIS";
 
             ps = conn.prepareStatement(sentenciaSQL);
             ps.setString(1, pais);
@@ -280,15 +281,7 @@ public class PaisDAO extends Conexion {
     public int DeletePais(int pais_id){
         // Conecta a la base de datos
         conectar();
-        try{
-            // Cambiar a NULL el pais de cualquier libro con el pais a borrar
-            sentenciaSQL =  "UPDATE LIBRO " +
-                            "SET PAIS_ID = NULL " +
-                            "WHERE PAIS_ID = ?";
-            ps = conn.prepareStatement(sentenciaSQL);
-            ps.setInt(1, pais_id);
-            ps.executeUpdate();
-            
+        try{            
             // Borrar el pais
             sentenciaSQL = "DELETE FROM PAIS " +
                             "WHERE PAIS_ID = ?";

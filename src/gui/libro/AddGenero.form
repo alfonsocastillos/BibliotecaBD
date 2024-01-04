@@ -140,7 +140,7 @@
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
           <Image iconType="3" name="/img/Acciones/add.png"/>
         </Property>
-        <Property name="toolTipText" type="java.lang.String" value="Registrar nuevo actor"/>
+        <Property name="toolTipText" type="java.lang.String" value="Registrar nuevo genero"/>
         <Property name="focusable" type="boolean" value="false"/>
       </Properties>
       <Events>
@@ -152,7 +152,7 @@
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
           <Image iconType="3" name="/img/Acciones/borrar.png"/>
         </Property>
-        <Property name="toolTipText" type="java.lang.String" value="Borrar actor"/>
+        <Property name="toolTipText" type="java.lang.String" value="Borrar genero"/>
         <Property name="focusable" type="boolean" value="false"/>
       </Properties>
       <Events>
@@ -164,7 +164,7 @@
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
           <Image iconType="3" name="/img/Acciones/editar.png"/>
         </Property>
-        <Property name="toolTipText" type="java.lang.String" value="Editar actor"/>
+        <Property name="toolTipText" type="java.lang.String" value="Editar genero"/>
         <Property name="focusable" type="boolean" value="false"/>
       </Properties>
       <Events>

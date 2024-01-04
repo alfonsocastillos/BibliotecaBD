@@ -27,6 +27,7 @@ public class EditorialDAO extends Conexion {
             
             ps = conn.prepareStatement(sentenciaSQL);            
             ps.setString(1, editorial);
+            ps.setString(2, editorial);
             rs = ps.executeQuery();
             
             // guarda el nuevo id
@@ -62,7 +63,7 @@ public class EditorialDAO extends Conexion {
         try{
            // actualiza los datos
            sentenciaSQL = "UPDATE EDITORIAL SET " +
-                          "EDITORIAL = ?, " +                          
+                          "EDITORIAL = ? " +                          
                           "WHERE EDITORIAL_ID = ?";
             ps = conn.prepareStatement(sentenciaSQL);
             
@@ -253,7 +254,8 @@ public class EditorialDAO extends Conexion {
            editoriales = new Object[count][2];           
            sentenciaSQL =   "SELECT EDITORIAL_ID, EDITORIAL " +
                             "FROM EDITORIAL " +
-                            "WHERE UPPER (EDITORIAL) LIKE UPPER(?)";
+                            "WHERE UPPER (EDITORIAL) LIKE UPPER(?)" +
+                            "ORDER BY EDITORIAL";
            
            ps = conn.prepareStatement(sentenciaSQL);
            ps.setString(1, editorial);
@@ -280,16 +282,8 @@ public class EditorialDAO extends Conexion {
     public int DeleteEditorial(String editorial_id){
         // Conecta a la base de datos
         conectar();
-        try{
-            // Cambiar a NULL la editorial de cualquier libro con la editorial a borrar
-            sentenciaSQL =  "UPDATE LIBRO" +
-                            "SET EDITORIAL_ID = NULL " +
-                            "WHERE EDITORIAL_ID = ?";
-            ps = conn.prepareStatement(sentenciaSQL);
-            ps.setString(1, editorial_id);
-            ps.executeUpdate();
-            
-            // Borrar el idioma
+        try{            
+            // Borrar la editorial
             sentenciaSQL = "DELETE FROM EDITORIAL " +
                             "WHERE EDITORIAL_ID = ?";
             ps = conn.prepareStatement(sentenciaSQL);

@@ -12,7 +12,7 @@ import javax.swing.JOptionPane;
  */
 public class AddNewPais extends javax.swing.JDialog {
     // Para guardar el idioma
-    String pais_id;
+    int pais_id;
     PaisDAO pais_dao;
 
     /**
@@ -26,7 +26,7 @@ public class AddNewPais extends javax.swing.JDialog {
         // inicia los componentes
         initComponents();
         processWindowEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-        // Crea el dao para acceder a la tabla AUTOR
+        // Crea el dao para acceder a la tabla PAIS
         pais_dao = new PaisDAO();
         getRootPane().setDefaultButton(btnGuardar);                      
     }
@@ -36,10 +36,10 @@ public class AddNewPais extends javax.swing.JDialog {
         txtPais.setText("");
     }
     
-    public void SetEditId(String pais_id){
-        // Asigna el id del actor a modificar
+    public void SetEditId(int pais_id){
+        // Asigna el id del pais a modificar
         this.pais_id = pais_id;
-        // Busca el actor
+        // Busca el pais
         Object[] pais_edit = pais_dao.GetPaisById(pais_id);
         // Muestra los datos en los controles
         txtPais.setText(pais_edit[1].toString());        
@@ -60,7 +60,7 @@ public class AddNewPais extends javax.swing.JDialog {
         btnGuardar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Actor");
+        setTitle("Pais");
         setIconImage(java.awt.Toolkit.getDefaultToolkit().getImage( getClass().getResource("/img/actor.png")));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {
@@ -104,14 +104,14 @@ public class AddNewPais extends javax.swing.JDialog {
                 .addComponent(pnlTableList, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
+        getAccessibleContext().setAccessibleName("Pais");
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
     
     // Descartar cambios al cerrar la ventana
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-        BorrarTextos();
-        pais_id = null;
-        dispose();
+        
     }//GEN-LAST:event_formWindowClosed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
@@ -124,7 +124,7 @@ public class AddNewPais extends javax.swing.JDialog {
         }
         else{                      
             String pais = txtPais.getText().trim();
-            if (pais_id == null){ // Guarda un nuevo idioma                
+            if (pais_id == 0){ // Guarda un nuevo idioma                
                 pais_id = pais_dao.SavePais(pais);                
             }
             else{ // Actualiza idioma                
@@ -134,7 +134,7 @@ public class AddNewPais extends javax.swing.JDialog {
                 pais_id = pais_dao.UpdatePais(pais_obj);                
             }
             
-            if (pais_id == null){
+            if (pais_id == 0){
                 // Suena un beep
                 Toolkit.getDefaultToolkit().beep();
                 JOptionPane.showMessageDialog(this, "Error al guardar el pais", "Error", 0);                

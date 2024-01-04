@@ -26,7 +26,7 @@ public class AddNewEditorial extends javax.swing.JDialog {
         // inicia los componentes
         initComponents();
         processWindowEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-        // Crea el dao para acceder a la tabla AUTOR
+        // Crea el dao para acceder a la tabla EDITORIAL
         editorial_dao = new EditorialDAO();
         getRootPane().setDefaultButton(btnGuardar);                      
     }
@@ -60,7 +60,7 @@ public class AddNewEditorial extends javax.swing.JDialog {
         btnGuardar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Actor");
+        setTitle("Editorial");
         setIconImage(java.awt.Toolkit.getDefaultToolkit().getImage( getClass().getResource("/img/actor.png")));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {
@@ -109,9 +109,7 @@ public class AddNewEditorial extends javax.swing.JDialog {
     
     // Descartar cambios al cerrar la ventana
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-        BorrarTextos();
-        editorial_id = null;
-        dispose();
+
     }//GEN-LAST:event_formWindowClosed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed

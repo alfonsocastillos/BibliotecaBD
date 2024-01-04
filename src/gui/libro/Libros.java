@@ -10,13 +10,11 @@ import dataBase.dao.EditorialDAO;
 import java.awt.Toolkit;
 import javax.swing.JOptionPane;
 import tools.*;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 /**
  *
- * @author Carlos
- * Ventana que administra las peliculas
+ * @author Alfonso
+ * Ventana que administra los libros
  */
 public class Libros extends javax.swing.JInternalFrame {
     boolean editando = false;
@@ -35,11 +33,11 @@ public class Libros extends javax.swing.JInternalFrame {
     Object autores_lista[][];
     
     // Ventanas para agregar autores, editoriales y autorias
-    AddAutores add_autor;     // Para agregar (o crear) autores a la autoria 
-    AddIdioma add_dioma;        // Para crear, editar y eliminar idiomas
-    AddPais add_pais;           // Para crear, editar y eliminar paises
-    AddEditorial add_editorial; // Para crear, editar y eliminar editoriales
-    AddGenero add_genero;       // Para crear, editar y eliminar generos
+    AddAutores add_autor;           // Para agregar (o crear) autores a la autoria 
+    AddIdioma add_idioma;           // Para crear, editar y eliminar idiomas
+    AddPais add_pais;               // Para crear, editar y eliminar paises
+    AddEditorial add_editorial;     // Para crear, editar y eliminar editoriales
+    AddGenero add_genero;           // Para crear, editar y eliminar generos
 
     // TODO: arreglar todo este archivo
     
@@ -58,9 +56,13 @@ public class Libros extends javax.swing.JInternalFrame {
         pais_dao = new PaisDAO();
         editorial_dao = new EditorialDAO();
         
-        // Instanciando ventanas para agregar idiomas, paises, editoriales y generos
+        // Instanciando ventanas para agregar autores, idiomas, paises, editoriales y generos
         add_autor = new AddAutores((java.awt.Frame)this.getParent(), true);
-        // addDoblaje = new AddDoblaje((java.awt.Frame)this.getParent(), true);
+        add_editorial = new AddEditorial((java.awt.Frame)this.getParent(), true);
+        add_idioma = new AddIdioma((java.awt.Frame)this.getParent(), true);
+        add_pais = new AddPais((java.awt.Frame)this.getParent(), true);
+        add_genero = new AddGenero((java.awt.Frame)this.getParent(), true);
+        
         // localización de la ventana
         setLocale(null);
         // llena los datos      
@@ -266,13 +268,13 @@ public class Libros extends javax.swing.JInternalFrame {
         btnEdit = new javax.swing.JButton();
         btnCancela = new javax.swing.JButton();
         pnlTableList3 = new javax.swing.JPanel();
-        jButton2 = new javax.swing.JButton();
+        EditIdioma = new javax.swing.JButton();
         pnlTableList4 = new javax.swing.JPanel();
-        jButton3 = new javax.swing.JButton();
+        EditPais = new javax.swing.JButton();
         pnlTableList5 = new javax.swing.JPanel();
-        jButton4 = new javax.swing.JButton();
+        EditEditorial = new javax.swing.JButton();
         pnlTableList6 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
+        EditGenero = new javax.swing.JButton();
         btnRefresh = new javax.swing.JButton();
 
         setClosable(true);
@@ -446,7 +448,6 @@ public class Libros extends javax.swing.JInternalFrame {
 
         jLabel2.setText("Numero de libros en catálogo:");
         pnlTableList.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 230, -1, 30));
-        jLabel2.getAccessibleContext().setAccessibleName("Numero de libros en catálogo:");
         jLabel2.getAccessibleContext().setAccessibleDescription("");
 
         lblCantidad.setText("000");
@@ -537,29 +538,49 @@ public class Libros extends javax.swing.JInternalFrame {
         pnlTableList3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Idiomas", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N
         pnlTableList3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jButton2.setText("Editar idiomas");
-        pnlTableList3.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, 140, -1));
+        EditIdioma.setText("Editar idiomas");
+        EditIdioma.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                EditIdiomaActionPerformed(evt);
+            }
+        });
+        pnlTableList3.add(EditIdioma, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, 140, -1));
 
         pnlTableList4.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Países", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N
         pnlTableList4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jButton3.setText("Editar países");
-        pnlTableList4.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, 140, -1));
+        EditPais.setText("Editar países");
+        EditPais.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                EditPaisActionPerformed(evt);
+            }
+        });
+        pnlTableList4.add(EditPais, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, 140, -1));
 
         pnlTableList5.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Editoriales", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N
         pnlTableList5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jButton4.setText("Editar editoriales");
-        pnlTableList5.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, -1, -1));
+        EditEditorial.setText("Editar editoriales");
+        EditEditorial.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                EditEditorialActionPerformed(evt);
+            }
+        });
+        pnlTableList5.add(EditEditorial, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, -1, -1));
 
         pnlTableList6.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Generos", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N
         pnlTableList6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jButton1.setText("Editar editoriales");
-        pnlTableList6.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, -1, -1));
+        EditGenero.setText("Editar editoriales");
+        EditGenero.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                EditGeneroActionPerformed(evt);
+            }
+        });
+        pnlTableList6.add(EditGenero, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, -1, -1));
 
         btnRefresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/refresh.png"))); // NOI18N
-        btnRefresh.setToolTipText("Guardar");
+        btnRefresh.setToolTipText("Actualizar");
         btnRefresh.setFocusable(false);
         btnRefresh.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -860,7 +881,7 @@ public class Libros extends javax.swing.JInternalFrame {
             // Suena un beep
             Toolkit.getDefaultToolkit().beep();
             // Muestra un mensage de aviso
-            JOptionPane.showMessageDialog(this, "Para agregar actores primero guarde\nNo edite un libro.", "Aviso", 2);
+            JOptionPane.showMessageDialog(this, "Para agregar autores primero guarde\nNo edite un libro.", "Aviso", 2);
         }
         else{   // Abre la ventana para agregar autores            
             // Asigna el id de la pelicula            
@@ -876,11 +897,55 @@ public class Libros extends javax.swing.JInternalFrame {
 
     // Recarga todos los combo box para mostrar informacion actualizada
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
-        CancelaEdit();
         LlenaDatos();
+        CancelaEdit();
     }//GEN-LAST:event_btnRefreshActionPerformed
 
+    private void EditIdiomaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditIdiomaActionPerformed
+        // Hace visible la ventana para agregar idiomas
+        add_idioma.setLocationRelativeTo(this);
+        add_idioma.setVisible(true);
+        
+        // Al cerrar, actualizar los idiomas disponibles        
+        LlenadoIdiomas();
+        CancelaEdit();
+    }//GEN-LAST:event_EditIdiomaActionPerformed
+
+    private void EditPaisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditPaisActionPerformed
+        // Hace visible la ventana para agregar paises
+        add_pais.setLocationRelativeTo(this);
+        add_pais.setVisible(true);
+        
+        // Al cerrar, actualizar los paises disponibles
+        LlenadoPaises();
+        CancelaEdit();
+    }//GEN-LAST:event_EditPaisActionPerformed
+
+    private void EditEditorialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditEditorialActionPerformed
+        // Hace visible la ventana para agregar editoriales
+        add_editorial.setLocationRelativeTo(this);
+        add_editorial.setVisible(true);
+        
+        // Al cerrar, actualizar las editoriales disponibles
+        LlenadoEditoriales();
+        CancelaEdit();
+    }//GEN-LAST:event_EditEditorialActionPerformed
+
+    private void EditGeneroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditGeneroActionPerformed
+        // Hace visible la ventana para agregar generos
+        add_genero.setLocationRelativeTo(this);
+        add_genero.setVisible(true);
+        
+        // Al cerrar, actualizar los generos disponibles
+        LlenadoEditoriales();
+        CancelaEdit();
+    }//GEN-LAST:event_EditGeneroActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton EditEditorial;
+    private javax.swing.JButton EditGenero;
+    private javax.swing.JButton EditIdioma;
+    private javax.swing.JButton EditPais;
     private javax.swing.JButton btnAddAutoria;
     private javax.swing.JButton btnAddLibro;
     private javax.swing.JButton btnBorrar;
@@ -896,10 +961,6 @@ public class Libros extends javax.swing.JInternalFrame {
     private javax.swing.JComboBox<String> cmbGenero;
     private javax.swing.JComboBox<String> cmbIdioma;
     private javax.swing.JComboBox<String> cmbPais;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel lblAnio;
     private javax.swing.JLabel lblCantidad;

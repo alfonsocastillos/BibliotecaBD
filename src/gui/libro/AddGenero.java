@@ -8,13 +8,13 @@ import tools.UtilsTable;
 /**
  *
  * @author Alfonso
- * Ventana que permite agregar autores a un libro
+ * Ventana que permite agregar generos
  */
 public class AddGenero extends javax.swing.JDialog {
-    // Para agregar el autores a un libro
-    String genero_id;
+    // Para agregar el genero
+    int genero_id;
     GeneroDAO genero_dao;
-    // Para listar todos los autores 
+    // Para listar todos los generos 
     Object lista_generos [][];  // Id, genero
    // public Object film[];
     java.awt.Frame parent;    
@@ -28,7 +28,7 @@ public class AddGenero extends javax.swing.JDialog {
         // ventana modal
         super(parent, modal);   // Llama al constructor del padre
         this.parent= parent;
-        setTitle("Autores");
+        setTitle("Generos");
         // inicia los componentes
         initComponents();
         // Crea el dao
@@ -38,16 +38,16 @@ public class AddGenero extends javax.swing.JDialog {
     }
     
     // ? ? ? 
-    public void SetGeneroId(String genero_id){   
+    public void SetGeneroId(int genero_id){   
         // Asigna el id del libro
         this.genero_id = genero_id;
         txtFiltro.setText("");
         LlenaTabla();
     }
     
-    // Llena y despliega la tabla de autores 
+    // Llena y despliega la tabla de generos 
     private void LlenaTabla(){     
-        // Consulta todos los autores (id, nombre apellido)
+        // Consulta todos los generos (id, genero)
         lista_generos = genero_dao.GetGenerosByNombre(txtFiltro.getText().trim());
         // Titulos de la tabla
         String[] T_GENERO = {"","Genero"};
@@ -122,7 +122,7 @@ public class AddGenero extends javax.swing.JDialog {
         pnlTableList.add(lblFiltro, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, 25));
 
         btnNewGenero.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/add.png"))); // NOI18N
-        btnNewGenero.setToolTipText("Registrar nuevo actor");
+        btnNewGenero.setToolTipText("Registrar nuevo genero");
         btnNewGenero.setFocusable(false);
         btnNewGenero.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -131,7 +131,7 @@ public class AddGenero extends javax.swing.JDialog {
         });
 
         btnDelGenero.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/borrar.png"))); // NOI18N
-        btnDelGenero.setToolTipText("Borrar actor");
+        btnDelGenero.setToolTipText("Borrar genero");
         btnDelGenero.setFocusable(false);
         btnDelGenero.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -140,7 +140,7 @@ public class AddGenero extends javax.swing.JDialog {
         });
 
         btnEditGenero.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/editar.png"))); // NOI18N
-        btnEditGenero.setToolTipText("Editar actor");
+        btnEditGenero.setToolTipText("Editar genero");
         btnEditGenero.setFocusable(false);
         btnEditGenero.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -193,13 +193,13 @@ public class AddGenero extends javax.swing.JDialog {
         // hace visible la ventana
         add_new_genero.setVisible(true);        
         LlenaTabla();
-        // cuando cierra la ventana agrega el actor a la tabla y lo selecciona
+        // cuando cierra la ventana agrega el genero a la tabla y lo selecciona
         UtilsTable.mueveTabla(tableList, UtilsTable.getRow(lista_generos, add_new_genero.genero_id));
     }//GEN-LAST:event_btnNewGeneroActionPerformed
 
-    // Llena la tabla de autores cada que se escribe una letra
+    // Llena la tabla de generos cada que se escribe una letra
     private void txtFiltroKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFiltroKeyReleased
-        // Filtra actores  
+        // Filtra generos  
         LlenaTabla();
     }//GEN-LAST:event_txtFiltroKeyReleased
 
@@ -222,7 +222,7 @@ public class AddGenero extends javax.swing.JDialog {
             if (res == 0){
                 String msj = "";
                 // si la respuesta es afirmativa, elimina el registro
-                int ret = genero_dao.DeleteGenero(tableList.getValueAt(tableList.getSelectedRow(), 0).toString());
+                int ret = genero_dao.DeleteGenero((Integer) tableList.getValueAt(tableList.getSelectedRow(), 0));
                 if (ret == 1){
                     msj = "No se pudo eliminar por que tiene registros asignados.";
                     javax.swing.JOptionPane.showMessageDialog(this, msj, "Información", 1);
@@ -233,7 +233,7 @@ public class AddGenero extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_btnDelGeneroActionPerformed
 
-    // Abre una ventana para poder editar al autor seleccionado
+    // Abre una ventana para poder editar al genero seleccionado
     private void btnEditGeneroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditGeneroActionPerformed
         // Botón que edita el registro selecionado de la tabla
         if (tableList.getSelectedRow() < 0){
@@ -242,10 +242,10 @@ public class AddGenero extends javax.swing.JDialog {
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila", "Información", 1);
         }
         else{
-            // Obtiene el id del actor seleccionado
-            genero_id = tableList.getValueAt(tableList.getSelectedRow(), 0).toString();
-            // Abre la ventana para editar actor
-            // Ventana para editar actor
+            // Obtiene el id del genero seleccionado
+            genero_id = (Integer) tableList.getValueAt(tableList.getSelectedRow(), 0);
+            // Abre la ventana para editar genero
+            // Ventana para editar genero
             AddNewGenero edit_genero = new AddNewGenero(parent, true);        
             // Localización de la ventana
             edit_genero.setLocationRelativeTo(this);            
@@ -253,7 +253,7 @@ public class AddGenero extends javax.swing.JDialog {
             // hace visible la ventana
             edit_genero.setVisible(true);
             LlenaTabla();
-            // cuando cierra la ventana agrega el actor a la tabla y lo selecciona
+            // cuando cierra la ventana agrega el genero a la tabla y lo selecciona
             UtilsTable.mueveTabla(tableList, UtilsTable.getRow(lista_generos, edit_genero.genero_id));
         }
     }//GEN-LAST:event_btnEditGeneroActionPerformed

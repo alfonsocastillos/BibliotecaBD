@@ -252,9 +252,10 @@ public class IdiomaDAO extends Conexion {
 
             // Misma consulta, pero ahora puede ser guardada en el arreglo
             idiomas = new Object[count][2];           
-            sentenciaSQL =   "SELECT IDIOMA_ID, IDIOMA " +
-                             "FROM IDIOMA " +
-                             "WHERE UPPER (IDIOMA) LIKE UPPER(?)";
+            sentenciaSQL =  "SELECT IDIOMA_ID, IDIOMA " +
+                            "FROM IDIOMA " +
+                            "WHERE UPPER (IDIOMA) LIKE UPPER(?) " +
+                            "ORDER BY IDIOMA";
 
             ps = conn.prepareStatement(sentenciaSQL);
             ps.setString(1, idioma);
@@ -281,15 +282,7 @@ public class IdiomaDAO extends Conexion {
     public int DeleteIdioma(int idioma_id){
         // Conecta a la base de datos
         conectar();
-        try{
-            // Cambiar a NULL el idioma de cualquier libro con el idioma a borrar
-            sentenciaSQL =  "UPDATE LIBRO " +
-                            "SET IDIOMA_ID = NULL " +
-                            "WHERE IDIOMA_ID = ?";
-            ps = conn.prepareStatement(sentenciaSQL);
-            ps.setInt(1, idioma_id);
-            ps.executeUpdate();
-            
+        try{            
             // Borrar el idioma
             sentenciaSQL = "DELETE FROM IDIOMA " +
                             "WHERE IDIOMA_ID = ?";

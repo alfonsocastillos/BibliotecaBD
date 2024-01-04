@@ -287,7 +287,7 @@ public class LibroDAO extends Conexion {
         int res = autor_dao.DeleteAutoriaFromLibro(libro_id);
         
         // Si se borro con exito la autoria, borrar el libro
-        if (res == 1){
+        if (res == 0){
             // Conecta a la base de datos
             conectar();
             try{
