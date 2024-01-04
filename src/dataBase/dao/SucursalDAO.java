@@ -37,15 +37,15 @@ public class SucursalDAO extends Conexion{
                if (rs.getString(3) == null)
                    Sucursales[i][2]=("");
                else
-                   Sucursales[i][2]=(rs.getString(3));
-               Sucursales[i][3]=(rs.getString(4));
-               Sucursales[i][4]=(rs.getString(5));
-               Sucursales[i][5]=(rs.getString(6));
-               Sucursales[i][6]=(rs.getString(7));
-               Sucursales[i][7]=(rs.getString(8)); 
-               Sucursales[i][7]=(rs.getString(9));
-               Sucursales[i][7]=(rs.getString(10)); 
-               i++;
+                 Sucursales[i][2]=(rs.getString(3));
+                Sucursales[i][3]=(rs.getString(4));
+                Sucursales[i][4]=(rs.getString(5));
+                Sucursales[i][5]=(rs.getString(6));
+                Sucursales[i][6]=(rs.getString(7));
+                Sucursales[i][7]=(rs.getString(8)); 
+                Sucursales[i][8]=(rs.getString(9));
+                Sucursales[i][9]=(rs.getString(10)); 
+                i++;
            }           
            return Sucursales;
         }
@@ -69,22 +69,24 @@ public class SucursalDAO extends Conexion{
                             "NOMBRE = ?, " +
                             "LADA = ?, " +
                             "TELEFONO = ?, " +
+                            "EXTENSION = ?, " +
                             "PAGINA_WEB = ?, " +
                             "HORA_APERTURA= ?, " +
                             "HORA_CIERRE = ?, " +
                             "CORREO = ?, " +
                             "DIRECCION_ID = ?, " +
-                            "WHERE SUCUSAL_ID = ?";
+                            "WHERE SURCUSAL_ID = ?";
             ps = conn.prepareStatement(sentenciaSQL);
             
-            ps.setString(1, Suc[1].toString());     // nombre
-            ps.setString(2, Suc[2].toString());     // lada
-            ps.setString(3, Suc[3].toString());     // telefono
-            ps.setString(4, Suc[4].toString());     // Nueva  pagina web
-            ps.setString(5, Suc[5].toString());     // Nuevo apertura
-            ps.setString(6, Suc[6].toString());     // Nuevo cierre
-            ps.setString(7, Suc[7].toString());     // Nuevo correo
-            ps.setString(8, Suc[8].toString());     // Nuevo direccion id
+            ps.setString(1, Suc[1].toString());     // nuevo nombre
+            ps.setString(2, Suc[2].toString());     // nueva lada
+            ps.setString(3, Suc[3].toString());     // nuevo telefono
+            ps.setString(3, Suc[4].toString());     // nueva extension
+            ps.setString(4, Suc[5].toString());     // Nueva  pagina web
+            ps.setString(5, Suc[6].toString());     // Nueva apertura
+            ps.setString(6, Suc[7].toString());     // Nuevo cierre
+            ps.setString(7, Suc[8].toString());     // Nuevo correo
+            ps.setString(8, Suc[9].toString());     // Nuevo direccion id
             ps.setString(9, Suc[0].toString());     // Id de la sucursal a modificar
             ps.executeUpdate();
             return Suc[0].toString();               // Regresa el id de la sucursal
@@ -99,85 +101,88 @@ public class SucursalDAO extends Conexion{
        }
     }
 
-    // Consultar todas las direcciones
-    public Object [][] GetAllDireccionesByEstado(String estado_id){
+    // Consultar todas las sucusales 
+    public Object [][] GetAllSucursalessByEstado(String estado_id){
         conectar();
-        Object [][] dirs;
+        Object [][] suc;
         int i = 0;
         int count = 0;
         try{
-            sentenciaSQL = "SELECT COUNT(*) FROM DIRECCIONES WHERE ESTADO_ID = ?";     // Numero de direcciones en ese estado
+            sentenciaSQL = "SELECT COUNT(*) FROM SUCURSALES WHERE ESTADO_ID = ?";     // Numero de sucursales en ese estado
             ps = conn.prepareStatement(sentenciaSQL);       // Convierte el str a un sentencia utilizable en SQL        
-            ps.setString(1, estado_id);                     // Nuevo numero exterior
-            rs = ps.executeQuery();                         // Resultado de la consulta
+            ps.setString(1, estado_id);          // Nuevo numero exterior
+            rs = ps.executeQuery();                            // Resultado de la consulta
 
-            // Numero de direcciones en ese estado (COUNT)
+            // Numero de sucursales en ese estado (COUNT)
             if (rs.next()){
                 count = rs.getInt(1);
             }
 
-            // Arreglo de todas las direcciones (ID, alcaldia, cp, calle, no. exterior, no. interior, estado id)
-            dirs = new Object[count][7];           
-            sentenciaSQL  = "SELECT DIRECCION_ID, ALCALDIA, CP, CALLE, EXTERIOR, INTERIOR, ESTADO_ID " +
-                            "FROM DIRECCION WHERE ESTADO_ID = ? ORDER BY 2";           
+            // Arreglo de todas las sucursales (ID, nombre, lada , telefono , extencion, pagina web, hora apertura, hora cierre, correo, direccion id)
+            suc = new Object[count][10];           
+            sentenciaSQL  = "SELECT SUCURSAL_ID, NOMBRE, LADA, TELEFONO, EXTENCION, PAGINA WEB, HORA_APERTURA, HORA_CIERRE, CORREO, DIRECCION_ID " +
+                            "FROM SUCURSAL WHERE ESTADO_ID = ? ORDER BY 2";           
             ps = conn.prepareStatement(sentenciaSQL);
             ps.setString(1, estado_id);
             rs = ps.executeQuery();
 
-            // Agregar a todas las direcciones al arreglo (migrar de rs a dirs)
+            // Agregar a todas las sucursales al arreglo (migrar de rs a suc)
             while (rs.next()){
-                dirs[i][0] = (rs.getString(1));     // Id
-                dirs[i][1] = (rs.getString(2));     // Alcaldia
-                dirs[i][2] = (rs.getString(3));     // CP
-                dirs[i][3] = (rs.getString(4));     // Calle
-                dirs[i][4] = (rs.getString(5));     // Exterior
-                dirs[i][5] = (rs.getString(6));     // Interior
-                dirs[i][6] = (rs.getString(7));     // Estado id
+                suc[i][0] = (rs.getString(1));     // Id
+                suc[i][1] = (rs.getString(2));     // nombre
+                suc[i][2] = (rs.getString(3));     // lada
+                suc[i][3] = (rs.getString(4));     // telefon
+                suc[i][4] = (rs.getString(5));     // Extencion
+                suc[i][5] = (rs.getString(6));     // pagina web
+                suc[i][6] = (rs.getString(7));     // hora apertura
+                suc[i][7] = (rs.getString(8));     // hora cierre
+                suc[i][8] = (rs.getString(9));     // correo
+                suc[i][9] = (rs.getString(10));     // direccion id
                 i++;
             }           
-            return dirs;
+            return suc;
         }
         catch (SQLException ex){
             System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + ConfigDataBase.DB_ERR_QUERY + 
-                    "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "GetAllDireccionesByEstado");
+                    "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "GetAllSucursalesByEstado");
             return null;
         }
         finally{
            desconectar();           
        }
     }  
-
-    
-    /// falta modificar esta parte 
-    
-    // Consultar una direccion por id
-    public Object[] GetDireccionById(String direccion_id)
+     
+    // Consultar una sucursale por id
+    public Object[] GetSucursalById(String sucursal_id)
     {
         conectar();
-        Object [] direccion = new Object[7];
+        Object [] sucursal = new Object[10];
        
         try{                    
-            sentenciaSQL  = "SELECT DIRECCION_ID, ALCALDIA, CP, CALLE, EXTERIOR, INTERIOR, ESTADO_ID FROM DIRECCION " + 
-                            "WHERE DIRECCION_ID = ?";           
+            sentenciaSQL  = "SELECT SUCURSAL_ID, NOMBRE, LADA, TELEFONO, EXTENCION, PAGINA WEB, HORA_APERTURA, HORA_CIERRE, CORREO, DIRECCION_ID  FROM SUCURSAL " + 
+                            "WHERE SUCURSAL_ID = ?";           
             ps = conn.prepareStatement(sentenciaSQL);
-            ps.setString(1, direccion_id);    // Reemplaza el parámetro index (simbolo ?) con el str x
+            ps.setString(1, sucursal_id);    // Reemplaza el parámetro index (simbolo ?) con el str x
             rs = ps.executeQuery();
 
-            // Llena el arreglo actor con el resultado
+            // Llena el arreglo con el resultado
             while (rs.next()){
-                direccion[0] = (rs.getString(1));
-                direccion[1] = (rs.getString(2));  
-                direccion[2] = (rs.getString(3));
-                direccion[3] = (rs.getString(4));  
-                direccion[4] = (rs.getString(5));
-                direccion[5] = (rs.getString(6));  
-                direccion[6] = (rs.getString(7));
+                sucursal[0] = (rs.getString(1));
+                sucursal[1] = (rs.getString(2));  
+                sucursal[2] = (rs.getString(3));
+                sucursal[3] = (rs.getString(4));  
+                sucursal[4] = (rs.getString(5));
+                sucursal[5] = (rs.getString(6));  
+                sucursal[6] = (rs.getString(7));
+                sucursal[7] = (rs.getString(8));
+                sucursal[8] = (rs.getString(9));
+                sucursal[9] = (rs.getString(10));
             }           
-            return direccion;
+            return sucursal;
         }
          catch (SQLException ex){
              System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + ConfigDataBase.DB_ERR_QUERY + 
-                     "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "GetDireccionById");
+                     "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "GetSucursalById");
              return null;
         }
         finally{
@@ -186,38 +191,37 @@ public class SucursalDAO extends Conexion{
 
     }
     
-    // Borrar una direccion
-    public int DeleteDireccion(String direccion_id){
-        // Conecta a la base de datos
-        conectar();
+    // Borrar una sucursal
+    public int DeleteSucursal(String sucursal_id){
+        conectar();  // Conecta a la base de datos
         try{
-            // Cambiar a NULL la direccion de cualquier empleado/sucursal/cliente con la direccion a borrar
+            // Cambiar a NULL la sucursal de cualquier empleado/cliente/direccion  con la sucursal a borrar
             sentenciaSQL =  "UPDATE CLIENTE" +
-                            "SET DIRECCION_ID = NULL " +
-                            "WHERE DIRECCION_ID = ?";
+                            "SET SUCRUSAL_ID = NULL " +
+                            "WHERE SUCURSAL_ID = ?";
             ps = conn.prepareStatement(sentenciaSQL);
-            ps.setString(1, direccion_id);
+            ps.setString(1, sucursal_id);
             ps.executeUpdate();
             
              sentenciaSQL =  "UPDATE EMPLEADO" +
-                            "SET DIRECCION_ID = NULL " +
-                            "WHERE DIRECCION_ID = ?";
+                            "SET SUCURSAL_ID = NULL " +
+                            "WHERE SUCURSAL_ID = ?";
             ps = conn.prepareStatement(sentenciaSQL);
-            ps.setString(1, direccion_id);
+            ps.setString(1, sucursal_id);
             ps.executeUpdate();
             
-            sentenciaSQL =  "UPDATE SUCURSAL" +
-                            "SET DIRECCION_ID = NULL " +
-                            "WHERE DIRECCION_ID = ?";
+            sentenciaSQL =  "UPDATE DIRECCION" +
+                            "SET SUCURSAL_ID = NULL " +
+                            "WHERE SUCURSAL_ID = ?";
             ps = conn.prepareStatement(sentenciaSQL);
-            ps.setString(1, direccion_id);
-            ps.executeUpdate();
+            ps.setString(1, sucursal_id);
+            ps.executeUpdate();                   
             
             // Borrar el idioma
-            sentenciaSQL = "DELETE FROM DIRECCION " +
-                            "WHERE DIRECCION_ID = ?";
+            sentenciaSQL = "DELETE FROM SUCURSAL " +
+                            "WHERE SUCURSAL_ID = ?";
             ps = conn.prepareStatement(sentenciaSQL);
-            ps.setString(1, direccion_id);
+            ps.setString(1, sucursal_id);
             int res = ps.executeUpdate();
             if (res == 1){
                 return 0;
@@ -227,7 +231,7 @@ public class SucursalDAO extends Conexion{
         }
         catch (SQLException ex){
             System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
-                    "\n\n" + sentenciaSQL + "\n\nUbicación: " + "DeleteDireccion");
+                    "\n\n" + sentenciaSQL + "\n\nUbicación: " + "DeleteSucursal");
             if (ex.getErrorCode() ==  2292)
                 return 1;
             return 2;

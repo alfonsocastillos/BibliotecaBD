@@ -7,14 +7,14 @@ import dataBase.Conexion;
 import dataBase.ConfigDataBase;
 import java.sql.*;
    
-public class PrestamoDAO extends Conexion { // Para llamar procedimientos almacenados
+public class PrestamoDAO extends Conexion { 
     
-    public String SavePrestamo (Object[] Pres){ // Guarda un libro y se conecta a la base de datos
+    public String SavePrestamo (Object[] Libro){ // Guarda un libro y se conecta a la base de datos
         
         conectar();
         try{
-            String id = "";
-            
+            String id = null;
+         
             // genera el nuevo id
             sentenciaSQL = "SELECT SUBSTR (EXTRACT(YEAR FROM SYSDATE),3,2)||LPAD(EXTRACT(MONTH FROM SYSDATE),2,'0') || LPAD(EXTRACT(DAY FROM SYSDATE),2,'0')||LPAD(NVL(MAX(TO_NUMBER(SUBSTR(PRESTAMO_ID,7,3)))+1,1),3,'0') \n" +
                            " FROM PRESTAMO\n" +
@@ -31,23 +31,24 @@ public class PrestamoDAO extends Conexion { // Para llamar procedimientos almace
             ps = conn.prepareStatement(sentenciaSQL);
             ps.setString(1, id);
             // Asigna los valores del arreglo            
-            ps.setString(2, Pres [0].toString());
-            ps.setString(3,Pres [1].toString());
-            ps.setString(4,Pres [2].toString());
-            ps.setString(5,Pres [3].toString());
-            ps.setString(6,Pres [4].toString());        
+            ps.setString(2, Libro [0].toString());
+            ps.setString(3,Libro [1].toString());
+            ps.setString(4,Libro [2].toString());
+            ps.setString(5,Libro[3].toString());
+            ps.setString(6,Libro [4].toString());        
             ps.executeUpdate();
             return id;
         }
         catch (SQLException ex){
             System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
-                    "\n\n" + sentenciaSQL + "\n\nUbicación: " + "savePrestamo");
+                    "\n\n" + sentenciaSQL + "\n\nUbicación: " + "saveLibro");
             return null;
         }
        finally{
            desconectar();
        }
     }   
+
     // Modificar un prestamo
     public String UpdatePrestamo(Object[] Pres)
     {       
@@ -63,9 +64,9 @@ public class PrestamoDAO extends Conexion { // Para llamar procedimientos almace
             ps = conn.prepareStatement(sentenciaSQL);
             ps.setString(1, Pres[1].toString());  // Nueva fecha de prestamo
             ps.setString(2, Pres[2].toString());  // nueva fecha de entrega 
-            ps.setString(3, Pres[3].toString());  // cliente ID
-            ps.setString(4, Pres[4].toString());  // empleado ID
-            ps.setString(5, Pres[1].toString());  // prestamo ID
+            ps.setString(3, Pres[3].toString());  // nuevo cliente ID
+            ps.setString(4, Pres[4].toString());  // nuevo empleado ID
+            ps.setString(5, Pres[1].toString());  // nuevo prestamo ID
             ps.executeUpdate();
            
             return Pres[0].toString();               // Regresa el id del prestamo
@@ -80,7 +81,7 @@ public class PrestamoDAO extends Conexion { // Para llamar procedimientos almace
        }
     }
 
-    // Consultar todos los prestamos
+    // Consultar todos los prestamos por genero
     public Object [][] GetAllPrestamosByGenero(String genero_id){
         conectar();
         Object [][] pres;
@@ -147,8 +148,7 @@ public class PrestamoDAO extends Conexion { // Para llamar procedimientos almace
                 prestamo[2] = (rs.getString(3));
                 prestamo[3] = (rs.getString(4));  
                 prestamo[4] = (rs.getString(5));
-                prestamo[5] = (rs.getString(6));  
-            }           
+             }           
             return prestamo;
         }
          catch (SQLException ex){
@@ -166,8 +166,15 @@ public class PrestamoDAO extends Conexion { // Para llamar procedimientos almace
     public int DeletePrestamo(String prestamo_id){
         conectar(); // Conecta a la base de datos
         try{
-            // Cambiar a NULL el prestamo de cualquier cliente con el prestamo a borrar
+            // Cambiar a NULL el prestamo de cualquier cliente/empleado con el prestamo a borrar
             sentenciaSQL =  "UPDATE CLIENTE" +
+                            "SET PRESTAMO_ID = NULL " +
+                            "WHERE PRESTAMO_ID = ?";
+            ps = conn.prepareStatement(sentenciaSQL);
+            ps.setString(1, prestamo_id);
+            ps.executeUpdate();
+            
+            sentenciaSQL =  "UPDATE EMPLEADO" +
                             "SET PRESTAMO_ID = NULL " +
                             "WHERE PRESTAMO_ID = ?";
             ps = conn.prepareStatement(sentenciaSQL);
