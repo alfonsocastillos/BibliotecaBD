@@ -2,6 +2,7 @@ package gui;
 
 // import gui.renta.Renta;
 import gui.libro.Libros;
+//import gui.clientes.Clientes;
 import java.awt.Dimension;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
@@ -22,6 +23,8 @@ public class MDIPrincipal extends javax.swing.JFrame {
     String empleado_nombre;
     // Declara las ventanas
     Libros vtn_libros;
+    // Ventana Clientes
+    //Clientes vtn_clientes;
     // Renta vtnRenta;
 
     /**
@@ -59,9 +62,11 @@ public class MDIPrincipal extends javax.swing.JFrame {
         setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
         // Instancia las ventanas
         vtn_libros = new Libros();
+        //vtn_clientes = new Clientes();
         //vtnRenta = new Renta(id_empleado,id_sucursal, empleado_nombre);
         // Agrega las ventanas al panel
         desktopPane.add(vtn_libros);
+        //desktopPane.add(vtn_clientes);
         //desktopPane.add(vtnRenta);
         pack(); // Ajusta el tamaño de la ventana al preferido por sus componentes internos
     }
@@ -98,6 +103,18 @@ public class MDIPrincipal extends javax.swing.JFrame {
         else
             vtn_libros.moveToFront();
     }
+    
+    
+    //private void AbreClientes(){
+    //            if (!vtn_clientes.isVisible()){
+    //        // Posiciona la ventana
+    //        setLocation(vtn_clientes);
+    //        //Abre la ventana renta
+    //        vtn_clientes.setVisible(true);
+    //    }// Si ya está abierta, la pone adelante
+    //    else 
+    //        vtn_clientes.moveToFront();
+    //}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -134,7 +151,6 @@ public class MDIPrincipal extends javax.swing.JFrame {
         setTitle("Renta de películas");
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         setIconImage(java.awt.Toolkit.getDefaultToolkit().getImage( getClass().getResource("/img/icono.png")));
-        setPreferredSize(new java.awt.Dimension(500, 509));
         setResizable(false);
 
         desktopPane.setBackground(new java.awt.Color(255, 255, 255));
@@ -248,6 +264,7 @@ public class MDIPrincipal extends javax.swing.JFrame {
         editMenu.add(menuActor);
 
         menuCliente.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        menuCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/actor.png"))); // NOI18N
         menuCliente.setMnemonic('p');
         menuCliente.setText("Clientes");
         editMenu.add(menuCliente);
@@ -307,7 +324,12 @@ public class MDIPrincipal extends javax.swing.JFrame {
     private void menuPeliculaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuPeliculaActionPerformed
         AbreLibros();
     }//GEN-LAST:event_menuPeliculaActionPerformed
-
+    
+    // Abrir la ventana de libros
+    //private void menuClienteActionPerformed(java.awt.event.ActionEvent evt) {                                             
+    //    AbreClientes();
+    //} 
+    
     private void menuActorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuActorActionPerformed
         // Accion del menu actor
 
@@ -322,7 +344,7 @@ public class MDIPrincipal extends javax.swing.JFrame {
         // Accion del boton renta de la barra de accesos rapidos 
         // abreRenta();
     }//GEN-LAST:event_btnRentaActionPerformed
-
+    
     private void btnLibrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLibrosActionPerformed
         // Accion del boton pelicula de la barra de accesos rapidos 
         AbreLibros();
