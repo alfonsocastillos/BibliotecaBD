@@ -228,7 +228,7 @@ public class Libros extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        pnlPelicula = new javax.swing.JPanel();
+        pnlLibro = new javax.swing.JPanel();
         lblTitulo = new javax.swing.JLabel();
         txtTitulo = new javax.swing.JTextField();
         lblEdicion = new javax.swing.JLabel();
@@ -298,50 +298,50 @@ public class Libros extends javax.swing.JInternalFrame {
             }
         });
 
-        pnlPelicula.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Libro", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N
-        pnlPelicula.setName(""); // NOI18N
-        pnlPelicula.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        pnlLibro.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Libro", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N
+        pnlLibro.setName(""); // NOI18N
+        pnlLibro.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         lblTitulo.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblTitulo.setText("Título:");
-        pnlPelicula.add(lblTitulo, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, -1, 20));
+        pnlLibro.add(lblTitulo, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, -1, 20));
 
         txtTitulo.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        pnlPelicula.add(txtTitulo, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 30, 250, 20));
+        pnlLibro.add(txtTitulo, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 30, 250, 20));
 
         lblEdicion.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblEdicion.setText("Edicion:");
-        pnlPelicula.add(lblEdicion, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 110, -1, 20));
+        pnlLibro.add(lblEdicion, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 110, -1, 20));
 
-        txtEdicion.setDocument(new InputType(InputType.TIPO_SOLO_NUMEROS, 4, false, false));
+        txtEdicion.setDocument(new InputType(InputType.TIPO_SOLO_NUMEROS, 2, false, false));
         txtEdicion.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtEdicion.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        pnlPelicula.add(txtEdicion, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 110, 60, 20));
+        pnlLibro.add(txtEdicion, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 110, 60, 20));
 
         lblGenero.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblGenero.setText("Género:");
-        pnlPelicula.add(lblGenero, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 70, -1, 20));
+        pnlLibro.add(lblGenero, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 70, -1, 20));
 
-        pnlPelicula.add(cmbGenero, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 70, 140, -1));
+        pnlLibro.add(cmbGenero, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 70, 140, -1));
 
         lblClas.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblClas.setText("No. páginas");
-        pnlPelicula.add(lblClas, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 150, -1, 20));
+        pnlLibro.add(lblClas, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 150, -1, 20));
 
         lblRenta.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblRenta.setText("País");
-        pnlPelicula.add(lblRenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 110, -1, 20));
+        pnlLibro.add(lblRenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 110, -1, 20));
 
         lblDiasR.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblDiasR.setText("Editorial");
-        pnlPelicula.add(lblDiasR, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 150, -1, 20));
+        pnlLibro.add(lblDiasR, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 150, -1, 20));
 
         lblGenero1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblGenero1.setText("Idioma:");
-        pnlPelicula.add(lblGenero1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, -1, 20));
+        pnlLibro.add(lblGenero1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, -1, 20));
 
         cmbPais.setNextFocusableComponent(cmbGenero);
-        pnlPelicula.add(cmbPais, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 110, 250, -1));
+        pnlLibro.add(cmbPais, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 110, 250, -1));
 
         cmbIdioma.setNextFocusableComponent(cmbGenero);
         cmbIdioma.addActionListener(new java.awt.event.ActionListener() {
@@ -349,19 +349,19 @@ public class Libros extends javax.swing.JInternalFrame {
                 cmbIdiomaActionPerformed(evt);
             }
         });
-        pnlPelicula.add(cmbIdioma, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 70, 250, -1));
+        pnlLibro.add(cmbIdioma, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 70, 250, -1));
 
         cmbEditorial.setNextFocusableComponent(cmbGenero);
-        pnlPelicula.add(cmbEditorial, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 150, 250, -1));
+        pnlLibro.add(cmbEditorial, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 150, 250, -1));
 
         lblAnio.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblAnio.setText("Año:");
-        pnlPelicula.add(lblAnio, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 30, -1, 20));
+        pnlLibro.add(lblAnio, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 30, -1, 20));
 
         txtPags.setDocument(new InputType(InputType.TIPO_SOLO_NUMEROS, 4, false, false));
         txtPags.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtPags.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        pnlPelicula.add(txtPags, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 150, 60, 20));
+        pnlLibro.add(txtPags, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 150, 60, 20));
 
         txtAnio.setDocument(new InputType(InputType.TIPO_SOLO_NUMEROS, 4, false, false));
         txtAnio.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -371,7 +371,7 @@ public class Libros extends javax.swing.JInternalFrame {
                 txtAnioActionPerformed(evt);
             }
         });
-        pnlPelicula.add(txtAnio, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 30, 60, 20));
+        pnlLibro.add(txtAnio, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 30, 60, 20));
 
         pnlTableList.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Lista de libros", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N
         pnlTableList.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -602,7 +602,7 @@ public class Libros extends javax.swing.JInternalFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(pnlTableList, javax.swing.GroupLayout.PREFERRED_SIZE, 585, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(pnlPelicula, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 585, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(pnlLibro, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 585, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(pnlTableList1, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
@@ -636,7 +636,7 @@ public class Libros extends javax.swing.JInternalFrame {
                     .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pnlPelicula, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(pnlLibro, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(pnlTableList3, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -762,7 +762,7 @@ public class Libros extends javax.swing.JInternalFrame {
                     msj = "Se eliminó el libro.";
                 }
                 else if (ret == 1){
-                    msj = "No se pudo eliminar por que tiene registros asignados.";
+                    msj = "No se pudo eliminar por que tiene registros asignados o\nno fue seleccionado apropiadamente.";
                 }
                 // suena un beep
                 java.awt.Toolkit.getDefaultToolkit().beep();
@@ -892,7 +892,7 @@ public class Libros extends javax.swing.JInternalFrame {
             add_autor.setLocationRelativeTo(this);
             // hace visible la ventana
             add_autor.setVisible(true);
-            // cuando cierra la ventana agrega el actor seleccionada a la tabla de actores
+            // cuando cierra la ventana agrega el autor seleccionada a la tabla de autores
             LlenaTablaAutores();
         }
     }//GEN-LAST:event_btnAddAutoriaActionPerformed
@@ -978,7 +978,7 @@ public class Libros extends javax.swing.JInternalFrame {
     private javax.swing.JLabel lblRenta;
     private javax.swing.JLabel lblTitulo;
     private javax.swing.JLabel lblTitulo1;
-    private javax.swing.JPanel pnlPelicula;
+    private javax.swing.JPanel pnlLibro;
     private javax.swing.JPanel pnlTableList;
     private javax.swing.JPanel pnlTableList1;
     private javax.swing.JPanel pnlTableList3;

@@ -218,7 +218,8 @@ public class LibroDAO extends Conexion {
             ps.setInt(1, id);                           // Id del libro
             ps.setString(2, libro[1].toString());       // Titulo
             ps.setInt(3, (Integer) libro[2]);           // Edicion
-            String date = ((Integer) libro[3]).toString() + "-01-01";
+            String repeated = new String(new char[4 - ((Integer) libro[3]).toString().length()]).replace("\0", "0");
+            String date = repeated + ((Integer) libro[3]).toString() + "-01-01";    
             ps.setDate(4, java.sql.Date.valueOf(date)); // Año 
             ps.setInt(5, (Integer) libro[4]);           // No. paginas
             ps.setInt(6, (Integer) libro[5]);           // Idioma_id
@@ -259,7 +260,8 @@ public class LibroDAO extends Conexion {
                        
             ps.setString(1, libro[1].toString());       // Titulo
             ps.setInt(2, (Integer) libro[2]);           // Edicion
-            String date = ((Integer) libro[3]).toString() + "-01-01";
+            String repeated = new String(new char[4 - ((Integer) libro[3]).toString().length()]).replace("\0", "0");
+            String date = repeated + ((Integer) libro[3]).toString() + "-01-01";
             ps.setDate(3, java.sql.Date.valueOf(date)); // Año 
             ps.setInt(4, (Integer) libro[4]);           // No. paginas
             ps.setInt(5, (Integer) libro[5]);           // Idioma_id
@@ -287,7 +289,7 @@ public class LibroDAO extends Conexion {
         int res = autor_dao.DeleteAutoriaFromLibro(libro_id);
         
         // Si se borro con exito la autoria, borrar el libro
-        if (res == 0){
+        if (res == 1 || res == 0){
             // Conecta a la base de datos
             conectar();
             try{
