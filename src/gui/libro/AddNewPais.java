@@ -75,7 +75,7 @@ public class AddNewPais extends javax.swing.JDialog {
         pnlTableList.add(txtPais, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 60, 140, 25));
 
         lblNombre.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        lblNombre.setText("Pias");
+        lblNombre.setText("Pais");
         pnlTableList.add(lblNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 60, -1, 25));
 
         btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/guardar.png"))); // NOI18N
@@ -103,8 +103,6 @@ public class AddNewPais extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(pnlTableList, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
-
-        getAccessibleContext().setAccessibleName("Pais");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

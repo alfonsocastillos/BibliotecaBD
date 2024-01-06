@@ -38,8 +38,6 @@ public class Libros extends javax.swing.JInternalFrame {
     AddPais add_pais;               // Para crear, editar y eliminar paises
     AddEditorial add_editorial;     // Para crear, editar y eliminar editoriales
     AddGenero add_genero;           // Para crear, editar y eliminar generos
-
-    // TODO: arreglar todo este archivo
     
     public Libros() {
         // Constructor
@@ -368,6 +366,11 @@ public class Libros extends javax.swing.JInternalFrame {
         txtAnio.setDocument(new InputType(InputType.TIPO_SOLO_NUMEROS, 4, false, false));
         txtAnio.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtAnio.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtAnio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtAnioActionPerformed(evt);
+            }
+        });
         pnlPelicula.add(txtAnio, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 30, 60, 20));
 
         pnlTableList.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Lista de libros", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N
@@ -407,7 +410,7 @@ public class Libros extends javax.swing.JInternalFrame {
         pnlTableList.add(txtFiltro, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 30, 230, 25));
 
         btnBorrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/borrar.png"))); // NOI18N
-        btnBorrar.setToolTipText("Borrar pelicula");
+        btnBorrar.setToolTipText("Borrar libro");
         btnBorrar.setFocusable(false);
         btnBorrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -472,7 +475,7 @@ public class Libros extends javax.swing.JInternalFrame {
         pnlTableList1.add(scpTableList1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, 170, 100));
 
         btnAddAutoria.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/add.png"))); // NOI18N
-        btnAddAutoria.setToolTipText("Agregar actor");
+        btnAddAutoria.setToolTipText("Agregar autor");
         btnAddAutoria.setFocusable(false);
         btnAddAutoria.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -482,7 +485,7 @@ public class Libros extends javax.swing.JInternalFrame {
         pnlTableList1.add(btnAddAutoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 40, 30, 30));
 
         btnRmveAutoria.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/quitar.png"))); // NOI18N
-        btnRmveAutoria.setToolTipText("Borrar actor");
+        btnRmveAutoria.setToolTipText("Borrar autor");
         btnRmveAutoria.setFocusable(false);
         btnRmveAutoria.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -492,6 +495,7 @@ public class Libros extends javax.swing.JInternalFrame {
         pnlTableList1.add(btnRmveAutoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 40, 30, 30));
 
         btnAddLibro.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/add_libro.png"))); // NOI18N
+        btnAddLibro.setToolTipText("Nuevo");
         btnAddLibro.setFocusable(false);
         btnAddLibro.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -787,7 +791,6 @@ public class Libros extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_tableListMouseClicked
 
     // Abre una ventana con el reporte de los libros dentro de la app
-    // TODO: implementar el reporte Libros
     private void btnReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteActionPerformed
         // genera reporte de peliculas
         VentanaReporteLibros reporte_libros = new VentanaReporteLibros();
@@ -795,7 +798,6 @@ public class Libros extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnReporteActionPerformed
 
     // Crea un docuemento PDF con el reporte de los libros en el lector PDF
-    // TODO: implementar el reporte Libros
     private void btnReportePDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportePDFActionPerformed
         // genera y ejecuta el reporte en PDF
         ReporteLibrosPDF reporte = new ReporteLibrosPDF();
@@ -937,9 +939,13 @@ public class Libros extends javax.swing.JInternalFrame {
         add_genero.setVisible(true);
         
         // Al cerrar, actualizar los generos disponibles
-        LlenadoEditoriales();
+        LlenadoGeneros();
         CancelaEdit();
     }//GEN-LAST:event_EditGeneroActionPerformed
+
+    private void txtAnioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtAnioActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtAnioActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton EditEditorial;
