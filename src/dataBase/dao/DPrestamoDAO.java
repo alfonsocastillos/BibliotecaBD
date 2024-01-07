@@ -142,13 +142,30 @@ public class DPrestamoDAO extends Conexion { // Para llamar procedimientos almac
     public int DeleteDPrestamo(String dprestamo_id){
         conectar(); // Conecta a la base de datos
         try{
-            // Cambiar a NULL el detalle de prestamo de cualquier cliente con el detalle a borrar
-            sentenciaSQL =  "UPDATE CLIENTE" +
+            // Cambiar a NULL el detalle de prestamo de cualquier libro_id/prestamos_id  con el detalle a borrar
+            sentenciaSQL =  "UPDATE LIBRO_ID" +
                             "SET DPRESTAMO_ID = NULL " +
                             "WHERE DPRESTAMO_ID = ?";
             ps = conn.prepareStatement(sentenciaSQL);
             ps.setString(1, dprestamo_id);
             ps.executeUpdate();   
+         
+            sentenciaSQL =  "UPDATE PRESTAMO_ID" +
+                            "SET DPRESTAMO_ID = NULL " +
+                            "WHERE DPRESTAMO_ID = ?";
+            ps = conn.prepareStatement(sentenciaSQL);
+            ps.setString(1, dprestamo_id);
+            ps.executeUpdate();
+            
+            // Borrar el idioma
+            sentenciaSQL = "DELETE FROM DPRESTAMO " +
+                            "WHERE DPRESTAMO_ID = ?";
+            ps = conn.prepareStatement(sentenciaSQL);
+            ps.setString(1, dprestamo_id);
+            int res = ps.executeUpdate();
+            if (res == 1){
+                return 0;
+            }
             return 1;
         }
         catch (SQLException ex){
