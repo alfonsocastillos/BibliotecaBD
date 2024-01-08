@@ -2,7 +2,7 @@ package gui;
 
 // import gui.renta.Renta;
 import gui.libro.Libros;
-//import gui.clientes.Clientes;
+import gui.clientes.Clientes;
 import java.awt.Dimension;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
@@ -24,7 +24,7 @@ public class MDIPrincipal extends javax.swing.JFrame {
     // Declara las ventanas
     Libros vtn_libros;
     // Ventana Clientes
-    //Clientes vtn_clientes;
+    Clientes vtn_clientes;
     // Renta vtnRenta;
 
     /**
@@ -62,11 +62,11 @@ public class MDIPrincipal extends javax.swing.JFrame {
         setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
         // Instancia las ventanas
         vtn_libros = new Libros();
-        //vtn_clientes = new Clientes();
+        vtn_clientes = new Clientes();
         //vtnRenta = new Renta(id_empleado,id_sucursal, empleado_nombre);
         // Agrega las ventanas al panel
         desktopPane.add(vtn_libros);
-        //desktopPane.add(vtn_clientes);
+        desktopPane.add(vtn_clientes);
         //desktopPane.add(vtnRenta);
         pack(); // Ajusta el tamaño de la ventana al preferido por sus componentes internos
     }
@@ -105,16 +105,16 @@ public class MDIPrincipal extends javax.swing.JFrame {
     }
     
     
-    //private void AbreClientes(){
-    //            if (!vtn_clientes.isVisible()){
-    //        // Posiciona la ventana
-    //        setLocation(vtn_clientes);
-    //        //Abre la ventana renta
-    //        vtn_clientes.setVisible(true);
-    //    }// Si ya está abierta, la pone adelante
-    //    else 
-    //        vtn_clientes.moveToFront();
-    //}
+    private void AbreClientes(){
+                if (!vtn_clientes.isVisible()){
+            // Posiciona la ventana
+            setLocation(vtn_clientes);
+            //Abre la ventana renta
+            vtn_clientes.setVisible(true);
+        }// Si ya está abierta, la pone adelante
+        else 
+            vtn_clientes.moveToFront();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -130,6 +130,7 @@ public class MDIPrincipal extends javax.swing.JFrame {
         barraDeAcceso = new javax.swing.JToolBar();
         btnRenta = new javax.swing.JButton();
         btnLibros = new javax.swing.JButton();
+        btnClientes = new javax.swing.JButton();
         barVent = new javax.swing.JToolBar();
         sptDown = new javax.swing.JSplitPane();
         lblSucursal = new javax.swing.JLabel();
@@ -194,6 +195,17 @@ public class MDIPrincipal extends javax.swing.JFrame {
             }
         });
         barraDeAcceso.add(btnLibros);
+
+        btnClientes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/actor.png"))); // NOI18N
+        btnClientes.setFocusable(false);
+        btnClientes.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnClientes.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnClientes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClientesActionPerformed(evt);
+            }
+        });
+        barraDeAcceso.add(btnClientes);
 
         barVent.setRollover(true);
 
@@ -326,9 +338,9 @@ public class MDIPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_menuPeliculaActionPerformed
     
     // Abrir la ventana de libros
-    //private void menuClienteActionPerformed(java.awt.event.ActionEvent evt) {                                             
-    //    AbreClientes();
-    //} 
+    private void menuClienteActionPerformed(java.awt.event.ActionEvent evt) {                                             
+        AbreClientes();
+    } 
     
     private void menuActorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuActorActionPerformed
         // Accion del menu actor
@@ -350,6 +362,10 @@ public class MDIPrincipal extends javax.swing.JFrame {
         AbreLibros();
     }//GEN-LAST:event_btnLibrosActionPerformed
 
+    private void btnClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClientesActionPerformed
+       AbreClientes();
+    }//GEN-LAST:event_btnClientesActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -358,6 +374,7 @@ public class MDIPrincipal extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToolBar barVent;
     private javax.swing.JToolBar barraDeAcceso;
+    private javax.swing.JButton btnClientes;
     private javax.swing.JButton btnLibros;
     private javax.swing.JButton btnRenta;
     private javax.swing.JDesktopPane desktopPane;

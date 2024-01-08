@@ -1,13 +1,14 @@
 package gui.clientes;
-
-
+import dataBase.dao.ClienteDAO;
 /**
  *
- * @author Carlos
- * Ventana que registra una renta de peliculas
+ * @author Jordi
+ * Ventana que registra clientes
  */
 public class Clientes extends javax.swing.JInternalFrame {
   
+    
+    
     public Clientes(String idEmpleado, String idTienda, String empleadoName) {
         initComponents();
         
@@ -38,15 +39,17 @@ public class Clientes extends javax.swing.JInternalFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        txtTitulo = new javax.swing.JTextField();
-        txtTitulo1 = new javax.swing.JTextField();
-        txtTitulo2 = new javax.swing.JTextField();
-        txtTitulo3 = new javax.swing.JTextField();
-        txtTitulo4 = new javax.swing.JTextField();
-        txtTitulo5 = new javax.swing.JTextField();
-        txtTitulo6 = new javax.swing.JTextField();
-        txtTitulo7 = new javax.swing.JTextField();
-        txtTitulo8 = new javax.swing.JTextField();
+        TextFieldNoInterior = new javax.swing.JTextField();
+        TextFieldNombre = new javax.swing.JTextField();
+        TextFieldApellidoPat = new javax.swing.JTextField();
+        TextFieldApellidoMat = new javax.swing.JTextField();
+        TextFieldCorreo = new javax.swing.JTextField();
+        TextFieldAlcaldia = new javax.swing.JTextField();
+        TextFieldCP = new javax.swing.JTextField();
+        TextFieldCalle = new javax.swing.JTextField();
+        TextFieldNoExterior = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        TextFieldNoInterior1 = new javax.swing.JTextField();
 
         setClosable(true);
         setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
@@ -68,66 +71,77 @@ public class Clientes extends javax.swing.JInternalFrame {
                 btnGuardaActionPerformed(evt);
             }
         });
-        pnlRenta.add(btnGuarda, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 320, 60, 60));
+        pnlRenta.add(btnGuarda, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 330, 60, 60));
 
         lblCliente.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblCliente.setText("Nombre:");
-        pnlRenta.add(lblCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 60, -1, 20));
+        pnlRenta.add(lblCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 50, -1, 20));
 
         lblFecha.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblFecha.setText("Apellido Paterno:");
-        pnlRenta.add(lblFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 90, -1, 20));
+        pnlRenta.add(lblFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 80, -1, 20));
 
         lblTotal.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblTotal.setText("Alcaldia:");
-        pnlRenta.add(lblTotal, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 180, -1, 20));
+        pnlRenta.add(lblTotal, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 170, -1, 20));
 
         lblTotal1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblTotal1.setText("Apellido Materno:");
-        pnlRenta.add(lblTotal1, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 120, -1, 20));
+        pnlRenta.add(lblTotal1, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 110, -1, 20));
 
         lblTotal2.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblTotal2.setText("Correo:");
-        pnlRenta.add(lblTotal2, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 150, -1, 20));
+        pnlRenta.add(lblTotal2, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 140, -1, 20));
 
         jLabel1.setText("CP:");
-        pnlRenta.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 210, -1, -1));
+        pnlRenta.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 200, -1, -1));
 
         jLabel2.setText("Calle:");
-        pnlRenta.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 240, -1, -1));
+        pnlRenta.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 230, -1, -1));
 
         jLabel3.setText("No. Exterior:");
-        pnlRenta.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 270, -1, -1));
+        pnlRenta.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 260, -1, -1));
 
-        jLabel4.setText("No. Interior:");
-        pnlRenta.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 300, -1, -1));
+        jLabel4.setText("Escolaridad:");
+        pnlRenta.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 320, -1, -1));
 
-        txtTitulo.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        pnlRenta.add(txtTitulo, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 300, 250, 20));
+        TextFieldNoInterior.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        pnlRenta.add(TextFieldNoInterior, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 320, 250, 20));
 
-        txtTitulo1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        pnlRenta.add(txtTitulo1, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 60, 250, 20));
+        TextFieldNombre.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        pnlRenta.add(TextFieldNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 50, 250, 20));
 
-        txtTitulo2.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        pnlRenta.add(txtTitulo2, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 90, 250, 20));
+        TextFieldApellidoPat.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        pnlRenta.add(TextFieldApellidoPat, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 80, 250, 20));
 
-        txtTitulo3.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        pnlRenta.add(txtTitulo3, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 120, 250, 20));
+        TextFieldApellidoMat.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        pnlRenta.add(TextFieldApellidoMat, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 110, 250, 20));
 
-        txtTitulo4.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        pnlRenta.add(txtTitulo4, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 150, 250, 20));
+        TextFieldCorreo.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        pnlRenta.add(TextFieldCorreo, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 140, 250, 20));
 
-        txtTitulo5.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        pnlRenta.add(txtTitulo5, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 180, 250, 20));
+        TextFieldAlcaldia.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        TextFieldAlcaldia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TextFieldAlcaldiaActionPerformed(evt);
+            }
+        });
+        pnlRenta.add(TextFieldAlcaldia, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 170, 250, 20));
 
-        txtTitulo6.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        pnlRenta.add(txtTitulo6, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 210, 250, 20));
+        TextFieldCP.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        pnlRenta.add(TextFieldCP, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 200, 250, 20));
 
-        txtTitulo7.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        pnlRenta.add(txtTitulo7, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 240, 250, 20));
+        TextFieldCalle.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        pnlRenta.add(TextFieldCalle, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 230, 250, 20));
 
-        txtTitulo8.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        pnlRenta.add(txtTitulo8, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 270, 250, 20));
+        TextFieldNoExterior.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        pnlRenta.add(TextFieldNoExterior, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 260, 250, 20));
+
+        jLabel5.setText("No. Interior:");
+        pnlRenta.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 290, -1, -1));
+
+        TextFieldNoInterior1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        pnlRenta.add(TextFieldNoInterior1, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 290, 250, 20));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -146,30 +160,54 @@ public class Clientes extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnGuardaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardaActionPerformed
-//         Guarda y actualiza los datos
-        
+    // Obtener datos de los campos de texto
+    String nombre = TextFieldNombre.getText();
+    String apellidoPat = TextFieldApellidoPat.getText();
+    String apellidoMat = TextFieldApellidoMat.getText();
+    String correo = TextFieldCorreo.getText();
+    String alcaldia = TextFieldAlcaldia.getText();
+    String cp = TextFieldCP.getText();
+    String calle = TextFieldCalle.getText();
+    String noExterior = TextFieldNoExterior.getText();
+    String noInterior = TextFieldNoInterior.getText();
+    
+    // Crear un objeto para representar la información del nuevo cliente
+    Object[] nuevoCliente = {nombre, apellidoPat, apellidoMat, correo, null, null, null};
+
+    // Insertar en la base de datos y obtener el nuevo ID del cliente
+    ClienteDAO clienteDAO = new ClienteDAO();
+    clienteDAO.saveUsuario(nuevoCliente);
+
+    // Imprimir el ID del nuevo cliente (puedes hacer algo más con este valor)
+    System.out.println("Nuevo cliente insertado satisfactoriamente.");
     }//GEN-LAST:event_btnGuardaActionPerformed
 
+    private void TextFieldAlcaldiaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TextFieldAlcaldiaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TextFieldAlcaldiaActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField TextFieldAlcaldia;
+    private javax.swing.JTextField TextFieldApellidoMat;
+    private javax.swing.JTextField TextFieldApellidoPat;
+    private javax.swing.JTextField TextFieldCP;
+    private javax.swing.JTextField TextFieldCalle;
+    private javax.swing.JTextField TextFieldCorreo;
+    private javax.swing.JTextField TextFieldNoExterior;
+    private javax.swing.JTextField TextFieldNoInterior;
+    private javax.swing.JTextField TextFieldNoInterior1;
+    private javax.swing.JTextField TextFieldNombre;
     private javax.swing.JButton btnGuarda;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel lblCliente;
     private javax.swing.JLabel lblFecha;
     private javax.swing.JLabel lblTotal;
     private javax.swing.JLabel lblTotal1;
     private javax.swing.JLabel lblTotal2;
     private javax.swing.JPanel pnlRenta;
-    private javax.swing.JTextField txtTitulo;
-    private javax.swing.JTextField txtTitulo1;
-    private javax.swing.JTextField txtTitulo2;
-    private javax.swing.JTextField txtTitulo3;
-    private javax.swing.JTextField txtTitulo4;
-    private javax.swing.JTextField txtTitulo5;
-    private javax.swing.JTextField txtTitulo6;
-    private javax.swing.JTextField txtTitulo7;
-    private javax.swing.JTextField txtTitulo8;
     // End of variables declaration//GEN-END:variables
 }

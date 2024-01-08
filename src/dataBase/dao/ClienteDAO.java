@@ -84,32 +84,32 @@ public class ClienteDAO extends Conexion {
     }
     
     // Método para guardar un usuario
-    public String saveUsuario(Object[] usuario) {
-        conectar();
-        try {
-            String id = generateId("CLIENTE", "CLIENTE_ID"); // Generar nuevo ID
-            String sentenciaSQL = "INSERT INTO CLIENTE VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-            PreparedStatement ps = conn.prepareStatement(sentenciaSQL);
-            
-            ps.setString(1, id);                  // Id (calculado)
-            ps.setString(2, usuario[0].toString());// Nombre
-            ps.setString(3, usuario[1].toString());// Apellido Paterno
-            ps.setString(4, usuario[2].toString());// Apellido Materno
-            ps.setString(5, usuario[3].toString());// Correo
-            ps.setString(6, usuario[4].toString());// Id de dirección (provisto)
-            ps.setString(7, usuario[5].toString());// Id de escolaridad (provisto)
-            ps.setString(8, usuario[6].toString());// Id de credencial (provisto)
-            
-            ps.executeUpdate();
-            return id;
-        } catch (SQLException ex) {
-            System.out.println("Error " + ex.getSQLState() + "\n\n" + ex.getMessage() +
-                    "\n\n" + sentenciaSQL + "\n\nUbicación: " + "saveUsuario");
-            return null;
-        } finally {
-            desconectar();
-        }
+   public void saveUsuario(Object[] usuario) {
+    conectar();
+    try {
+        String id = generateId("CLIENTE", "CLIENTE_ID"); // Generar nuevo ID
+        String sentenciaSQL = "INSERT INTO CLIENTE VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        PreparedStatement ps = conn.prepareStatement(sentenciaSQL);
+
+        ps.setString(1, id);                  // Id (calculado)
+        ps.setString(2, usuario[0].toString());// Nombre
+        ps.setString(3, usuario[1].toString());// Apellido Paterno
+        ps.setString(4, usuario[2].toString());// Apellido Materno
+        ps.setString(5, usuario[3].toString());// Correo
+        ps.setString(6, usuario[4].toString());// Id de dirección (provisto)
+        ps.setString(7, usuario[5].toString());// Id de escolaridad (provisto)
+        ps.setString(8, usuario[6].toString());// Id de credencial (provisto)
+
+        ps.executeUpdate();
+    } catch (SQLException ex) {
+        // Manejo de excepciones...
+        System.err.println("Error al insertar usuario: " + ex.getMessage());
+    } finally {
+        desconectar();
     }
+    }
+
+
 
     // Método para actualizar un usuario
     public String updateUsuario(Object[] usuario) {
@@ -192,5 +192,9 @@ public class ClienteDAO extends Conexion {
         }
     }
 }
+
+
+
+
 
                      
