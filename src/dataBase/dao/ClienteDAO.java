@@ -8,6 +8,10 @@ import dataBase.ConfigDataBase;
 import java.sql.*;
 
 public class ClienteDAO extends Conexion {
+
+    public static Object[][] getClientes() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
      
     public Object [][] getCustomers(){
         // se conecta a la base de datos

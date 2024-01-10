@@ -203,4 +203,8 @@ public class PrestamoDAO extends Conexion {
            desconectar();
        }
     }
+
+    public String savePrestamo(Object[] Prestamo) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }

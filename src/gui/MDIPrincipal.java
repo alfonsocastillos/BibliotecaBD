@@ -2,7 +2,7 @@ package gui;
 
 // import gui.renta.Renta;
 import gui.libro.Libros;
-import gui.clientes.Clientes;
+//import gui.clientes.Clientes;
 import java.awt.Dimension;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
@@ -24,7 +24,7 @@ public class MDIPrincipal extends javax.swing.JFrame {
     // Declara las ventanas
     Libros vtn_libros;
     // Ventana Clientes
-    Clientes vtn_clientes;
+    //Clientes vtn_clientes;
     // Renta vtnRenta;
 
     /**
@@ -62,11 +62,11 @@ public class MDIPrincipal extends javax.swing.JFrame {
         setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
         // Instancia las ventanas
         vtn_libros = new Libros();
-        vtn_clientes = new Clientes();
+        //vtn_clientes = new Clientes();
         //vtnRenta = new Renta(id_empleado,id_sucursal, empleado_nombre);
         // Agrega las ventanas al panel
         desktopPane.add(vtn_libros);
-        desktopPane.add(vtn_clientes);
+       // desktopPane.add(vtn_clientes);
         //desktopPane.add(vtnRenta);
         pack(); // Ajusta el tamaño de la ventana al preferido por sus componentes internos
     }
@@ -105,7 +105,7 @@ public class MDIPrincipal extends javax.swing.JFrame {
     }
     
     
-    private void AbreClientes(){
+    /*private void AbreClientes(){
                 if (!vtn_clientes.isVisible()){
             // Posiciona la ventana
             setLocation(vtn_clientes);
@@ -114,7 +114,7 @@ public class MDIPrincipal extends javax.swing.JFrame {
         }// Si ya está abierta, la pone adelante
         else 
             vtn_clientes.moveToFront();
-    }
+    }*/
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -339,7 +339,7 @@ public class MDIPrincipal extends javax.swing.JFrame {
     
     // Abrir la ventana de libros
     private void menuClienteActionPerformed(java.awt.event.ActionEvent evt) {                                             
-        AbreClientes();
+       // AbreClientes();
     } 
     
     private void menuActorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuActorActionPerformed
@@ -363,7 +363,7 @@ public class MDIPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLibrosActionPerformed
 
     private void btnClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClientesActionPerformed
-       AbreClientes();
+       //AbreClientes();
     }//GEN-LAST:event_btnClientesActionPerformed
 
     /**

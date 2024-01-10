@@ -47,8 +47,8 @@ public class Prestamo  extends javax.swing.JInternalFrame {
         
         // pone el nombre del empleado
         lblEmpleadoIn.setText(this.EmpleadoNombre);
-        // Consulta los datos
-        ClienteDAO = new ClienteDAO();
+           // Consulta los datos
+           ClienteDAO ClienteDAO = new ClienteDAO();
         // crea instancia de las ventanas
         addLibrosPrestamo = new AddLibrosPrestamo(null, true);        
         // llena los datos
