@@ -131,6 +131,7 @@ public class MDIPrincipal extends javax.swing.JFrame {
         btnRenta = new javax.swing.JButton();
         btnLibros = new javax.swing.JButton();
         btnClientes = new javax.swing.JButton();
+        btnReportes = new javax.swing.JButton();
         barVent = new javax.swing.JToolBar();
         sptDown = new javax.swing.JSplitPane();
         lblSucursal = new javax.swing.JLabel();
@@ -169,7 +170,9 @@ public class MDIPrincipal extends javax.swing.JFrame {
         );
         desktopPaneLayout.setVerticalGroup(
             desktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(desktopPaneLayout.createSequentialGroup()
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 1111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 2, Short.MAX_VALUE))
         );
 
         barraDeAcceso.setRollover(true);
@@ -206,6 +209,18 @@ public class MDIPrincipal extends javax.swing.JFrame {
             }
         });
         barraDeAcceso.add(btnClientes);
+
+        btnReportes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/seo-report.png"))); // NOI18N
+        btnReportes.setFocusable(false);
+        btnReportes.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnReportes.setPreferredSize(new java.awt.Dimension(34, 33));
+        btnReportes.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnReportes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReportesActionPerformed(evt);
+            }
+        });
+        barraDeAcceso.add(btnReportes);
 
         barVent.setRollover(true);
 
@@ -317,7 +332,7 @@ public class MDIPrincipal extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(barraDeAcceso, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(barraDeAcceso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(desktopPane)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -366,6 +381,10 @@ public class MDIPrincipal extends javax.swing.JFrame {
        AbreClientes();
     }//GEN-LAST:event_btnClientesActionPerformed
 
+    private void btnReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportesActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnReportesActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -377,6 +396,7 @@ public class MDIPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton btnClientes;
     private javax.swing.JButton btnLibros;
     private javax.swing.JButton btnRenta;
+    private javax.swing.JButton btnReportes;
     private javax.swing.JDesktopPane desktopPane;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenu fileMenu;

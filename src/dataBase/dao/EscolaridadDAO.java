@@ -6,6 +6,8 @@ package dataBase.dao;
 import dataBase.Conexion;
 import dataBase.ConfigDataBase;
 import java.sql.*;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  *
@@ -310,5 +312,32 @@ public class EscolaridadDAO extends Conexion {
         finally{
            desconectar();
        }
+    }
+    
+    
+    
+    // Método para obtener la lista de escolaridades desde la base de datos
+    public List<String> obtenerListaEscolaridades() {
+        // Conecta a la base de datos
+        conectar();
+        
+        List<String> listaEscolaridades = new ArrayList<>();
+
+        // Consulta para obtener la lista de escolaridades
+        String query = "SELECT nivel FROM escolaridad";
+
+        try (PreparedStatement statement = conn.prepareStatement(query);
+             ResultSet resultSet = statement.executeQuery()) {
+
+            while (resultSet.next()) {
+                String nivel = resultSet.getString("nivel");
+                listaEscolaridades.add(nivel);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace(); // Manejo de errores; puedes personalizar esto según tus necesidades
+        }
+
+        return listaEscolaridades;
     }
 }

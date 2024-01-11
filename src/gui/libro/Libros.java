@@ -341,6 +341,11 @@ public class Libros extends javax.swing.JInternalFrame {
         pnlLibro.add(lblGenero1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, -1, 20));
 
         cmbPais.setNextFocusableComponent(cmbGenero);
+        cmbPais.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbPaisActionPerformed(evt);
+            }
+        });
         pnlLibro.add(cmbPais, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 110, 250, -1));
 
         cmbIdioma.setNextFocusableComponent(cmbGenero);
@@ -352,6 +357,11 @@ public class Libros extends javax.swing.JInternalFrame {
         pnlLibro.add(cmbIdioma, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 70, 250, -1));
 
         cmbEditorial.setNextFocusableComponent(cmbGenero);
+        cmbEditorial.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbEditorialActionPerformed(evt);
+            }
+        });
         pnlLibro.add(cmbEditorial, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 150, 250, -1));
 
         lblAnio.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -402,6 +412,11 @@ public class Libros extends javax.swing.JInternalFrame {
         pnlTableList.add(lblTitulo1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, -1, 25));
 
         txtFiltro.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        txtFiltro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtFiltroActionPerformed(evt);
+            }
+        });
         txtFiltro.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtFiltroKeyReleased(evt);
@@ -903,16 +918,6 @@ public class Libros extends javax.swing.JInternalFrame {
         CancelaEdit();
     }//GEN-LAST:event_btnRefreshActionPerformed
 
-    private void EditIdiomaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditIdiomaActionPerformed
-        // Hace visible la ventana para agregar idiomas
-        add_idioma.setLocationRelativeTo(this);
-        add_idioma.setVisible(true);
-        
-        // Al cerrar, actualizar los idiomas disponibles        
-        LlenadoIdiomas();
-        CancelaEdit();
-    }//GEN-LAST:event_EditIdiomaActionPerformed
-
     private void EditPaisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditPaisActionPerformed
         // Hace visible la ventana para agregar paises
         add_pais.setLocationRelativeTo(this);
@@ -946,6 +951,28 @@ public class Libros extends javax.swing.JInternalFrame {
     private void txtAnioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtAnioActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtAnioActionPerformed
+
+    private void EditIdiomaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditIdiomaActionPerformed
+        // Hace visible la ventana para agregar idiomas
+        add_idioma.setLocationRelativeTo(this);
+        add_idioma.setVisible(true);
+
+        // Al cerrar, actualizar los idiomas disponibles
+        LlenadoIdiomas();
+        CancelaEdit();
+    }//GEN-LAST:event_EditIdiomaActionPerformed
+
+    private void cmbPaisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbPaisActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbPaisActionPerformed
+
+    private void cmbEditorialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbEditorialActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbEditorialActionPerformed
+
+    private void txtFiltroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFiltroActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtFiltroActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton EditEditorial;
