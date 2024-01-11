@@ -3,6 +3,7 @@ package gui;
 // import gui.renta.Renta;
 import gui.libro.Libros;
 import gui.clientes.Clientes;
+import gui.reportes.Reportes;
 import java.awt.Dimension;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
@@ -25,8 +26,8 @@ public class MDIPrincipal extends javax.swing.JFrame {
     Libros vtn_libros;
     // Ventana Clientes
     Clientes vtn_clientes;
-    // Renta vtnRenta;
-
+    // Renta vtnReportes;
+    Reportes vtn_reportes;
     /**
      * Creates new form MDIPrincipal
      * @param id_sucursal
@@ -63,10 +64,12 @@ public class MDIPrincipal extends javax.swing.JFrame {
         // Instancia las ventanas
         vtn_libros = new Libros();
         vtn_clientes = new Clientes();
+        vtn_reportes = new Reportes();
         //vtnRenta = new Renta(id_empleado,id_sucursal, empleado_nombre);
         // Agrega las ventanas al panel
         desktopPane.add(vtn_libros);
         desktopPane.add(vtn_clientes);
+        desktopPane.add(vtn_reportes);
         //desktopPane.add(vtnRenta);
         pack(); // Ajusta el tamaño de la ventana al preferido por sus componentes internos
     }
@@ -114,6 +117,17 @@ public class MDIPrincipal extends javax.swing.JFrame {
         }// Si ya está abierta, la pone adelante
         else 
             vtn_clientes.moveToFront();
+    }
+    
+    private void AbreReportes(){
+                if (!vtn_reportes.isVisible()){
+            // Posiciona la ventana
+            setLocation(vtn_reportes);
+            //Abre la ventana renta
+            vtn_reportes.setVisible(true);
+        }// Si ya está abierta, la pone adelante
+        else 
+            vtn_reportes.moveToFront();
     }
 
     /**
@@ -383,6 +397,7 @@ public class MDIPrincipal extends javax.swing.JFrame {
 
     private void btnReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportesActionPerformed
         // TODO add your handling code here:
+        AbreReportes();
     }//GEN-LAST:event_btnReportesActionPerformed
 
     /**
