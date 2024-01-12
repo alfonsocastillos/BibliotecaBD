@@ -25,17 +25,18 @@ public class PrestamoDAO extends Conexion {
             // guarda el nuevo id
             if (rs.next()){
                 id = rs.getString(1);
+                System.out.println(id+"texto");
             }
             
-            sentenciaSQL = "INSERT INTO PRESTAMO VALUES (?,?,?,?,?,?)";
+            sentenciaSQL = "INSERT INTO PRESTAMO VALUES (?,?,?,?,?)";
             ps = conn.prepareStatement(sentenciaSQL);
             ps.setString(1, id);
             // Asigna los valores del arreglo            
-            ps.setString(2, Libro [0].toString());
-            ps.setString(3,Libro [1].toString());
-            ps.setString(4,Libro [2].toString());
-            ps.setString(5,Libro[3].toString());
-            ps.setString(6,Libro [4].toString());        
+            //ps.setString(2, Libro [0].toString());
+            ps.setString(2,Libro [1].toString());
+            ps.setString(3,Libro [3].toString());
+            ps.setString(4,Libro[2].toString());
+            ps.setString(5,Libro [4].toString());        
             ps.executeUpdate();
             return id;
         }

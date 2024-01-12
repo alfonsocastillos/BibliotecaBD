@@ -1,6 +1,6 @@
 package gui.prestamo;
 
-import dataBase.dao.DPrestamoDAO;
+import dataBase.dao.LibroDAO;
 import java.awt.Toolkit;
 import javax.swing.JOptionPane;
 import tools.UtilsTable;
@@ -12,7 +12,7 @@ import tools.UtilsTable;
  */
 public class AddLibrosPrestamo extends javax.swing.JDialog {
        int id = 0;
-       DPrestamoDAO daoFilm;
+       LibroDAO daoLibros;
        Object filmsLista [][];
        public Object film[];
 
@@ -25,11 +25,11 @@ public class AddLibrosPrestamo extends javax.swing.JDialog {
         // ventana modal
         super(parent, modal);
         // Yiyulo de la ventana
-        setTitle("Agreagar pelicula a la renta");
+        setTitle("Agregar libros al prestamo");
         // inicia los componentes
         initComponents();
         // Crea el daopara consltar las ventanas
-        daoFilm = new DPrestamoDAO();
+        daoLibros = new LibroDAO();
         // llena la tabla
         llenaTabla();
     }
@@ -37,7 +37,7 @@ public class AddLibrosPrestamo extends javax.swing.JDialog {
     private void llenaTabla(){        
         // Consulta las peliculas y lo guardaen un arreglo
         // consulta los datos de las peliculas
-       // filmsLista = daoFilm.getFilmsByTitleDesc(txtFiltro.getText().trim());
+       filmsLista = daoLibros.GetLibrosByDescripcion(txtFiltro.getText().trim());
         // Titulos de la tabla
         String[] T_FILMS = {"","Título"};
         // alineación de las celdas
@@ -73,7 +73,7 @@ public class AddLibrosPrestamo extends javax.swing.JDialog {
         btnBorrarFiltro = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setIconImage(java.awt.Toolkit.getDefaultToolkit().getImage( getClass().getResource("/img/peliculas.png")));
+        setIconImage(java.awt.Toolkit.getDefaultToolkit().getImage( getClass().getResource("/img/libros.png")));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowActivated(java.awt.event.WindowEvent evt) {
                 formWindowActivated(evt);
@@ -91,7 +91,7 @@ public class AddLibrosPrestamo extends javax.swing.JDialog {
             }
         });
 
-        pnlTableList.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Películas", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N
+        pnlTableList.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Libros", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N
 
         scpTableList.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scpTableList.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -159,7 +159,7 @@ public class AddLibrosPrestamo extends javax.swing.JDialog {
                     .addComponent(txtFiltro)
                     .addComponent(lblTitulo1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(11, 11, 11)
-                .addComponent(scpTableList, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE)
+                .addComponent(scpTableList, javax.swing.GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -180,7 +180,7 @@ public class AddLibrosPrestamo extends javax.swing.JDialog {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(23, 23, 23)
                 .addComponent(pnlTableList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -193,11 +193,12 @@ public class AddLibrosPrestamo extends javax.swing.JDialog {
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
         // Accion del boton aceptar
         // Verifica si se selecciono un elemento de la tabla
+        //System.out.print("ffff");
         if (tableList.getSelectedRow() < 0){
             // Suena un beep
             Toolkit.getDefaultToolkit().beep();
             // Muestra un mensage de aviso
-            JOptionPane.showMessageDialog(this, "Seleccione una pelicula.", "Aviso",2);            
+            JOptionPane.showMessageDialog(this, "Seleccione un libro.", "Aviso",2);            
         }
         else{      
             /*

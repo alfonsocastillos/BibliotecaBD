@@ -1,9 +1,9 @@
 package gui.prestamo;
 
 import dataBase.dao.ClienteDAO;
-import dataBase.dao.DaoDRenta;
+import dataBase.dao.DPrestamoDAO;
 import dataBase.dao.DaoPayment;
-import dataBase.dao.DaoRenta;
+import dataBase.dao.PrestamoDAO;
 import dataBase.dao.DaoTPagos;
 import java.awt.Frame;
 import java.awt.Toolkit;
@@ -38,7 +38,7 @@ public class Prestamo extends javax.swing.JInternalFrame {
     // Ventana que agrega peliculas
     AddLibrosPrestamo addLibrosPrestamo;
     //AddPago addPago;
-    DefaultTableModel modeloPelicuas;
+    DefaultTableModel modeloLibros;
     DefaultTableModel modeloPagos;
     float totalSum = 0;
 
@@ -62,7 +62,7 @@ public class Prestamo extends javax.swing.JInternalFrame {
         //daoTPagos = new DaoTPagos();
         // crea instancia de las ventanas
         //addPago = new AddPago(null, true);
-        //addLibrosPrestamo = new AddLibrosPrestamo(null, true);        
+        addLibrosPrestamo = new AddLibrosPrestamo(null, true);        
         // llena los datos
         llenaDatos();
     }
@@ -70,27 +70,26 @@ public class Prestamo extends javax.swing.JInternalFrame {
     private void llenaDatos(){
         llenaClientes();
        // llenaTablaPagos();
-        //llenaTablaPeliculas();
+        llenaTablaLibros();
     }
     
-    private void llenaTablaPeliculas(){    
+    private void llenaTablaLibros(){    
         // obtiene fecha
         Calendar c = Calendar.getInstance();
         // Pone la fecha de renta en el control
-        lblFechaOut.setText(c.get(Calendar.DATE) + "/" + c.get(Calendar.MONTH) + "/" + c.get(Calendar.YEAR));
+        lblFechaOut.setText(c.get(Calendar.DATE) + "/" + c.get(Calendar.MONTH+1) + "/" + c.get(Calendar.YEAR));
         c.add(Calendar.DAY_OF_YEAR, 3);
         // Pone la fecha de entrega en el control
-        lblFechaIn.setText(c.get(Calendar.DATE) + "/" + c.get(Calendar.MONTH) + "/" + c.get(Calendar.YEAR));
+        lblFechaIn.setText(c.get(Calendar.DATE) + "/" + c.get(Calendar.MONTH+1) + "/" + c.get(Calendar.YEAR));
         // Configuración de la tabla donde se mostraran las peliculas
         int[][] cellAlignment = {{0,javax.swing.SwingConstants.LEFT, javax.swing.SwingConstants.RIGHT}};
         int[][] cellSize = {{0,0},
-                            {1,640},
-                            {2,50}};
-        String[] T_RENTA = {"","Título", "Monto"};
+                            {1,670}};
+        String[] T_RENTA = {"","Título"};
         // llena la tabla 
         UtilsTable.llenaTabla(tableList,null, T_RENTA, cellAlignment, cellSize);
         // obtiene el modelo de la tabla (datos)
-        modeloPelicuas = (DefaultTableModel) tableList.getModel();
+        modeloLibros = (DefaultTableModel) tableList.getModel();
     }    
     
     private void llenaClientes(){
@@ -129,7 +128,7 @@ public class Prestamo extends javax.swing.JInternalFrame {
         }
         else if (tableList.getRowCount() == 0){
             Toolkit.getDefaultToolkit().beep();
-            javax.swing.JOptionPane.showMessageDialog(this, "No hay peliculas en la renta.","Aviso",2);
+            javax.swing.JOptionPane.showMessageDialog(this, "No hay libros en prestamo.","Aviso",2);
             return false;
         }/*
         else if (cmbTipoPago.getSelectedIndex() == 0){
@@ -224,7 +223,7 @@ public class Prestamo extends javax.swing.JInternalFrame {
                 btnGuardaActionPerformed(evt);
             }
         });
-        pnlRenta.add(btnGuarda, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 20, 40, 40));
+        pnlRenta.add(btnGuarda, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 20, 40, 40));
 
         lblCliente.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblCliente.setText("Cliente");
@@ -301,7 +300,7 @@ public class Prestamo extends javax.swing.JInternalFrame {
                 btnAddPeliculaActionPerformed(evt);
             }
         });
-        pnlTableList.add(btnAddPelicula, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 20, 40, 40));
+        pnlTableList.add(btnAddPelicula, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 20, 40, 40));
         btnAddPelicula.getAccessibleContext().setAccessibleDescription("Agregar libros");
 
         btnBorrarPel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/borrar.png"))); // NOI18N
@@ -320,10 +319,12 @@ public class Prestamo extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(pnlRenta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pnlTableList, javax.swing.GroupLayout.DEFAULT_SIZE, 735, Short.MAX_VALUE))
+                .addComponent(pnlTableList, javax.swing.GroupLayout.PREFERRED_SIZE, 735, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(pnlRenta, javax.swing.GroupLayout.PREFERRED_SIZE, 735, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -339,34 +340,36 @@ public class Prestamo extends javax.swing.JInternalFrame {
 
     private void btnGuardaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardaActionPerformed
 //         Guarda y actualiza los datos
-        /*if (estanLlenos()){
-            if (totalesIguales()){
+        if (estanLlenos()){
+            //if (totalesIguales()){
+            System.out.println("holajaco");
                 // Guarda datos de los controles en un arreglo de objetos
                 Object[] renta = new Object[5];
-                renta[0] = id_sucursal;  
+                renta[0] = id_sucursal;
+                System.out.println(renta[0]);
                 renta[1] = lblFechaOut.getText();
                 renta[2] = cliente[cmbCliente.getSelectedIndex()-1][0].toString();
                 renta[3] = lblFechaIn.getText();
                 renta[4] = id_empleado;
                 // Guarda la renta y recupera el id
-                DaoRenta daoRenta = new DaoRenta();
-                String id = daoRenta.saveRenta(renta);
+                PrestamoDAO daoRenta = new PrestamoDAO();
+                String id = daoRenta.SavePrestamo(renta);
                 if (id != null){        
                     // si guardo la renta, guarda los datos del detalle
-                    DaoDRenta daoDRenta = new DaoDRenta();
+                    DPrestamoDAO daoDRenta = new DPrestamoDAO();
                     int i;
                     for (i = 0; i < tableList.getRowCount(); i++)
-                        daoDRenta.saveDRenta(id,Integer.parseInt(tableList.getValueAt(i, 0).toString()));
+                        daoDRenta.saveDPrestamo(id,Integer.parseInt(tableList.getValueAt(i, 0).toString()));
                     
                     // si guardo la renta, guarda los datos del pago
-                    DaoPayment daoPayment = new DaoPayment();
+                    /*DaoPayment daoPayment = new DaoPayment();
                     int j;
                     for (j = 0; j < tableListPagos.getRowCount(); j++)
                         daoPayment.savePayment(id,Integer.parseInt(tableListPagos.getValueAt(j, 0).toString()),
-                                Float.parseFloat(tableListPagos.getValueAt(j, 2).toString()));
+                                Float.parseFloat(tableListPagos.getValueAt(j, 2).toString()));*/
                     
-                    if (i > 0 && j > 0){
-                        javax.swing.JOptionPane.showMessageDialog(this, "La renta se guardó correctamente","Información",1);
+                    if (i > 0 ){
+                        javax.swing.JOptionPane.showMessageDialog(this, "El prestamo se guardó correctamente","Información",1);
                         showReporte(id);
                     }
                     else
@@ -374,8 +377,8 @@ public class Prestamo extends javax.swing.JInternalFrame {
                 }
                 else
                     javax.swing.JOptionPane.showMessageDialog(this, "Error al guardar","Información",1);
-            }
-        }*/
+            //}
+        }
     }//GEN-LAST:event_btnGuardaActionPerformed
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
@@ -395,10 +398,11 @@ public class Prestamo extends javax.swing.JInternalFrame {
 
     private void btnAddPeliculaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddPeliculaActionPerformed
         // verifica si son menos de 3 peliculas
-         /*if (tableList.getRowCount()== 3){
+        //System.out.print("malaria");
+         if (tableList.getRowCount()== 3){
              // Suena un beep
              Toolkit.getDefaultToolkit().beep();
-             javax.swing.JOptionPane.showMessageDialog(this, "No se pueden agregar mas de 3\npeliculas a la renta.","Aviso",2);
+             javax.swing.JOptionPane.showMessageDialog(this, "No se pueden agregar mas de 3\nlibros al prestamo.","Aviso",2);
          }
          else{
             // Abre la ventana para agregar peliculas
@@ -411,33 +415,33 @@ public class Prestamo extends javax.swing.JInternalFrame {
             if (addLibrosPrestamo.tableList.getSelectedRow() >= 0){
                 // verifica si la pelicula ya está en la lista
                 if (verificaRepetido(addLibrosPrestamo.film[0].toString())){
-                    modeloPelicuas.addRow(addLibrosPrestamo.film);
+                    modeloLibros.addRow(addLibrosPrestamo.film);
                     // calcula el monto de la renta
-                    totalSum = totalSum + Float.parseFloat(addLibrosPrestamo.film[2].toString());
+                    //totalSum = totalSum + Float.parseFloat(addLibrosPrestamo.film[2].toString());
                     // pone el monto en el control
-                    DecimalFormat df = new DecimalFormat("#.00");
-                    lblTotalIn.setText("" + df.format(totalSum));
+                    //sDecimalFormat df = new DecimalFormat("#.00");
+                    //lblTotalIn.setText("" + df.format(totalSum));
                 }
             }
-         }*/
+         }
     }//GEN-LAST:event_btnAddPeliculaActionPerformed
 
     private void btnBorrarPelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarPelActionPerformed
         // Borrar peliucula del detalle
         // valida si selecciono la fila
-         /*if (tableList.getSelectedRow() < 0){
+         if (tableList.getSelectedRow() < 0){
              // Suena un beep
              Toolkit.getDefaultToolkit().beep();
              javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila.","Aviso",2);
          }
         else{
               // calcula en nuevo monto
-              totalSum = totalSum - Float.parseFloat(tableList.getValueAt(tableList.getSelectedRow(), 2).toString());
+              //totalSum = totalSum - Float.parseFloat(tableList.getValueAt(tableList.getSelectedRow(), 2).toString());
               // muestra el nuevo monto
-              lblTotalIn.setText("$" + totalSum);
+              //lblTotalIn.setText("$" + totalSum);
               //remueve el elemento del modelo de la tabla
-              modeloPelicuas.removeRow(tableList.getSelectedRow());
-         }*/
+              modeloLibros.removeRow(tableList.getSelectedRow());
+         }
     }//GEN-LAST:event_btnBorrarPelActionPerformed
 
     private void cmbClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbClienteActionPerformed
