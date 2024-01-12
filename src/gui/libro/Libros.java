@@ -277,6 +277,9 @@ public class Libros extends javax.swing.JInternalFrame {
 
         setClosable(true);
         setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
+        setIconifiable(true);
+        setMaximizable(true);
+        setResizable(true);
         setTitle("Libros");
         setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/img/libros.png"))); // NOI18N
         setName(""); // NOI18N
@@ -307,26 +310,26 @@ public class Libros extends javax.swing.JInternalFrame {
         pnlLibro.add(lblTitulo, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, -1, 20));
 
         txtTitulo.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        pnlLibro.add(txtTitulo, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 30, 250, 20));
+        pnlLibro.add(txtTitulo, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 30, 290, 20));
 
         lblEdicion.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblEdicion.setText("Edicion:");
-        pnlLibro.add(lblEdicion, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 110, -1, 20));
+        pnlLibro.add(lblEdicion, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 110, -1, 20));
 
         txtEdicion.setDocument(new InputType(InputType.TIPO_SOLO_NUMEROS, 2, false, false));
         txtEdicion.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtEdicion.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        pnlLibro.add(txtEdicion, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 110, 60, 20));
+        pnlLibro.add(txtEdicion, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 110, 130, 20));
 
         lblGenero.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblGenero.setText("Género:");
-        pnlLibro.add(lblGenero, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 70, -1, 20));
+        pnlLibro.add(lblGenero, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 70, -1, 20));
 
-        pnlLibro.add(cmbGenero, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 70, 140, -1));
+        pnlLibro.add(cmbGenero, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 70, 230, -1));
 
         lblClas.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        lblClas.setText("No. páginas");
-        pnlLibro.add(lblClas, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 150, -1, 20));
+        lblClas.setText("No. páginas:");
+        pnlLibro.add(lblClas, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 150, -1, 20));
 
         lblRenta.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblRenta.setText("País");
@@ -346,7 +349,7 @@ public class Libros extends javax.swing.JInternalFrame {
                 cmbPaisActionPerformed(evt);
             }
         });
-        pnlLibro.add(cmbPais, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 110, 250, -1));
+        pnlLibro.add(cmbPais, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 110, 290, -1));
 
         cmbIdioma.setNextFocusableComponent(cmbGenero);
         cmbIdioma.addActionListener(new java.awt.event.ActionListener() {
@@ -354,7 +357,7 @@ public class Libros extends javax.swing.JInternalFrame {
                 cmbIdiomaActionPerformed(evt);
             }
         });
-        pnlLibro.add(cmbIdioma, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 70, 250, -1));
+        pnlLibro.add(cmbIdioma, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 70, 290, -1));
 
         cmbEditorial.setNextFocusableComponent(cmbGenero);
         cmbEditorial.addActionListener(new java.awt.event.ActionListener() {
@@ -362,16 +365,16 @@ public class Libros extends javax.swing.JInternalFrame {
                 cmbEditorialActionPerformed(evt);
             }
         });
-        pnlLibro.add(cmbEditorial, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 150, 250, -1));
+        pnlLibro.add(cmbEditorial, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 150, 290, -1));
 
         lblAnio.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblAnio.setText("Año:");
-        pnlLibro.add(lblAnio, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 30, -1, 20));
+        pnlLibro.add(lblAnio, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 30, -1, 20));
 
         txtPags.setDocument(new InputType(InputType.TIPO_SOLO_NUMEROS, 4, false, false));
         txtPags.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtPags.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        pnlLibro.add(txtPags, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 150, 60, 20));
+        pnlLibro.add(txtPags, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 150, 130, 20));
 
         txtAnio.setDocument(new InputType(InputType.TIPO_SOLO_NUMEROS, 4, false, false));
         txtAnio.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -381,7 +384,7 @@ public class Libros extends javax.swing.JInternalFrame {
                 txtAnioActionPerformed(evt);
             }
         });
-        pnlLibro.add(txtAnio, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 30, 60, 20));
+        pnlLibro.add(txtAnio, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 30, 130, 20));
 
         pnlTableList.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Lista de libros", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N
         pnlTableList.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -405,7 +408,7 @@ public class Libros extends javax.swing.JInternalFrame {
         });
         scpTableList.setViewportView(tableList);
 
-        pnlTableList.add(scpTableList, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 560, 160));
+        pnlTableList.add(scpTableList, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 790, 160));
 
         lblTitulo1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblTitulo1.setText("Filtrar:");
@@ -432,7 +435,7 @@ public class Libros extends javax.swing.JInternalFrame {
                 btnBorrarActionPerformed(evt);
             }
         });
-        pnlTableList.add(btnBorrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 20, 40, 40));
+        pnlTableList.add(btnBorrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 20, 40, 40));
 
         btnReporte.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/reporte.png"))); // NOI18N
         btnReporte.setToolTipText("Mostrar reporte");
@@ -442,7 +445,7 @@ public class Libros extends javax.swing.JInternalFrame {
                 btnReporteActionPerformed(evt);
             }
         });
-        pnlTableList.add(btnReporte, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 20, 40, 40));
+        pnlTableList.add(btnReporte, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 20, 40, 40));
 
         btnReportePDF.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/pdf-icon.png"))); // NOI18N
         btnReportePDF.setToolTipText("Mostrar en PDF");
@@ -452,7 +455,7 @@ public class Libros extends javax.swing.JInternalFrame {
                 btnReportePDFActionPerformed(evt);
             }
         });
-        pnlTableList.add(btnReportePDF, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 20, 40, 40));
+        pnlTableList.add(btnReportePDF, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 20, 40, 40));
 
         btnBorrarFiltro.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/cancelarm.png"))); // NOI18N
         btnBorrarFiltro.setToolTipText("Borrar filtro");
@@ -616,16 +619,16 @@ public class Libros extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(pnlTableList, javax.swing.GroupLayout.PREFERRED_SIZE, 585, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(pnlLibro, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 585, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(pnlTableList1, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
-                            .addComponent(pnlTableList3, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
-                            .addComponent(pnlTableList4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(pnlTableList5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(pnlTableList6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(pnlTableList, javax.swing.GroupLayout.DEFAULT_SIZE, 817, Short.MAX_VALUE)
+                            .addComponent(pnlLibro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(pnlTableList1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(pnlTableList6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(pnlTableList5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(pnlTableList4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(pnlTableList3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(btnAddLibro, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -649,26 +652,26 @@ public class Libros extends javax.swing.JInternalFrame {
                     .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnCancela, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pnlLibro, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(pnlTableList3, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(pnlTableList4, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(pnlTableList5, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(pnlTableList5, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(pnlLibro, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(2, 2, 2)
-                        .addComponent(pnlTableList6, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(pnlTableList1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(25, 25, 25)
+                        .addGap(0, 54, Short.MAX_VALUE)
                         .addComponent(pnlTableList, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGap(0, 34, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(pnlTableList6, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(43, 43, 43)
+                        .addComponent(pnlTableList1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
         );
 
         pack();
