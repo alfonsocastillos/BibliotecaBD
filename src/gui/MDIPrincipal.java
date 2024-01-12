@@ -2,6 +2,7 @@ package gui;
 
 // import gui.renta.Renta;
 import gui.libro.Libros;
+import gui.prestamo.Prestamo;
 import gui.clientes.Clientes;
 import gui.reportes.Reportes;
 import java.awt.Dimension;
@@ -26,8 +27,8 @@ public class MDIPrincipal extends javax.swing.JFrame {
     Libros vtn_libros;
     // Ventana Clientes
     Clientes vtn_clientes;
-    // Renta vtnReportes;
-    Reportes vtn_reportes;
+    Prestamo vtn_prestamo;
+
     /**
      * Creates new form MDIPrincipal
      * @param id_sucursal
@@ -64,13 +65,12 @@ public class MDIPrincipal extends javax.swing.JFrame {
         // Instancia las ventanas
         vtn_libros = new Libros();
         vtn_clientes = new Clientes();
-        vtn_reportes = new Reportes();
-        //vtnRenta = new Renta(id_empleado,id_sucursal, empleado_nombre);
+        vtn_prestamo = new Prestamo(id_empleado,id_sucursal, empleado_nombre);
+        //vtn_prestamo = new Prestamo();
         // Agrega las ventanas al panel
         desktopPane.add(vtn_libros);
         desktopPane.add(vtn_clientes);
-        desktopPane.add(vtn_reportes);
-        //desktopPane.add(vtnRenta);
+        desktopPane.add(vtn_prestamo);
         pack(); // Ajusta el tamaño de la ventana al preferido por sus componentes internos
     }
       
@@ -81,16 +81,17 @@ public class MDIPrincipal extends javax.swing.JFrame {
         frame.setLocation((desktopSize.width - frameSize.width)/2, (desktopSize.height- frameSize.height)/2);
     }
        
-    /*private void abreRenta (){        
-        if (!vtnRenta.isVisible()){
+    private void abrePrestamo (){  
+        
+        if (!vtn_prestamo.isVisible()){
             // Posiciona la ventana
-            setLocation(vtnRenta);
+            setLocation(vtn_prestamo);
             //Abre la ventana renta
-            vtnRenta.setVisible(true);
+            vtn_prestamo.setVisible(true);
         }// Si ya está abierta, la pone adelante
         else 
-            vtnRenta.moveToFront();
-    }*/
+            vtn_prestamo.moveToFront();
+    }
     
     private void AbreLibros(){
         if (vtn_libros == null) {
@@ -378,12 +379,12 @@ public class MDIPrincipal extends javax.swing.JFrame {
 
     private void menuRentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuRentaActionPerformed
         // Accion del menu renta
-        // abreRenta();
+        abrePrestamo();
     }//GEN-LAST:event_menuRentaActionPerformed
 
     private void btnRentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRentaActionPerformed
         // Accion del boton renta de la barra de accesos rapidos 
-        // abreRenta();
+        abrePrestamo();
     }//GEN-LAST:event_btnRentaActionPerformed
     
     private void btnLibrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLibrosActionPerformed

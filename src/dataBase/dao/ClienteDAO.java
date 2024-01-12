@@ -7,6 +7,7 @@ import dataBase.Conexion;
 import dataBase.ConfigDataBase;
 import java.math.BigDecimal;
 import java.sql.*;
+import java.util.Arrays;
 
 public class ClienteDAO extends Conexion {
      
@@ -41,7 +42,8 @@ public class ClienteDAO extends Conexion {
                 customers[i][2]=(rs.getString(3)); 
                 customers[i][3]=(rs.getString(4));
                 i++;
-            }           
+            }      
+            System.out.println(Arrays.toString(customers));
             return customers;
         }
         catch (SQLException ex){
