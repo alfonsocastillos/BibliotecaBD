@@ -150,9 +150,9 @@ public class Prestamo extends javax.swing.JInternalFrame {
     private void limpia(){
         cmbCliente.setSelectedIndex(0);
         Calendar c = Calendar.getInstance();
-        lblFechaOut.setText(c.get(Calendar.DATE) + "/" + c.get(Calendar.MONTH) + "/" + c.get(Calendar.YEAR));
+        lblFechaOut.setText(c.get(Calendar.DATE) + "/" + c.get(Calendar.MONTH+1) + "/" + c.get(Calendar.YEAR));
         c.add(Calendar.DAY_OF_YEAR, 3);
-        lblFechaIn.setText(c.get(Calendar.DATE) + "/" + c.get(Calendar.MONTH) + "/" + c.get(Calendar.YEAR));
+        lblFechaIn.setText(c.get(Calendar.DATE) + "/" + c.get(Calendar.MONTH+1) + "/" + c.get(Calendar.YEAR));
         //lblTotalIn.setText("");
         UtilsTable.limpiaTabla(tableList);
        // UtilsTable.limpiaTabla(tableListPagos);
