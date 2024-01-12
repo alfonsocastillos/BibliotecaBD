@@ -121,14 +121,14 @@ public class MDIPrincipal extends javax.swing.JFrame {
     }
     
     private void AbreReportes(){
-                if (!vtn_reportes.isVisible()){
+                /*if (!vtn_reportes.isVisible()){
             // Posiciona la ventana
             setLocation(vtn_reportes);
             //Abre la ventana renta
             vtn_reportes.setVisible(true);
         }// Si ya está abierta, la pone adelante
         else 
-            vtn_reportes.moveToFront();
+            vtn_reportes.moveToFront();*/
     }
 
     /**

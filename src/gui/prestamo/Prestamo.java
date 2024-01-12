@@ -2,9 +2,9 @@ package gui.prestamo;
 
 import dataBase.dao.ClienteDAO;
 import dataBase.dao.DPrestamoDAO;
-import dataBase.dao.DaoPayment;
+//import dataBase.dao.DaoPayment;
 import dataBase.dao.PrestamoDAO;
-import dataBase.dao.DaoTPagos;
+//import dataBase.dao.DaoTPagos;
 import java.awt.Frame;
 import java.awt.Toolkit;
 import java.text.DecimalFormat;
@@ -28,7 +28,7 @@ public class Prestamo extends javax.swing.JInternalFrame {
     boolean editando = false;
     // Para consultar los datos de la DB
     ClienteDAO daoCliente;
-    DaoTPagos daoTPagos;
+//    DaoTPagos daoTPagos;
     // para guardar los datos consultados
     Object filmsLista [][];
     Object languajes[][];
