@@ -109,7 +109,7 @@ public class MDIPrincipal extends javax.swing.JFrame {
     }
     
     
-    private void AbreClientes(){
+    /*private void AbreClientes(){
                 if (!vtn_clientes.isVisible()){
             // Posiciona la ventana
             setLocation(vtn_clientes);
@@ -118,7 +118,7 @@ public class MDIPrincipal extends javax.swing.JFrame {
         }// Si ya está abierta, la pone adelante
         else 
             vtn_clientes.moveToFront();
-    }
+    }*/
     
     private void AbreReportes(){
                 /*if (!vtn_reportes.isVisible()){
@@ -369,7 +369,7 @@ public class MDIPrincipal extends javax.swing.JFrame {
     
     // Abrir la ventana de libros
     private void menuClienteActionPerformed(java.awt.event.ActionEvent evt) {                                             
-        AbreClientes();
+       // AbreClientes();
     } 
     
     private void menuActorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuActorActionPerformed
@@ -393,7 +393,7 @@ public class MDIPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLibrosActionPerformed
 
     private void btnClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClientesActionPerformed
-       AbreClientes();
+       //AbreClientes();
     }//GEN-LAST:event_btnClientesActionPerformed
 
     private void btnReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportesActionPerformed
