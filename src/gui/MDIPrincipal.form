@@ -87,7 +87,7 @@
                   <Font name="Arial" size="14" style="1"/>
                 </Property>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/img/actor.png"/>
+                  <Image iconType="3" name="/img/user_icon.png"/>
                 </Property>
                 <Property name="mnemonic" type="int" value="112"/>
                 <Property name="text" type="java.lang.String" value="Clientes"/>
@@ -254,7 +254,7 @@
         <Component class="javax.swing.JButton" name="btnClientes">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/img/actor.png"/>
+              <Image iconType="3" name="/img/user_icon.png"/>
             </Property>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>

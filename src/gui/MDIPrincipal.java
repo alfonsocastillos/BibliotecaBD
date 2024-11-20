@@ -214,7 +214,7 @@ public class MDIPrincipal extends javax.swing.JFrame {
         });
         barraDeAcceso.add(btnLibros);
 
-        btnClientes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/actor.png"))); // NOI18N
+        btnClientes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/user_icon.png"))); // NOI18N
         btnClientes.setFocusable(false);
         btnClientes.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnClientes.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -306,7 +306,7 @@ public class MDIPrincipal extends javax.swing.JFrame {
         editMenu.add(menuActor);
 
         menuCliente.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        menuCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/actor.png"))); // NOI18N
+        menuCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/user_icon.png"))); // NOI18N
         menuCliente.setMnemonic('p');
         menuCliente.setText("Clientes");
         editMenu.add(menuCliente);
