@@ -2,7 +2,9 @@ package gui;
 
 // import gui.renta.Renta;
 import gui.libro.Libros;
-//import gui.clientes.Clientes;
+import gui.prestamo.Prestamo;
+import gui.clientes.Clientes;
+import gui.reportes.Reportes;
 import java.awt.Dimension;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
@@ -24,8 +26,8 @@ public class MDIPrincipal extends javax.swing.JFrame {
     // Declara las ventanas
     Libros vtn_libros;
     // Ventana Clientes
-    //Clientes vtn_clientes;
-    // Renta vtnRenta;
+    Clientes vtn_clientes;
+    Prestamo vtn_prestamo;
 
     /**
      * Creates new form MDIPrincipal
@@ -62,12 +64,13 @@ public class MDIPrincipal extends javax.swing.JFrame {
         setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
         // Instancia las ventanas
         vtn_libros = new Libros();
-        //vtn_clientes = new Clientes();
-        //vtnRenta = new Renta(id_empleado,id_sucursal, empleado_nombre);
+        vtn_clientes = new Clientes();
+        vtn_prestamo = new Prestamo(id_empleado,id_sucursal, empleado_nombre);
+        //vtn_prestamo = new Prestamo();
         // Agrega las ventanas al panel
         desktopPane.add(vtn_libros);
-       // desktopPane.add(vtn_clientes);
-        //desktopPane.add(vtnRenta);
+        desktopPane.add(vtn_clientes);
+        desktopPane.add(vtn_prestamo);
         pack(); // Ajusta el tamaño de la ventana al preferido por sus componentes internos
     }
       
@@ -78,16 +81,17 @@ public class MDIPrincipal extends javax.swing.JFrame {
         frame.setLocation((desktopSize.width - frameSize.width)/2, (desktopSize.height- frameSize.height)/2);
     }
        
-    /*private void abreRenta (){        
-        if (!vtnRenta.isVisible()){
+    private void abrePrestamo (){  
+        
+        if (!vtn_prestamo.isVisible()){
             // Posiciona la ventana
-            setLocation(vtnRenta);
+            setLocation(vtn_prestamo);
             //Abre la ventana renta
-            vtnRenta.setVisible(true);
+            vtn_prestamo.setVisible(true);
         }// Si ya está abierta, la pone adelante
         else 
-            vtnRenta.moveToFront();
-    }*/
+            vtn_prestamo.moveToFront();
+    }
     
     private void AbreLibros(){
         if (vtn_libros == null) {
@@ -115,6 +119,17 @@ public class MDIPrincipal extends javax.swing.JFrame {
         else 
             vtn_clientes.moveToFront();
     }*/
+    
+    private void AbreReportes(){
+                /*if (!vtn_reportes.isVisible()){
+            // Posiciona la ventana
+            setLocation(vtn_reportes);
+            //Abre la ventana renta
+            vtn_reportes.setVisible(true);
+        }// Si ya está abierta, la pone adelante
+        else 
+            vtn_reportes.moveToFront();*/
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -131,6 +146,7 @@ public class MDIPrincipal extends javax.swing.JFrame {
         btnRenta = new javax.swing.JButton();
         btnLibros = new javax.swing.JButton();
         btnClientes = new javax.swing.JButton();
+        btnReportes = new javax.swing.JButton();
         barVent = new javax.swing.JToolBar();
         sptDown = new javax.swing.JSplitPane();
         lblSucursal = new javax.swing.JLabel();
@@ -169,7 +185,9 @@ public class MDIPrincipal extends javax.swing.JFrame {
         );
         desktopPaneLayout.setVerticalGroup(
             desktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(desktopPaneLayout.createSequentialGroup()
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 1111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 2, Short.MAX_VALUE))
         );
 
         barraDeAcceso.setRollover(true);
@@ -196,7 +214,7 @@ public class MDIPrincipal extends javax.swing.JFrame {
         });
         barraDeAcceso.add(btnLibros);
 
-        btnClientes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/actor.png"))); // NOI18N
+        btnClientes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/user_icon.png"))); // NOI18N
         btnClientes.setFocusable(false);
         btnClientes.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnClientes.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -206,6 +224,18 @@ public class MDIPrincipal extends javax.swing.JFrame {
             }
         });
         barraDeAcceso.add(btnClientes);
+
+        btnReportes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/seo-report.png"))); // NOI18N
+        btnReportes.setFocusable(false);
+        btnReportes.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnReportes.setPreferredSize(new java.awt.Dimension(34, 33));
+        btnReportes.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnReportes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReportesActionPerformed(evt);
+            }
+        });
+        barraDeAcceso.add(btnReportes);
 
         barVent.setRollover(true);
 
@@ -276,7 +306,7 @@ public class MDIPrincipal extends javax.swing.JFrame {
         editMenu.add(menuActor);
 
         menuCliente.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        menuCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/actor.png"))); // NOI18N
+        menuCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/user_icon.png"))); // NOI18N
         menuCliente.setMnemonic('p');
         menuCliente.setText("Clientes");
         editMenu.add(menuCliente);
@@ -317,7 +347,7 @@ public class MDIPrincipal extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(barraDeAcceso, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(barraDeAcceso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(desktopPane)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -349,12 +379,12 @@ public class MDIPrincipal extends javax.swing.JFrame {
 
     private void menuRentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuRentaActionPerformed
         // Accion del menu renta
-        // abreRenta();
+        abrePrestamo();
     }//GEN-LAST:event_menuRentaActionPerformed
 
     private void btnRentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRentaActionPerformed
         // Accion del boton renta de la barra de accesos rapidos 
-        // abreRenta();
+        abrePrestamo();
     }//GEN-LAST:event_btnRentaActionPerformed
     
     private void btnLibrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLibrosActionPerformed
@@ -365,6 +395,11 @@ public class MDIPrincipal extends javax.swing.JFrame {
     private void btnClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClientesActionPerformed
        //AbreClientes();
     }//GEN-LAST:event_btnClientesActionPerformed
+
+    private void btnReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportesActionPerformed
+        // TODO add your handling code here:
+        AbreReportes();
+    }//GEN-LAST:event_btnReportesActionPerformed
 
     /**
      * @param args the command line arguments
@@ -377,6 +412,7 @@ public class MDIPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton btnClientes;
     private javax.swing.JButton btnLibros;
     private javax.swing.JButton btnRenta;
+    private javax.swing.JButton btnReportes;
     private javax.swing.JDesktopPane desktopPane;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenu fileMenu;

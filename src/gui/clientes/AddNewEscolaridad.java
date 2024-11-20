@@ -1,48 +1,45 @@
-package gui.libro;
+package gui.clientes;
 
-import dataBase.dao.EditorialDAO;
+import gui.clientes.*;
+import dataBase.dao.EscolaridadDAO;
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author Carlos
- * Ventana que permite crear, editar y eliminar idiomas del catálogo
- */
-public class AddNewEditorial extends javax.swing.JDialog {
+
+public class AddNewEscolaridad extends javax.swing.JDialog {
     // Para guardar el idioma
-    String editorial_id;
-    EditorialDAO editorial_dao;
+    int escolaridad_id;
+    EscolaridadDAO escolaridad_dao;
 
     /**
      * Creates new form 
      * @param parent
      * @param modal
      */
-    public AddNewEditorial(java.awt.Frame parent, boolean modal) {
+    public AddNewEscolaridad(java.awt.Frame parent, boolean modal) {
         // ventana modal
         super(parent, modal);
         // inicia los componentes
         initComponents();
         processWindowEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-        // Crea el dao para acceder a la tabla EDITORIAL
-        editorial_dao = new EditorialDAO();
+        // Crea el dao para acceder a la tabla PAIS
+        escolaridad_dao = new EscolaridadDAO();
         getRootPane().setDefaultButton(btnGuardar);                      
     }
     
     private void BorrarTextos(){
         // Borra el texto
-        txtEditorial.setText("");
+        txtEscolaridad.setText("");
     }
     
-    public void SetEditId(String editorial_id){
-        // Asigna el id del actor a modificar
-        this.editorial_id = editorial_id;
-        // Busca el actor
-        Object[] editorial_edit = editorial_dao.GetEditorialById(editorial_id);
+    public void SetEditId(int escolaridad_id){
+        // Asigna el id del pais a modificar
+        this.escolaridad_id = escolaridad_id;
+        // Busca el pais
+        Object[] escolaridad_edit = escolaridad_dao.GetEscolaridadById(escolaridad_id);
         // Muestra los datos en los controles
-        txtEditorial.setText(editorial_edit[1].toString());        
+        txtEscolaridad.setText(escolaridad_edit[1].toString());        
     }
     
     /**
@@ -55,12 +52,13 @@ public class AddNewEditorial extends javax.swing.JDialog {
     private void initComponents() {
 
         pnlTableList = new javax.swing.JPanel();
-        txtEditorial = new javax.swing.JTextField();
+        txtEscolaridad = new javax.swing.JTextField();
         lblNombre = new javax.swing.JLabel();
         btnGuardar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Editorial");
+        setTitle("Pais");
+        setAutoRequestFocus(false);
         setIconImage(java.awt.Toolkit.getDefaultToolkit().getImage( getClass().getResource("/img/libros.png")));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {
@@ -71,11 +69,11 @@ public class AddNewEditorial extends javax.swing.JDialog {
         pnlTableList.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N
         pnlTableList.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        txtEditorial.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        pnlTableList.add(txtEditorial, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 60, 140, 25));
+        txtEscolaridad.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        pnlTableList.add(txtEscolaridad, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 60, 190, 25));
 
         lblNombre.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        lblNombre.setText("Editorial:");
+        lblNombre.setText("Escolaridad:");
         pnlTableList.add(lblNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 60, -1, 25));
 
         btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/guardar.png"))); // NOI18N
@@ -86,7 +84,7 @@ public class AddNewEditorial extends javax.swing.JDialog {
                 btnGuardarActionPerformed(evt);
             }
         });
-        pnlTableList.add(btnGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 10, 40, 40));
+        pnlTableList.add(btnGuardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 10, 40, 40));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -94,8 +92,8 @@ public class AddNewEditorial extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(pnlTableList, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(pnlTableList, javax.swing.GroupLayout.DEFAULT_SIZE, 291, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -109,33 +107,33 @@ public class AddNewEditorial extends javax.swing.JDialog {
     
     // Descartar cambios al cerrar la ventana
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-
+        
     }//GEN-LAST:event_formWindowClosed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         // Accion del boton Guardar
-        if (txtEditorial.getText().trim().length() == 0){
+        if (txtEscolaridad.getText().trim().length() == 0){
             // Suena un beep
             Toolkit.getDefaultToolkit().beep();
             // Muestra un mensage de aviso
-            JOptionPane.showMessageDialog(this, "Escriba el idioma", "Aviso", 2);
+            JOptionPane.showMessageDialog(this, "Escriba la Escolaridad", "Aviso", 2);
         }
         else{                      
-            String editorial = txtEditorial.getText().trim();
-            if (editorial_id == null){ // Guarda un nuevo idioma                
-                editorial_id = editorial_dao.SaveEditorial(editorial);
+            String escolaridad = txtEscolaridad.getText().trim();
+            if (escolaridad_id == 0){ // Guarda un nuevo idioma                
+                escolaridad_id = escolaridad_dao.SaveEscolaridad(escolaridad);                
             }
             else{ // Actualiza idioma                
-                Object[] editorial_obj = new Object[2];
-                editorial_obj[0] = editorial_id;              // Id del editorial
-                editorial_obj[1] = editorial;                 // editorial
-                editorial_id = editorial_dao.UpdateEditorial(editorial_obj);                
+                Object[] escolaridad_obj = new Object[2];
+                escolaridad_obj[0] = escolaridad_id;              // Id del pais
+                escolaridad_obj[1] = escolaridad;                 // pais
+                escolaridad_id = escolaridad_dao.UpdateEscolaridad(escolaridad_obj);                
             }
             
-            if (editorial_id == null){
+            if (escolaridad_id == 0){
                 // Suena un beep
                 Toolkit.getDefaultToolkit().beep();
-                JOptionPane.showMessageDialog(this, "Error al guardar el editorial", "Error", 0);                
+                JOptionPane.showMessageDialog(this, "Error al guardar la escolaridad", "Error", 0);                
             }
             else{
                 BorrarTextos();
@@ -148,6 +146,6 @@ public class AddNewEditorial extends javax.swing.JDialog {
     private javax.swing.JButton btnGuardar;
     private javax.swing.JLabel lblNombre;
     private javax.swing.JPanel pnlTableList;
-    private javax.swing.JTextField txtEditorial;
+    private javax.swing.JTextField txtEscolaridad;
     // End of variables declaration//GEN-END:variables
 }

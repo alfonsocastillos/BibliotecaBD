@@ -1,21 +1,18 @@
-package gui.libro;
+package gui.clientes;
 
-import dataBase.dao.EditorialDAO;
+import gui.clientes.*;
+import dataBase.dao.CredencialDAO;
 import java.awt.Toolkit;
 import javax.swing.JOptionPane;
 import tools.UtilsTable;
 
-/**
- *
- * @author Alfonso
- * Ventana que permite agregar editoriales
- */
-public class AddEditorial extends javax.swing.JDialog {
-    // Para agregar una editorial
-    String editorial_id;
-    EditorialDAO editorial_dao;
-    // Para listar todos los editorial 
-    Object lista_editoriales [][];  // Id, pais
+
+public class AddCredenciales extends javax.swing.JDialog {
+    // Para agregar el paises
+    int credencial_id;
+    CredencialDAO credencial_dao;
+    // Para listar todos los paises 
+    Object lista_credenciales [][];  // Id, fecha de renovacion
    // public Object film[];
     java.awt.Frame parent;    
 
@@ -24,23 +21,23 @@ public class AddEditorial extends javax.swing.JDialog {
      * @param parent
      * @param modal
      */
-    public AddEditorial(java.awt.Frame parent, boolean modal) {
+    public AddCredenciales(java.awt.Frame parent, boolean modal) {
         // ventana modal
         super(parent, modal);   // Llama al constructor del padre
         this.parent= parent;
-        setTitle("Editoriales");
+        setTitle("Fecha de Renovación");
         // inicia los componentes
         initComponents();
         // Crea el dao
-        editorial_dao = new EditorialDAO();
+        credencial_dao = new CredencialDAO();
         // llena la tabla
         LlenaTabla();
     }
     
     // ? ? ? 
-    public void SetEditorialId(String editorial_id){   
+    public void SetPaisId(int id_credencial){   
         // Asigna el id del libro
-        this.editorial_id = editorial_id;
+        this.credencial_id = id_credencial;
         txtFiltro.setText("");
         LlenaTabla();
     }
@@ -48,9 +45,9 @@ public class AddEditorial extends javax.swing.JDialog {
     // Llena y despliega la tabla de autores 
     private void LlenaTabla(){     
         // Consulta todos los autores (id, nombre apellido)
-        lista_editoriales = editorial_dao.GetEditorialByNombre(txtFiltro.getText().trim());
+        lista_credenciales = credencial_dao.GetCredencialesByNombre(txtFiltro.getText().trim());
         // Titulos de la tabla
-        String[] T_EDITORIAL = {"","Editorial"};
+        String[] T_CREDENCIAL = {"","Fecha de Renovación"};
         // alineación de las celdas
         int[][] cellAlignment = {{0,javax.swing.SwingConstants.LEFT}};
         // Tamaño de las celdas
@@ -61,7 +58,7 @@ public class AddEditorial extends javax.swing.JDialog {
             la alineación y el tamaño de las celdas
         */
        
-        UtilsTable.llenaTabla(tableList,lista_editoriales, T_EDITORIAL, cellAlignment, cellSize);
+        UtilsTable.llenaTabla(tableList,lista_credenciales, T_CREDENCIAL, cellAlignment, cellSize);
     }
     
     /**
@@ -78,13 +75,11 @@ public class AddEditorial extends javax.swing.JDialog {
         tableList = new javax.swing.JTable();
         txtFiltro = new javax.swing.JTextField();
         lblFiltro = new javax.swing.JLabel();
-        btnNewEditorial = new javax.swing.JButton();
-        btnDelEditorial = new javax.swing.JButton();
-        btnEditEditorial = new javax.swing.JButton();
+        btnNewCredencial = new javax.swing.JButton();
+        btnDelCredencial = new javax.swing.JButton();
+        btnEditCredencial = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setAlwaysOnTop(true);
-        setFocusCycleRoot(false);
         setIconImage(java.awt.Toolkit.getDefaultToolkit().getImage( getClass().getResource("/img/libros.png")));
 
         pnlTableList.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N
@@ -123,30 +118,30 @@ public class AddEditorial extends javax.swing.JDialog {
         lblFiltro.setText("Filtrar:");
         pnlTableList.add(lblFiltro, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, 25));
 
-        btnNewEditorial.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/add.png"))); // NOI18N
-        btnNewEditorial.setToolTipText("Registrar nuevo actor");
-        btnNewEditorial.setFocusable(false);
-        btnNewEditorial.addActionListener(new java.awt.event.ActionListener() {
+        btnNewCredencial.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/add.png"))); // NOI18N
+        btnNewCredencial.setToolTipText("Registrar nuevo idioma");
+        btnNewCredencial.setFocusable(false);
+        btnNewCredencial.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnNewEditorialActionPerformed(evt);
+                btnNewCredencialActionPerformed(evt);
             }
         });
 
-        btnDelEditorial.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/borrar.png"))); // NOI18N
-        btnDelEditorial.setToolTipText("Borrar actor");
-        btnDelEditorial.setFocusable(false);
-        btnDelEditorial.addActionListener(new java.awt.event.ActionListener() {
+        btnDelCredencial.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/borrar.png"))); // NOI18N
+        btnDelCredencial.setToolTipText("Borrar idioma");
+        btnDelCredencial.setFocusable(false);
+        btnDelCredencial.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDelEditorialActionPerformed(evt);
+                btnDelCredencialActionPerformed(evt);
             }
         });
 
-        btnEditEditorial.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/editar.png"))); // NOI18N
-        btnEditEditorial.setToolTipText("Editar actor");
-        btnEditEditorial.setFocusable(false);
-        btnEditEditorial.addActionListener(new java.awt.event.ActionListener() {
+        btnEditCredencial.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/editar.png"))); // NOI18N
+        btnEditCredencial.setToolTipText("Editar idioma");
+        btnEditCredencial.setFocusable(false);
+        btnEditCredencial.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEditEditorialActionPerformed(evt);
+                btnEditCredencialActionPerformed(evt);
             }
         });
 
@@ -159,11 +154,11 @@ public class AddEditorial extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(pnlTableList, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnNewEditorial, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnNewCredencial, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(39, 39, 39)
-                        .addComponent(btnEditEditorial, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnEditCredencial, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(44, 44, 44)
-                        .addComponent(btnDelEditorial, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnDelCredencial, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -173,9 +168,9 @@ public class AddEditorial extends javax.swing.JDialog {
                 .addComponent(pnlTableList, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnNewEditorial, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnDelEditorial, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnEditEditorial, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnNewCredencial, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDelCredencial, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnEditCredencial, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -187,26 +182,26 @@ public class AddEditorial extends javax.swing.JDialog {
        
     }//GEN-LAST:event_tableListMouseClicked
 
-    // Abre una ventana que posibilida crear una EDITORIAL
-    private void btnNewEditorialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewEditorialActionPerformed
-        AddNewEditorial add_new_editorial = new AddNewEditorial(parent, true);        
+    // Abre una ventana que posibilida crear un PAIS
+    private void btnNewCredencialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewCredencialActionPerformed
+        AddNewCredenciales add_new_credencial = new AddNewCredenciales(parent, true);        
         // Localizacvión de la ventana        
-        add_new_editorial.setLocationRelativeTo(this);
+        add_new_credencial.setLocationRelativeTo(this);
         // hace visible la ventana
-        add_new_editorial.setVisible(true);        
+        add_new_credencial.setVisible(true);        
         LlenaTabla();
-        // cuando cierra la ventana agrega el actor a la tabla y lo selecciona
-        UtilsTable.mueveTabla(tableList, UtilsTable.getRow(lista_editoriales, add_new_editorial.editorial_id));
-    }//GEN-LAST:event_btnNewEditorialActionPerformed
+        // cuando cierra la ventana agrega el pais a la tabla y lo selecciona
+        UtilsTable.mueveTabla(tableList, UtilsTable.getRow(lista_credenciales, add_new_credencial.credencial_id));
+    }//GEN-LAST:event_btnNewCredencialActionPerformed
 
-    // Llena la tabla de editoriales cada que se escribe una letra
+    // Llena la tabla de paises cada que se escribe una letra
     private void txtFiltroKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFiltroKeyReleased
-        // Filtra actores  
+        // Filtra paises  
         LlenaTabla();
     }//GEN-LAST:event_txtFiltroKeyReleased
 
-    // Elimina a la editorial seleccionado de la tabla de EDITORIAL
-    private void btnDelEditorialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelEditorialActionPerformed
+    // Elimina al pais seleccionado de la tabla de PAIS
+    private void btnDelCredencialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelCredencialActionPerformed
         // Eliminar un registro
         // si no selecciona fila, le avisa al usuario
         if (tableList.getSelectedRow() < 0){
@@ -218,13 +213,13 @@ public class AddEditorial extends javax.swing.JDialog {
             // suena un beep
             java.awt.Toolkit.getDefaultToolkit().beep();
             // pregunta si quiere eliminar el registro y camtura la respuesta
-            int res = javax.swing.JOptionPane.showConfirmDialog(this, "¿Eliminar " + lista_editoriales[tableList.getSelectedRow()][1].toString() + "?",
+            int res = javax.swing.JOptionPane.showConfirmDialog(this, "¿Eliminar " + lista_credenciales[tableList.getSelectedRow()][1].toString() + "?",
                  "Seleccione", JOptionPane.YES_NO_OPTION);
             // evalua la respuesta 
             if (res == 0){
                 String msj = "";
                 // si la respuesta es afirmativa, elimina el registro
-                int ret = editorial_dao.DeleteEditorial(tableList.getValueAt(tableList.getSelectedRow(), 0).toString());
+                int ret = credencial_dao.DeleteCredenciales((Integer) tableList.getValueAt(tableList.getSelectedRow(), 0));
                 if (ret == 1){
                     msj = "No se pudo eliminar por que tiene registros asignados.";
                     javax.swing.JOptionPane.showMessageDialog(this, msj, "Información", 1);
@@ -233,37 +228,38 @@ public class AddEditorial extends javax.swing.JDialog {
                 LlenaTabla();
             }
         }
-    }//GEN-LAST:event_btnDelEditorialActionPerformed
+    }//GEN-LAST:event_btnDelCredencialActionPerformed
 
-    // Abre una ventana para poder editar al editorial seleccionado
-    private void btnEditEditorialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditEditorialActionPerformed
-        // Botón que edita el registro selecionado de la tabla
-        if (tableList.getSelectedRow() < 0){
-            // Suena un beep
+    // Abre una ventana para poder editar a la credencial seleccionada
+    private void btnEditCredencialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditCredencialActionPerformed
+        // Botón que edita el registro seleccionado de la tabla
+        if (tableList.getSelectedRow() < 0) {
             Toolkit.getDefaultToolkit().beep();
-            javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila", "Información", 1);
+            JOptionPane.showMessageDialog(this, "Seleccione una fila", "Información", 1);
+        } else {
+            credencial_id = (Integer) tableList.getValueAt(tableList.getSelectedRow(), 0);
+            String fechaRenovacion = JOptionPane.showInputDialog(this, "Ingrese la nueva fecha de renovación (DD/MM/YY):");
+            if (fechaRenovacion != null) {
+                Object[] credencial_obj = new Object[2];
+                credencial_obj[0] = credencial_id;
+                credencial_obj[1] = fechaRenovacion;
+
+                int result = credencial_dao.UpdateCredencial(credencial_obj);
+
+                if (result > 0) {
+                    JOptionPane.showMessageDialog(this, "Fecha de renovación actualizada correctamente.");
+                    LlenaTabla();  // Actualiza la tabla después de la modificación
+                } else {
+                    JOptionPane.showMessageDialog(this, "Error al actualizar la fecha de renovación.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
         }
-        else{
-            // Obtiene el id del actor seleccionado
-            editorial_id = tableList.getValueAt(tableList.getSelectedRow(), 0).toString();
-            // Abre la ventana para editar actor
-            // Ventana para editar actor
-            AddNewEditorial edit_editorial = new AddNewEditorial(parent, true);        
-            // Localización de la ventana
-            edit_editorial.setLocationRelativeTo(this);            
-            edit_editorial.SetEditId(editorial_id);
-            // hace visible la ventana
-            edit_editorial.setVisible(true);
-            LlenaTabla();
-            // cuando cierra la ventana agrega el actor a la tabla y lo selecciona
-            UtilsTable.mueveTabla(tableList, UtilsTable.getRow(lista_editoriales, edit_editorial.editorial_id));
-        }
-    }//GEN-LAST:event_btnEditEditorialActionPerformed
+    }//GEN-LAST:event_btnEditCredencialActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnDelEditorial;
-    private javax.swing.JButton btnEditEditorial;
-    private javax.swing.JButton btnNewEditorial;
+    private javax.swing.JButton btnDelCredencial;
+    private javax.swing.JButton btnEditCredencial;
+    private javax.swing.JButton btnNewCredencial;
     private javax.swing.JLabel lblFiltro;
     private javax.swing.JPanel pnlTableList;
     private javax.swing.JScrollPane scpTableList;

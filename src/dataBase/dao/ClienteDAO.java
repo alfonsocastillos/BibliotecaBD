@@ -5,7 +5,9 @@ package dataBase.dao;
 
 import dataBase.Conexion;
 import dataBase.ConfigDataBase;
+import java.math.BigDecimal;
 import java.sql.*;
+import java.util.Arrays;
 
 public class ClienteDAO extends Conexion {
 
@@ -44,7 +46,8 @@ public class ClienteDAO extends Conexion {
                 customers[i][2]=(rs.getString(3)); 
                 customers[i][3]=(rs.getString(4));
                 i++;
-            }           
+            }      
+            System.out.println(Arrays.toString(customers));
             return customers;
         }
         catch (SQLException ex){
@@ -58,24 +61,27 @@ public class ClienteDAO extends Conexion {
     }
     
     // Método para generar un nuevo ID
-    public String generateId(String tableName, String idColumnName) {
+    public String generateId(String tableName, String idColumnName, int startValue, int increment) {
         try {
             conectar();
             String id = "";
-            String query = "SELECT LPAD(SUBSTR(EXTRACT(YEAR FROM SYSDATE), 3, 2), 2, '0') || " +
-                           "LPAD(EXTRACT(MONTH FROM SYSDATE), 2, '0') || " +
-                           "LPAD(NVL(MAX(TO_NUMBER(SUBSTR(" + idColumnName + ", 5, 3))) + 1, 1), 3, '0') " +
-                           "FROM " + tableName +
-                           " WHERE SUBSTR(" + idColumnName + ", 1, 4) = " +
-                           "LPAD(SUBSTR(EXTRACT(YEAR FROM SYSDATE), 3, 2), 2, '0') || " +
-                           "LPAD(EXTRACT(MONTH FROM SYSDATE), 2, '0')";
-            
-            PreparedStatement ps = conn.prepareStatement(query);
-            ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {
-                id = rs.getString(1);
+            // Consulta para obtener el último valor de la secuencia
+            String query = "SELECT " + idColumnName + " FROM " + tableName + " ORDER BY " + idColumnName + " DESC FETCH FIRST 1 ROW ONLY";
+            PreparedStatement psQuery = conn.prepareStatement(query);
+            ResultSet rsQuery = psQuery.executeQuery();
+
+            int lastValue = startValue;  // Valor inicial si la secuencia está vacía
+
+            if (rsQuery.next()) {
+                lastValue = rsQuery.getInt(idColumnName);
             }
+
+            // Calcular el nuevo valor de la secuencia
+            int newValue = lastValue + increment;
+
+            // Formatear el nuevo valor de la secuencia (puedes ajustar el formato según tus necesidades)
+            id = String.format("%05d", newValue);
 
             return id;
         } catch (SQLException ex) {
@@ -87,31 +93,69 @@ public class ClienteDAO extends Conexion {
         }
     }
     
+    // Método para generar un nuevo ID para la tabla DIRECCION
+    public String generateDireccionId() {
+        return generateId("DIRECCION", "DIRECCION_ID", 2301000, 1000);
+    }
+
+    // Método para generar un nuevo ID para la tabla CREDENCIAL
+    public String generateCredencialId() {
+        return generateId("CREDENCIAL", "CREDENCIAL_ID", 1001, 1);
+    }
+
+    // Método para generar un nuevo ID para la tabla CLIENTE
+    public String generateClienteId() {
+        return generateId("CLIENTE", "CLIENTE_ID", 10001, 1);
+    }
+    
+    
     // Método para guardar un usuario
-   public void saveUsuario(Object[] usuario) {
+    public String saveCliente(Object[] usuario) {
     conectar();
-    try {
-        String id = generateId("CLIENTE", "CLIENTE_ID"); // Generar nuevo ID
-        String sentenciaSQL = "INSERT INTO CLIENTE VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        PreparedStatement ps = conn.prepareStatement(sentenciaSQL);
+        try {
+            // Obtener el nuevo ID de cliente usando la secuencia personalizada
+            String id = generateId("CLIENTE", "CLIENTE_ID", 10000, 1);
 
-        ps.setString(1, id);                  // Id (calculado)
-        ps.setString(2, usuario[0].toString());// Nombre
-        ps.setString(3, usuario[1].toString());// Apellido Paterno
-        ps.setString(4, usuario[2].toString());// Apellido Materno
-        ps.setString(5, usuario[3].toString());// Correo
-        ps.setString(6, usuario[4].toString());// Id de dirección (provisto)
-        ps.setString(7, usuario[5].toString());// Id de escolaridad (provisto)
-        ps.setString(8, usuario[6].toString());// Id de credencial (provisto)
+            // Resto del código para insertar el usuario en CLIENTE
+            String sentenciaSQL = "INSERT INTO CLIENTE VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement ps = conn.prepareStatement(sentenciaSQL);
 
-        ps.executeUpdate();
-    } catch (SQLException ex) {
-        // Manejo de excepciones...
-        System.err.println("Error al insertar usuario: " + ex.getMessage());
-    } finally {
-        desconectar();
+            ps.setString(1, id);                  // Id (calculado)
+            ps.setString(2, usuario[0].toString());// Nombre
+            ps.setString(3, usuario[1].toString());// Apellido Paterno
+            ps.setString(4, usuario[2].toString());// Apellido Materno
+            ps.setString(5, usuario[3].toString());// Correo
+            ps.setString(6, usuario[4].toString());// Id de dirección (provisto)
+            ps.setBigDecimal(7, new BigDecimal(usuario[5].toString()));  // Convertir a BigDecimal para NUMBER
+            ps.setBigDecimal(8, new BigDecimal(usuario[6].toString()));  // Convertir a BigDecimal para NUMBER
+
+            ps.executeUpdate();
+
+            // Obtener el CREDENCIAL_ID recién insertado usando la secuencia personalizada
+            String credencialId = generateId("CREDENCIAL", "CREDENCIAL_ID", 1001, 1);
+
+            // Insertar un nuevo registro en la tabla CREDENCIAL
+            sentenciaSQL = "INSERT INTO CREDENCIAL (CREDENCIAL_ID, FECHA_RENOVACION) VALUES (?, TO_DATE(?, 'YYYY-MM-DD'))";
+            ps = conn.prepareStatement(sentenciaSQL);
+
+            ps.setBigDecimal(1, new BigDecimal(credencialId));  // Convertir a BigDecimal para NUMBER
+            ps.setString(2, usuario[7].toString());            // Fecha de renovación
+
+            ps.executeUpdate();
+
+            return id;  // Regresa el nuevo ID de cliente
+        } catch (SQLException ex) {
+            // Manejo de excepciones...
+            ex.printStackTrace();
+            System.err.println("Error al insertar usuario: " + ex.getMessage());
+            return null;
+        } finally {
+            desconectar();
+        }
     }
-    }
+
+
+
 
 
 
