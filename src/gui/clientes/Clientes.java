@@ -100,7 +100,7 @@ public class Clientes extends javax.swing.JInternalFrame {
         setMaximizable(true);
         setResizable(true);
         setTitle("Clientes");
-        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/img/actor.png"))); // NOI18N
+        setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/img/user_icon.png"))); // NOI18N
         setName(""); // NOI18N
 
         pnlClientes.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Agregar Clientes", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N

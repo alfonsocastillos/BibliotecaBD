@@ -165,15 +165,17 @@ public class MDIPrincipal extends javax.swing.JFrame {
         menuAcercaDe = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Renta de películas");
+        setTitle("Prestamo de libros");
+        setAutoRequestFocus(false);
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         setIconImage(java.awt.Toolkit.getDefaultToolkit().getImage( getClass().getResource("/img/icono.png")));
-        setResizable(false);
 
         desktopPane.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/biblioteca_fondo.png"))); // NOI18N
+        jLabel1.setMaximumSize(new java.awt.Dimension(1920, 1080));
+        jLabel1.setMinimumSize(new java.awt.Dimension(860, 540));
 
         desktopPane.setLayer(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
@@ -214,7 +216,7 @@ public class MDIPrincipal extends javax.swing.JFrame {
         });
         barraDeAcceso.add(btnLibros);
 
-        btnClientes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/actor.png"))); // NOI18N
+        btnClientes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/user_icon.png"))); // NOI18N
         btnClientes.setFocusable(false);
         btnClientes.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnClientes.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -296,8 +298,9 @@ public class MDIPrincipal extends javax.swing.JFrame {
         editMenu.add(menuPelicula);
 
         menuActor.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        menuActor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/pen.png"))); // NOI18N
         menuActor.setMnemonic('y');
-        menuActor.setText("Actores");
+        menuActor.setText("Autores");
         menuActor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuActorActionPerformed(evt);
@@ -306,14 +309,20 @@ public class MDIPrincipal extends javax.swing.JFrame {
         editMenu.add(menuActor);
 
         menuCliente.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        menuCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/actor.png"))); // NOI18N
+        menuCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/user_icon.png"))); // NOI18N
         menuCliente.setMnemonic('p');
         menuCliente.setText("Clientes");
         editMenu.add(menuCliente);
 
         menuEmpleado.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        menuEmpleado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/employee.png"))); // NOI18N
         menuEmpleado.setMnemonic('d');
         menuEmpleado.setText("Empleados");
+        menuEmpleado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuEmpleadoActionPerformed(evt);
+            }
+        });
         editMenu.add(menuEmpleado);
 
         menuBar.add(editMenu);
@@ -400,6 +409,10 @@ public class MDIPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
         AbreReportes();
     }//GEN-LAST:event_btnReportesActionPerformed
+
+    private void menuEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuEmpleadoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_menuEmpleadoActionPerformed
 
     /**
      * @param args the command line arguments

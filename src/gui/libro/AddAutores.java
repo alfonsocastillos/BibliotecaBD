@@ -88,7 +88,7 @@ public class AddAutores extends javax.swing.JDialog {
         btnEditAutor = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setIconImage(java.awt.Toolkit.getDefaultToolkit().getImage( getClass().getResource("/img/actor.png")));
+        setIconImage(java.awt.Toolkit.getDefaultToolkit().getImage( getClass().getResource("/img/pen.png")));
 
         btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/guardar.png"))); // NOI18N
         btnGuardar.setToolTipText("Guardar");
@@ -193,10 +193,6 @@ public class AddAutores extends javax.swing.JDialog {
                     .addComponent(btnEditAutor, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        btnNewAutor.getAccessibleContext().setAccessibleDescription("Registrar nuevo autor");
-        btnDelAutor.getAccessibleContext().setAccessibleDescription("Borrar autor");
-        btnEditAutor.getAccessibleContext().setAccessibleDescription("Editar autor");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

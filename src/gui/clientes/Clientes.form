@@ -9,7 +9,7 @@
     <Property name="resizable" type="boolean" value="true"/>
     <Property name="title" type="java.lang.String" value="Clientes"/>
     <Property name="frameIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-      <Image iconType="3" name="/img/actor.png"/>
+      <Image iconType="3" name="/img/user_icon.png"/>
     </Property>
     <Property name="name" type="java.lang.String" value="" noResource="true"/>
   </Properties>
