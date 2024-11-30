@@ -18,6 +18,7 @@ import java.awt.Font;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 
 public class UtilsTable {
    
@@ -74,7 +75,7 @@ public class UtilsTable {
 
         //Ancho de las columas
         for (int i = 0; i< cellSize.length; i++)
-            columnZise(tabla,cellSize[i][0],cellSize[i][1]);
+            columnSize(tabla,cellSize[i][0],cellSize[i][1]);
         
         // Ancho de los renglones
         for (int i = 0; i< tabla.getRowCount(); i++)
@@ -90,10 +91,19 @@ public class UtilsTable {
            i-=1;
        }
     }
+    
+    public static void quitarColumna(JTable tabla, int indice) {
+        TableColumnModel tbc = tabla.getColumnModel();
+        tbc.removeColumn(tbc.getColumn(indice));
+    }
+    
+    public static Object obtenerValor(JTable tabla, int fila, int columna) {
+        return tabla.getModel().getValueAt(fila, columna);
+    }
            
     
     // Asigna el ancho de la columna
-    private static void columnZise(javax.swing.JTable tabla,int column, int size){
+    private static void columnSize(javax.swing.JTable tabla,int column, int size){
         // Da tamaño a las columnas de la tabla     
         tabla.getColumnModel().getColumn(column).setMaxWidth(size);
         tabla.getColumnModel().getColumn(column).setMinWidth(size);

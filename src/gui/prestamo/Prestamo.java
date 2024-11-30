@@ -2,9 +2,7 @@ package gui.prestamo;
 
 import dataBase.dao.ClienteDAO;
 import dataBase.dao.DPrestamoDAO;
-//import dataBase.dao.DaoPayment;
 import dataBase.dao.PrestamoDAO;
-//import dataBase.dao.DaoTPagos;
 import java.awt.Frame;
 import java.awt.Toolkit;
 import java.text.DecimalFormat;
@@ -22,25 +20,14 @@ import tools.UtilsTable;
 public class Prestamo extends javax.swing.JInternalFrame {
     String id_empleado;
     String id_sucursal;
-    String idCliente;
-    int idTipoPago;
     String empleado_nombre;
-    boolean editando = false;
     // Para consultar los datos de la DB
     ClienteDAO daoCliente;
-//    DaoTPagos daoTPagos;
     // para guardar los datos consultados
-    Object filmsLista [][];
-    Object languajes[][];
     Object cliente[][];
-    Object categories[][];
-    Object tiposPago[][];
     // Ventana que agrega peliculas
     AddLibrosPrestamo addLibrosPrestamo;
-    //AddPago addPago;
     DefaultTableModel modeloLibros;
-    DefaultTableModel modeloPagos;
-    float totalSum = 0;
 
     /**
      * Creates new form Peliculas
@@ -59,9 +46,7 @@ public class Prestamo extends javax.swing.JInternalFrame {
         lblEmpleadoIn.setText(this.empleado_nombre);
         // Consulta los datos
         daoCliente = new ClienteDAO();
-        //daoTPagos = new DaoTPagos();
         // crea instancia de las ventanas
-        //addPago = new AddPago(null, true);
         addLibrosPrestamo = new AddLibrosPrestamo(null, true);        
         // llena los datos
         llenaDatos();
@@ -69,7 +54,6 @@ public class Prestamo extends javax.swing.JInternalFrame {
     
     private void llenaDatos(){
         llenaClientes();
-       // llenaTablaPagos();
         llenaTablaLibros();
     }
     
@@ -84,10 +68,11 @@ public class Prestamo extends javax.swing.JInternalFrame {
         // Configuración de la tabla donde se mostraran las peliculas
         int[][] cellAlignment = {{0,javax.swing.SwingConstants.LEFT, javax.swing.SwingConstants.RIGHT}};
         int[][] cellSize = {{0,0},
-                            {1,670}};
-        String[] T_RENTA = {"","Título"};
+                            {1,700}};
+        String[] T_PRESTAMO = {"","Título"};
         // llena la tabla 
-        UtilsTable.llenaTabla(tableList,null, T_RENTA, cellAlignment, cellSize);
+        UtilsTable.llenaTabla(tableList,null, T_PRESTAMO, cellAlignment, cellSize);
+        UtilsTable.quitarColumna(tableList, 0);
         // obtiene el modelo de la tabla (datos)
         modeloLibros = (DefaultTableModel) tableList.getModel();
     }    
@@ -105,19 +90,6 @@ public class Prestamo extends javax.swing.JInternalFrame {
         }
     }
     
-    private void llenaTablaPagos(){
-        // Configuración de la tabla donde se mostraran las peliculas
-        int[][] cellAlignment = {{0,javax.swing.SwingConstants.LEFT, javax.swing.SwingConstants.RIGHT}};
-        int[][] cellSize = {{0,0},
-                            {1,120},
-                            {2,50}};
-        String[] T_PAGOS = {"","Tipo de pago", "Monto"};
-        // llena la tabla 
-        //UtilsTable.llenaTabla(tableListPagos,null, T_PAGOS, cellAlignment, cellSize);
-        // obtiene el modelo de la tabla (datos)
-      // modeloPagos = (DefaultTableModel) tableListPagos.getModel();
-    }
-    
     // Valida si se llenaron los datos
     private boolean estanLlenos(){        
         if (cmbCliente.getSelectedIndex() == 0){
@@ -130,13 +102,10 @@ public class Prestamo extends javax.swing.JInternalFrame {
             Toolkit.getDefaultToolkit().beep();
             javax.swing.JOptionPane.showMessageDialog(this, "No hay libros en prestamo.","Aviso",2);
             return false;
-        }/*
-        else if (cmbTipoPago.getSelectedIndex() == 0){
-            javax.swing.JOptionPane.showMessageDialog(this, "Seleccione un tipo de pago.","Aviso",2);
-            return false;
-        }*/
-        else
+        }
+        else {
             return true;
+        }
     }
     
     private void showReporte(String id){
@@ -155,13 +124,11 @@ public class Prestamo extends javax.swing.JInternalFrame {
         lblFechaIn.setText(c.get(Calendar.DATE) + "/" + c.get(Calendar.MONTH+1) + "/" + c.get(Calendar.YEAR));
         //lblTotalIn.setText("");
         UtilsTable.limpiaTabla(tableList);
-       // UtilsTable.limpiaTabla(tableListPagos);
-        totalSum = 0;
     }
     
-    private boolean verificaRepetido(String idFilm){
+    private boolean verificaRepetido(String idLibro){
         for (int i = 0; i < tableList.getRowCount(); i++){
-            if (tableList.getValueAt(i, 0).toString().equals(idFilm))
+            if (tableList.getValueAt(i, 0).toString().equals(idLibro))
                 return false;
         }
         return true;
@@ -359,15 +326,7 @@ public class Prestamo extends javax.swing.JInternalFrame {
                     DPrestamoDAO daoDRenta = new DPrestamoDAO();
                     int i;
                     for (i = 0; i < tableList.getRowCount(); i++)
-                        daoDRenta.saveDPrestamo(id,Integer.parseInt(tableList.getValueAt(i, 0).toString()));
-                    
-                    // si guardo la renta, guarda los datos del pago
-                    /*DaoPayment daoPayment = new DaoPayment();
-                    int j;
-                    for (j = 0; j < tableListPagos.getRowCount(); j++)
-                        daoPayment.savePayment(id,Integer.parseInt(tableListPagos.getValueAt(j, 0).toString()),
-                                Float.parseFloat(tableListPagos.getValueAt(j, 2).toString()));*/
-                    
+                        daoDRenta.saveDPrestamo(id,Integer.parseInt(tableList.getValueAt(i, 0).toString()));                    
                     if (i > 0 ){
                         javax.swing.JOptionPane.showMessageDialog(this, "El prestamo se guardó correctamente","Información",1);
                         showReporte(id);
@@ -413,14 +372,9 @@ public class Prestamo extends javax.swing.JInternalFrame {
             // cuando cierra la ventana agrega la pelicula seleccionada a la tabla de detalle de renta
             // si selecciono un registro, pone la pelicula
             if (addLibrosPrestamo.tableList.getSelectedRow() >= 0){
-                // verifica si la pelicula ya está en la lista
-                if (verificaRepetido(addLibrosPrestamo.film[0].toString())){
-                    modeloLibros.addRow(addLibrosPrestamo.film);
-                    // calcula el monto de la renta
-                    //totalSum = totalSum + Float.parseFloat(addLibrosPrestamo.film[2].toString());
-                    // pone el monto en el control
-                    //sDecimalFormat df = new DecimalFormat("#.00");
-                    //lblTotalIn.setText("" + df.format(totalSum));
+                // verifica si el libro ya está en la lista
+                if (verificaRepetido(addLibrosPrestamo.libros[0].toString())){
+                    modeloLibros.addRow(addLibrosPrestamo.libros);                    
                 }
             }
          }
@@ -434,13 +388,8 @@ public class Prestamo extends javax.swing.JInternalFrame {
              Toolkit.getDefaultToolkit().beep();
              javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila.","Aviso",2);
          }
-        else{
-              // calcula en nuevo monto
-              //totalSum = totalSum - Float.parseFloat(tableList.getValueAt(tableList.getSelectedRow(), 2).toString());
-              // muestra el nuevo monto
-              //lblTotalIn.setText("$" + totalSum);
-              //remueve el elemento del modelo de la tabla
-              modeloLibros.removeRow(tableList.getSelectedRow());
+        else{              
+            modeloLibros.removeRow(tableList.getSelectedRow());
          }
     }//GEN-LAST:event_btnBorrarPelActionPerformed
 

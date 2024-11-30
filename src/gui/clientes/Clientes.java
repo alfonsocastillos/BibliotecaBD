@@ -199,20 +199,20 @@ public class Clientes extends javax.swing.JInternalFrame {
                 EditCredencialActionPerformed(evt);
             }
         });
-        pnlTableListCredenciales.add(EditCredencial, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, 140, -1));
+        pnlTableListCredenciales.add(EditCredencial, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, 160, -1));
 
         pnlClientes.add(pnlTableListCredenciales, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 110, 190, 60));
 
         pnlTableList4.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Escolaridad", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N
         pnlTableList4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        EditEscolaridad.setText("Editar países");
+        EditEscolaridad.setText("Editar escolaridades");
         EditEscolaridad.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 EditEscolaridadActionPerformed(evt);
             }
         });
-        pnlTableList4.add(EditEscolaridad, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, 140, -1));
+        pnlTableList4.add(EditEscolaridad, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, 160, -1));
 
         pnlClientes.add(pnlTableList4, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 190, 190, 60));
 
