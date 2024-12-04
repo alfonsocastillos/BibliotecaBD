@@ -13,8 +13,8 @@ import tools.UtilsTable;
 public class AddLibrosPrestamo extends javax.swing.JDialog {
        int id = 0;
        LibroDAO daoLibros;
-       Object filmsLista [][];
-       public Object film[];
+       Object librosLista [][];
+       public Object libros[];
 
     /**
      * Creates new form AddPeliculasRentaD
@@ -37,7 +37,7 @@ public class AddLibrosPrestamo extends javax.swing.JDialog {
     private void llenaTabla(){        
         // Consulta las peliculas y lo guardaen un arreglo
         // consulta los datos de las peliculas
-       filmsLista = daoLibros.GetLibrosByDescripcion(txtFiltro.getText().trim());
+       librosLista = daoLibros.GetLibrosByDescripcion(txtFiltro.getText().trim());
         // Titulos de la tabla
         String[] T_FILMS = {"","Título"};
         // alineación de las celdas
@@ -49,7 +49,7 @@ public class AddLibrosPrestamo extends javax.swing.JDialog {
             Metodo que llena las tablas, recibe la tabla, los datos, los titulos,
             la alineación y el tamaño de las celdas
         */
-        UtilsTable.llenaTabla(tableList,filmsLista, T_FILMS, cellAlignment, cellSize);
+        UtilsTable.llenaTabla(tableList, librosLista, T_FILMS, cellAlignment, cellSize);
     }
     
     
@@ -205,11 +205,11 @@ public class AddLibrosPrestamo extends javax.swing.JDialog {
                 si selecciono un elemento, guarda los datos de la pelicula 
                 en un arreglo que retornará los datos a la pantalla anterior
             */
-            film = new Object [3];    
+            libros = new Object [3];    
             // Guarda id, nombre y costo de la pelicula
-            film [0] = filmsLista[tableList.getSelectedRow()][0];
-            film [1] = filmsLista[tableList.getSelectedRow()][1];
-            film [2] = filmsLista[tableList.getSelectedRow()][6];
+            libros [0] = librosLista[tableList.getSelectedRow()][0];
+            libros [1] = librosLista[tableList.getSelectedRow()][1];
+            libros [2] = librosLista[tableList.getSelectedRow()][6];
             
             // Cierra la ventana
             dispose();   

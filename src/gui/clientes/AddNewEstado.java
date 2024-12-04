@@ -1,6 +1,6 @@
-package gui.libro;
+package gui.clientes;
 
-import dataBase.dao.GeneroDAO;
+import dataBase.dao.EstadoDAO;
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import javax.swing.JOptionPane;
@@ -8,43 +8,47 @@ import javax.swing.JOptionPane;
 /**
  *
  * @author Carlos
- * Ventana que permite crear, editar y eliminar generos del catálogo
+ * Ventana que permite crear, editar y eliminar idiomas del catálogo
  */
-public class AddNewGenero extends javax.swing.JDialog {
-    // Para guardar el genero
-    int genero_id;
-    GeneroDAO genero_dao;
+public class AddNewEstado extends javax.swing.JDialog {
+    // Para guardar el idioma
+    int estado_id;
+    int pais_id;
+    EstadoDAO estado_dao;
 
     /**
      * Creates new form 
      * @param parent
      * @param modal
      */
-    public AddNewGenero(java.awt.Frame parent, boolean modal) {
+    public AddNewEstado(java.awt.Frame parent, boolean modal) {
         // ventana modal
         super(parent, modal);
         // inicia los componentes
         initComponents();
         processWindowEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-        // Crea el dao para acceder a la tabla GENERO
-        genero_dao = new GeneroDAO();
+        // Crea el dao para acceder a la tabla PAIS
+        estado_dao = new EstadoDAO();
         getRootPane().setDefaultButton(btnGuardar);                      
     }
     
     private void BorrarTextos(){
         // Borra el texto
-        txtGenero.setText("");
+        TextFieldEstado.setText("");
     }
     
-    public void SetEditId(int genero_id){
-        // Asigna el id del genero a modificar
-        this.genero_id = genero_id;
-        // Busca el genero
-        Object[] genero_edit = genero_dao.GetGeneroById(genero_id);
+    public void SetEditId(int estado_id){
+        // Asigna el id del pais a modificar
+        this.estado_id = estado_id;
+        // Busca el pais
+        Object[] estado_edit = estado_dao.GetEstadoById(estado_id);
         // Muestra los datos en los controles
-        txtGenero.setText(genero_edit[1].toString());        
+        TextFieldEstado.setText(estado_edit[1].toString());        
     }
     
+    public void SetPaisId(int pais_id) {
+        this.pais_id = pais_id;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -55,13 +59,13 @@ public class AddNewGenero extends javax.swing.JDialog {
     private void initComponents() {
 
         pnlTableList = new javax.swing.JPanel();
-        txtGenero = new javax.swing.JTextField();
+        TextFieldEstado = new javax.swing.JTextField();
         lblNombre = new javax.swing.JLabel();
         btnGuardar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Genero");
-        setIconImage(java.awt.Toolkit.getDefaultToolkit().getImage( getClass().getResource("/img/user_icon.png")));
+        setTitle("Estado");
+        setIconImage(java.awt.Toolkit.getDefaultToolkit().getImage( getClass().getResource("/img/libros.png")));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {
                 formWindowClosed(evt);
@@ -71,11 +75,11 @@ public class AddNewGenero extends javax.swing.JDialog {
         pnlTableList.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N
         pnlTableList.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        txtGenero.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        pnlTableList.add(txtGenero, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 60, 140, 25));
+        TextFieldEstado.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        pnlTableList.add(TextFieldEstado, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 60, 140, 25));
 
         lblNombre.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        lblNombre.setText("Genero:");
+        lblNombre.setText("Estado:");
         pnlTableList.add(lblNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 60, -1, 25));
 
         btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/guardar.png"))); // NOI18N
@@ -109,33 +113,32 @@ public class AddNewGenero extends javax.swing.JDialog {
     
     // Descartar cambios al cerrar la ventana
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-
+        
     }//GEN-LAST:event_formWindowClosed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         // Accion del boton Guardar
-        if (txtGenero.getText().trim().length() == 0){
+        String estado = TextFieldEstado.getText().trim();
+        if (estado.length() == 0){
             // Suena un beep
             Toolkit.getDefaultToolkit().beep();
             // Muestra un mensage de aviso
-            JOptionPane.showMessageDialog(this, "Escriba el genero", "Aviso", 2);
+            JOptionPane.showMessageDialog(this, "Escriba el estado", "Aviso", 2);
         }
-        else{                      
-            String genero = txtGenero.getText().trim();
-            if (genero_id == 0){ // Guarda un nuevo genero                
-                genero_id = genero_dao.SaveGenero(genero);
+        else{                                  
+            if (estado_id == 0) { // Guarda un nuevo estado                
+                Object[] estado_obj = {estado, pais_id};
+                estado_id = estado_dao.SaveEstado(estado_obj);                
             }
-            else{ // Actualiza genero                
-                Object[] genero_obj = new Object[2];
-                genero_obj[0] = genero_id;              // Id del genero
-                genero_obj[1] = genero;                 // genero
-                genero_id = genero_dao.UpdateGenero(genero_obj);                
+            else{ // Actualiza estado                
+                Object[] estado_obj = {estado_id, estado};                
+                estado_id = estado_dao.UpdateEstado(estado_obj);                
             }
             
-            if (genero_id == 0){
+            if (estado_id == 0){
                 // Suena un beep
                 Toolkit.getDefaultToolkit().beep();
-                JOptionPane.showMessageDialog(this, "Error al guardar el genero", "Error", 0);                
+                JOptionPane.showMessageDialog(this, "Error al guardar el estado", "Error", 0);                
             }
             else{
                 BorrarTextos();
@@ -145,9 +148,9 @@ public class AddNewGenero extends javax.swing.JDialog {
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField TextFieldEstado;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JLabel lblNombre;
     private javax.swing.JPanel pnlTableList;
-    private javax.swing.JTextField txtGenero;
     // End of variables declaration//GEN-END:variables
 }

@@ -1,6 +1,6 @@
-package gui.libro;
+package gui.clientes;
 
-import dataBase.dao.GeneroDAO;
+import dataBase.dao.PaisDAO;
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import javax.swing.JOptionPane;
@@ -8,41 +8,41 @@ import javax.swing.JOptionPane;
 /**
  *
  * @author Carlos
- * Ventana que permite crear, editar y eliminar generos del catálogo
+ * Ventana que permite crear, editar y eliminar paises del catálogo
  */
-public class AddNewGenero extends javax.swing.JDialog {
-    // Para guardar el genero
-    int genero_id;
-    GeneroDAO genero_dao;
+public class AddNewPais extends javax.swing.JDialog {
+    // Para guardar el pais
+    int pais_id;
+    PaisDAO pais_dao;
 
     /**
      * Creates new form 
      * @param parent
      * @param modal
      */
-    public AddNewGenero(java.awt.Frame parent, boolean modal) {
+    public AddNewPais(java.awt.Frame parent, boolean modal) {
         // ventana modal
         super(parent, modal);
         // inicia los componentes
         initComponents();
         processWindowEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-        // Crea el dao para acceder a la tabla GENERO
-        genero_dao = new GeneroDAO();
+        // Crea el dao para acceder a la tabla PAIS
+        pais_dao = new PaisDAO();
         getRootPane().setDefaultButton(btnGuardar);                      
     }
     
     private void BorrarTextos(){
         // Borra el texto
-        txtGenero.setText("");
+        txtPais.setText("");
     }
     
-    public void SetEditId(int genero_id){
-        // Asigna el id del genero a modificar
-        this.genero_id = genero_id;
-        // Busca el genero
-        Object[] genero_edit = genero_dao.GetGeneroById(genero_id);
+    public void SetEditId(int pais_id){
+        // Asigna el id del pais a modificar
+        this.pais_id = pais_id;
+        // Busca el pais
+        Object[] pais_edit = pais_dao.GetPaisById(pais_id);
         // Muestra los datos en los controles
-        txtGenero.setText(genero_edit[1].toString());        
+        txtPais.setText(pais_edit[1].toString());        
     }
     
     /**
@@ -55,13 +55,13 @@ public class AddNewGenero extends javax.swing.JDialog {
     private void initComponents() {
 
         pnlTableList = new javax.swing.JPanel();
-        txtGenero = new javax.swing.JTextField();
+        txtPais = new javax.swing.JTextField();
         lblNombre = new javax.swing.JLabel();
         btnGuardar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Genero");
-        setIconImage(java.awt.Toolkit.getDefaultToolkit().getImage( getClass().getResource("/img/user_icon.png")));
+        setTitle("Pais");
+        setIconImage(java.awt.Toolkit.getDefaultToolkit().getImage( getClass().getResource("/img/libros.png")));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {
                 formWindowClosed(evt);
@@ -71,11 +71,11 @@ public class AddNewGenero extends javax.swing.JDialog {
         pnlTableList.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N
         pnlTableList.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        txtGenero.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        pnlTableList.add(txtGenero, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 60, 140, 25));
+        txtPais.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        pnlTableList.add(txtPais, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 60, 140, 25));
 
         lblNombre.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        lblNombre.setText("Genero:");
+        lblNombre.setText("Pais");
         pnlTableList.add(lblNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 60, -1, 25));
 
         btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/guardar.png"))); // NOI18N
@@ -109,33 +109,33 @@ public class AddNewGenero extends javax.swing.JDialog {
     
     // Descartar cambios al cerrar la ventana
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-
+        
     }//GEN-LAST:event_formWindowClosed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         // Accion del boton Guardar
-        if (txtGenero.getText().trim().length() == 0){
+        if (txtPais.getText().trim().length() == 0){
             // Suena un beep
             Toolkit.getDefaultToolkit().beep();
             // Muestra un mensage de aviso
-            JOptionPane.showMessageDialog(this, "Escriba el genero", "Aviso", 2);
+            JOptionPane.showMessageDialog(this, "Escriba el pais", "Aviso", 2);
         }
         else{                      
-            String genero = txtGenero.getText().trim();
-            if (genero_id == 0){ // Guarda un nuevo genero                
-                genero_id = genero_dao.SaveGenero(genero);
+            String pais = txtPais.getText().trim();
+            if (pais_id == 0){ // Guarda un nuevo pais                
+                pais_id = pais_dao.SavePais(pais);                
             }
-            else{ // Actualiza genero                
-                Object[] genero_obj = new Object[2];
-                genero_obj[0] = genero_id;              // Id del genero
-                genero_obj[1] = genero;                 // genero
-                genero_id = genero_dao.UpdateGenero(genero_obj);                
+            else{ // Actualiza pais                
+                Object[] pais_obj = new Object[2];
+                pais_obj[0] = pais_id;              // Id del pais
+                pais_obj[1] = pais;                 // pais
+                pais_id = pais_dao.UpdatePais(pais_obj);                
             }
             
-            if (genero_id == 0){
+            if (pais_id == 0){
                 // Suena un beep
                 Toolkit.getDefaultToolkit().beep();
-                JOptionPane.showMessageDialog(this, "Error al guardar el genero", "Error", 0);                
+                JOptionPane.showMessageDialog(this, "Error al guardar el pais", "Error", 0);                
             }
             else{
                 BorrarTextos();
@@ -148,6 +148,6 @@ public class AddNewGenero extends javax.swing.JDialog {
     private javax.swing.JButton btnGuardar;
     private javax.swing.JLabel lblNombre;
     private javax.swing.JPanel pnlTableList;
-    private javax.swing.JTextField txtGenero;
+    private javax.swing.JTextField txtPais;
     // End of variables declaration//GEN-END:variables
 }

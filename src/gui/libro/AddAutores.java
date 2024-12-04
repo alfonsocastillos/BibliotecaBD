@@ -88,7 +88,7 @@ public class AddAutores extends javax.swing.JDialog {
         btnEditAutor = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setIconImage(java.awt.Toolkit.getDefaultToolkit().getImage( getClass().getResource("/img/user_icon.png")));
+        setIconImage(java.awt.Toolkit.getDefaultToolkit().getImage( getClass().getResource("/img/pen.png")));
 
         btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/guardar.png"))); // NOI18N
         btnGuardar.setToolTipText("Guardar");

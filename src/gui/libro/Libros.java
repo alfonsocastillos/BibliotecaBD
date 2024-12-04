@@ -71,7 +71,7 @@ public class Libros extends javax.swing.JInternalFrame {
     
     // Llena de datos las tablas a desplegar y los combo box
     private void LlenaDatos() {
-        // Llena combos y tabla de peliculas
+        // Llena combos y tabla de libros
         LlenadoIdiomas();
         LlenadoPaises();
         LlenadoEditoriales();
@@ -124,18 +124,19 @@ public class Libros extends javax.swing.JInternalFrame {
         // consulta los datos de las peliculas
         libros_lista = libro_dao.GetLibrosByDescripcion(txtFiltro.getText().trim()); // LIBRO_ID, TITULO, EDICION, EDITORIAL, GENERO, ANIO, NUM_PAGINAS, IDIOMA
         // configuración de la tabla
-        String[] T_LIBROS = {"","Libro", "Edicion", "Editorial", "Genero", "Año", "Páginas", "Idioma"};
+        String[] T_LIBROS = {"", "Libro", "Edicion", "Editorial", "Genero", "Año", "Páginas", "Idioma"};
         int[][] cellAlignment = {{0,javax.swing.SwingConstants.LEFT}};
         int[][] cellSize = {{0, 0},     // 
                             {1, 270},   // Libro
                             {2, 40},    // Edicion
                             {3, 180},   // Editorial
-                            {4, 90},    // Genero
+                            {4, 95},    // Genero
                             {5, 55},    // Año
                             {6, 55},    // Paginas
                             {7, 75}};   // Idioma    
         // pone los datos en la tabla
         UtilsTable.llenaTabla(tableList, libros_lista, T_LIBROS, cellAlignment, cellSize);
+        UtilsTable.quitarColumna(tableList, 0);
         lblCantidad.setText(libros_lista.length + "");
     }
     
@@ -731,7 +732,9 @@ public class Libros extends javax.swing.JInternalFrame {
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila.", "Información", 1);
         else{
             // Consulta los datos
-            Object[] libro_edit = libro_dao.GetLibroById((Integer) tableList.getValueAt(tableList.getSelectedRow(), 0)); 
+            Object[] libro_edit = libro_dao.GetLibroById((Integer) 
+                    UtilsTable.obtenerValor(
+                          tableList, tableList.getSelectedRow(), 0)); 
             if (libro_edit != null){
                 // LIBRO_ID, TITULO, EDICION, EDITORIAL, GENERO, ANIO, NUM_PAGINAS, IDIOMA, PAIS
                 txtTitulo.setText(libro_edit[1].toString());            // Titulo
