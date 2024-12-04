@@ -23,7 +23,7 @@ public class DireccionDAO extends Conexion {
             // genera el nuevo id (año + mes + 3 num)       
             sentenciaSQL =  "SELECT LPAD(SUBSTR(EXTRACT(YEAR FROM SYSDATE), 3, 2), 2, '0') || LPAD(EXTRACT(MONTH FROM SYSDATE), 2, '0') || LPAD(NVL(MAX(TO_NUMBER(SUBSTR(DIRECCION_ID, 5, 3))) + 1, 1), 3, '0') " +
                             "FROM DIRECCION " +
-                            "WHERE SUBSTR(DIRECCION_ID, 1, 4) = LPAD(SUBSTR(EXTRACT(YEAR FROM SYSDATE), 3, 2), 2, '0') || LPAD(EXTRACT(MONTH FROM SYSDATE), 2, '0');";
+                            "WHERE SUBSTR(DIRECCION_ID, 1, 4) = LPAD(SUBSTR(EXTRACT(YEAR FROM SYSDATE), 3, 2), 2, '0') || LPAD(EXTRACT(MONTH FROM SYSDATE), 2, '0')";
             
             ps = conn.prepareStatement(sentenciaSQL);            
             rs = ps.executeQuery();

@@ -86,16 +86,11 @@ public class LibroDAO extends Conexion {
             // Cuenta los registros en la base de datos
             sentenciaSQL =  "SELECT COUNT (LIBRO_ID) FROM (" +
                             "    SELECT LIBRO_ID  " +
-                            "    FROM LIBRO " +
-                            "    JOIN IDIOMA USING (IDIOMA_ID) " +
-                            "    JOIN EDITORIAL USING (EDITORIAL_ID) " +
-                            "    JOIN GENERO USING (GENERO_ID) " +
+                            "    FROM LIBRO " +                            
                             "    WHERE UPPER(TITULO) LIKE UPPER(?) " +
                             "UNION " +
                             "    SELECT LIBRO_ID " +
-                            "    FROM LIBRO " +
-                            "    JOIN IDIOMA USING (IDIOMA_ID) " +
-                            "    JOIN EDITORIAL USING (EDITORIAL_ID) " +
+                            "    FROM LIBRO " +                            
                             "    JOIN GENERO USING (GENERO_ID) " +
                             "    WHERE UPPER(GENERO) LIKE UPPER(?))";
                         

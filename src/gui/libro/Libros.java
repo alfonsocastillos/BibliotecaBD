@@ -71,7 +71,7 @@ public class Libros extends javax.swing.JInternalFrame {
     
     // Llena de datos las tablas a desplegar y los combo box
     private void LlenaDatos() {
-        // Llena combos y tabla de peliculas
+        // Llena combos y tabla de libros
         LlenadoIdiomas();
         LlenadoPaises();
         LlenadoEditoriales();

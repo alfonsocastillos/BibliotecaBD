@@ -15,7 +15,7 @@ import java.sql.*;
 public class EstadoDAO extends Conexion {
     
     // Crear un estado en un pais
-    public String SaveEstado(Object[] estado) 
+    public int SaveEstado(Object[] estado) 
     {
         // Se conecta a la base de datos
         conectar();
@@ -26,7 +26,7 @@ public class EstadoDAO extends Conexion {
                             "FROM PAIS " +
                             "LEFT JOIN ESTADO USING (PAIS_ID) " +
                             "WHERE PAIS_ID = ? " +
-                            "GROUP BY  PAIS_ID;";
+                            "GROUP BY  PAIS_ID";
             ps = conn.prepareStatement(sentenciaSQL);     
             ps.setString(1, estado[1].toString()); // Id del pais
             rs = ps.executeQuery();
@@ -40,16 +40,16 @@ public class EstadoDAO extends Conexion {
             sentenciaSQL = "INSERT INTO ESTADO VALUES(?, ?, ?)";
             ps = conn.prepareStatement(sentenciaSQL);
             // Asigna los valores del arreglo            
-            ps.setString(1, id);                    // Id (calculado)
+            ps.setInt(1, Integer.valueOf(id));      // Id (calculado)
             ps.setString(2, estado[0].toString());  // Estado (provisto)   
-            ps.setString(2, estado[1].toString());  // Id Pais (provisto)   
+            ps.setInt(3, (int) estado[1]);          // Id Pais (provisto)   
             ps.executeUpdate();
-            return id;
+            return Integer.valueOf(id);
         }
         catch (SQLException ex){
             System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
                     "\n\n" + sentenciaSQL + "\n\nUbicación: " + "SaveEstado");
-            return null;
+            return 0;
         }
         finally{
            desconectar();
@@ -58,26 +58,26 @@ public class EstadoDAO extends Conexion {
     }
     
     // Modificar un estado
-    public String UpdateEstado(Object[] estado)
+    public int UpdateEstado(Object[] estado)
     {       
         // se conecta a la base de datos
        conectar();
        try{
            // actualiza los datos
            sentenciaSQL = "UPDATE ESTADO SET " +
-                          "ESTADO = ?, " +
+                          "ESTADO = ? " +
                           "WHERE ESTADO_ID = ?";
             ps = conn.prepareStatement(sentenciaSQL);
             
             ps.setString(1, estado[1].toString());  // Nuevo nombre estado
-            ps.setString(2, estado[0].toString());  // Id del estado
+            ps.setInt(2, (int) estado[0]);          // Id del estado
             ps.executeUpdate();
-            return estado[0].toString();            // Regresa el id del estado
+            return (int) estado[0];                 // Regresa el id del estado
         }
         catch (SQLException ex){
             System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
                     "\n\n" + sentenciaSQL + "\n\nUbicación: " + "UpdateEstado");
-            return null;
+            return 0;
         }
         finally{
            desconectar();
@@ -85,7 +85,7 @@ public class EstadoDAO extends Conexion {
     }
     
     // Consultar todos los estados de un pais
-    public Object [][] GetAllEstadosByPais(String pais_id){
+    public Object [][] GetAllEstadosByPais(int pais_id){
        conectar();
        Object [][] estados;
        int i = 0;
@@ -94,7 +94,7 @@ public class EstadoDAO extends Conexion {
            sentenciaSQL =   "SELECT COUNT(*) FROM ESTADO " +
                             "WHERE PAIS_ID = ?";            // Numero de estados en el pais
            ps = conn.prepareStatement(sentenciaSQL);        // Convierte el str a un sentencia utilizable en SQL           
-           ps.setString(1, pais_id);
+           ps.setInt(1, pais_id);
            rs = ps.executeQuery();                          // Resultado de la consulta
            
            // Numero de idiomas (COUNT)
@@ -106,7 +106,7 @@ public class EstadoDAO extends Conexion {
            estados = new Object[count][2];           
            sentenciaSQL  = "SELECT ESTADO_ID, ESTADO FROM ESTADO WHERE PAIS_ID = ? ORDER BY 2";           
            ps = conn.prepareStatement(sentenciaSQL);
-           ps.setString(1, pais_id);
+           ps.setInt(1, pais_id);
            rs = ps.executeQuery();
            
            // Agregar a todos los estados al arreglo (migrar de rs a actores)
@@ -128,7 +128,7 @@ public class EstadoDAO extends Conexion {
     }  
 
     // Consulta el estado para un id
-    public Object[] GetEstadoById(String estado_id)
+    public Object[] GetEstadoById(int estado_id)
     {
         conectar();
         Object [] estado = new Object[3];
@@ -137,7 +137,7 @@ public class EstadoDAO extends Conexion {
                     
             sentenciaSQL  = "SELECT ESTADO_ID, ESTADO, PAIS_ID FROM ESTADO WHERE ESTADO_ID = ?";           
             ps = conn.prepareStatement(sentenciaSQL);
-            ps.setString(1, estado_id);    // Reemplaza el parámetro index (simbolo ?) con el str x
+            ps.setInt(1, estado_id);    // Reemplaza el parámetro index (simbolo ?) con el str x
             rs = ps.executeQuery();
 
             // Llena el arreglo estado con el resultado
@@ -236,43 +236,55 @@ public class EstadoDAO extends Conexion {
     }
     
     // Consultar estados con nombre parecido
-    public Object [][] GetEstadosByNombre(String estado){
+    public Object [][] GetEstadosByNombre(int pais_id, String estado){
        conectar();
        Object [][] estados;
        int i = 0;
        int count = 0;
        estado = "%" + estado + "%";
        try{
-           // Cuenta todos los actores que tengan un nombre parecido
-           sentenciaSQL =   "SELECT COUNT(ESTADO_ID) " +
+            // Cuenta todos los actores que tengan un nombre parecido
+            sentenciaSQL =  "SELECT COUNT(ESTADO_ID) " +
                             "FROM ESTADO " +
-                            "WHERE UPPER (ESTADO) LIKE UPPER(?)";   // Todos los estados que tengan un nombre parecido
-                            
-            
+                            "WHERE UPPER (ESTADO) LIKE UPPER(?) ";   // Todos los estados que tengan un nombre parecido
+            if(pais_id > 0) {
+               sentenciaSQL += "AND PAIS_ID = ?";               
+            }
+                                        
             ps = conn.prepareStatement(sentenciaSQL);   // prepara la sentencia 
             ps.setString(1, estado);
+            if(pais_id > 0) {
+               ps.setInt(2, pais_id);
+            }
             rs = ps.executeQuery();                     // Ejecuta la sentencia y la asigna al result set         
            
-           if (rs.next()){
+            if (rs.next()){
                count = rs.getInt(1);
-           }
+            }
            
-           // Misma consulta, pero ahora puede ser guardada en el arreglo
-           estados = new Object[count][2];
-           sentenciaSQL =   "SELECT ESTADO_ID, ESTADO " +
-                            "FROM ESTADO" +
-                            "WHERE UPPER (ESTADO) LIKE UPPER(?)";
-           
-           ps = conn.prepareStatement(sentenciaSQL);
-           ps.setString(1, estado);
-           rs = ps.executeQuery();
-           
-           while (rs.next()){
-               estados[i][0] = (rs.getString(1));
-               estados[i][1] = (rs.getString(2));
-               i++;
-           }           
-           return estados;
+            // Misma consulta, pero ahora puede ser guardada en el arreglo
+            estados = new Object[count][2];
+            sentenciaSQL =   "SELECT ESTADO_ID, ESTADO " +
+                             "FROM ESTADO " +
+                             "WHERE UPPER (ESTADO) LIKE UPPER(?)";
+            if(pais_id > 0) {
+               sentenciaSQL += "AND PAIS_ID = ?";               
+            }
+            sentenciaSQL += "ORDER BY 2";
+            
+            ps = conn.prepareStatement(sentenciaSQL);
+            ps.setString(1, estado);
+            if(pais_id > 0) {
+               ps.setInt(2, pais_id);
+            }
+            rs = ps.executeQuery();
+
+            while (rs.next()){
+                estados[i][0] = (rs.getInt(1));
+                estados[i][1] = (rs.getString(2));
+                i++;
+            }           
+            return estados;
         }
         catch (SQLException ex){
             System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + ConfigDataBase.DB_ERR_QUERY + 
@@ -285,7 +297,7 @@ public class EstadoDAO extends Conexion {
     }
 
     // Eliminar un estado
-    public int DeleteEstado(String estado_id){
+    public int DeleteEstado(int estado_id){
         // Conecta a la base de datos
         conectar();
         try{
@@ -294,14 +306,14 @@ public class EstadoDAO extends Conexion {
                             "SET ESTADO_ID = NULL " +
                             "WHERE ESTADO_ID = ?";
             ps = conn.prepareStatement(sentenciaSQL);
-            ps.setString(1, estado_id);
+            ps.setInt(1, estado_id);
             ps.executeUpdate();
             
             // Borrar el estado
             sentenciaSQL = "DELETE FROM ESTADO " +
                             "WHERE ESTADO_ID = ?";
             ps = conn.prepareStatement(sentenciaSQL);
-            ps.setString(1, estado_id);
+            ps.setInt(1, estado_id);
             int res = ps.executeUpdate();
             if (res == 1){
                 return 0;
