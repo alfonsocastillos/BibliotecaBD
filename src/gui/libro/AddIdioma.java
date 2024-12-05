@@ -37,7 +37,7 @@ public class AddIdioma extends javax.swing.JDialog {
         LlenaTabla();
     }
     
-    // ? ? ? 
+    // Establece el idioma siendo editado
     public void SetIdiomaId(int id_idioma){   
         // Asigna el id del libro
         this.idioma_id = id_idioma;
@@ -100,11 +100,6 @@ public class AddIdioma extends javax.swing.JDialog {
 
             }
         ));
-        tableList.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tableListMouseClicked(evt);
-            }
-        });
         scpTableList.setViewportView(tableList);
 
         pnlTableList.add(scpTableList, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 180, 170));
@@ -180,11 +175,6 @@ public class AddIdioma extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    // Hacer doble click no hace nada
-    private void tableListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableListMouseClicked
-       
-    }//GEN-LAST:event_tableListMouseClicked
-
     // Abre una ventana que posibilida crear un IDIOMA
     private void btnNewIdiomaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewIdiomaActionPerformed
         AddNewIdioma add_new_idioma = new AddNewIdioma(parent, true);        
@@ -220,11 +210,10 @@ public class AddIdioma extends javax.swing.JDialog {
                  "Seleccione", JOptionPane.YES_NO_OPTION);
             // evalua la respuesta 
             if (res == 0){
-                String msj = "";
                 // si la respuesta es afirmativa, elimina el registro
                 int ret = idioma_dao.DeleteIdioma((Integer) tableList.getValueAt(tableList.getSelectedRow(), 0));
                 if (ret == 1){
-                    msj = "No se pudo eliminar por que tiene registros asignados.";
+                    String msj = "No se pudo eliminar por que tiene registros asignados.";
                     javax.swing.JOptionPane.showMessageDialog(this, msj, "Información", 1);
                 }                
                 // Reinicia controles y parametros

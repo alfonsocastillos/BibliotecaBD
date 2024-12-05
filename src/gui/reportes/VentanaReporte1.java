@@ -1,14 +1,10 @@
 package gui.reportes;
 
-
 import dataBase.ReporteLibrosView1;
 import java.awt.BorderLayout;
 import java.awt.Toolkit;
 
 public class VentanaReporte1 extends javax.swing.JFrame {
-
-    
-
     public VentanaReporte1() {
         initComponents();
         conf();
@@ -70,11 +66,6 @@ public class VentanaReporte1 extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    /**
-     * @param args the command line arguments
-     */
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel pnlReporte;

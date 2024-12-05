@@ -27,8 +27,6 @@ public class Libros extends javax.swing.JInternalFrame {
     PaisDAO pais_dao;
     EditorialDAO editorial_dao;
     // Objtos que guardaran los datos    
-    Object idiomas[][];
-    Object generos[][];
     Object libros_lista[][];
     Object autores_lista[][];
     
@@ -345,27 +343,12 @@ public class Libros extends javax.swing.JInternalFrame {
         pnlLibro.add(lblGenero1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, -1, 20));
 
         cmbPais.setNextFocusableComponent(cmbGenero);
-        cmbPais.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmbPaisActionPerformed(evt);
-            }
-        });
         pnlLibro.add(cmbPais, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 110, 290, -1));
 
         cmbIdioma.setNextFocusableComponent(cmbGenero);
-        cmbIdioma.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmbIdiomaActionPerformed(evt);
-            }
-        });
         pnlLibro.add(cmbIdioma, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 70, 290, -1));
 
         cmbEditorial.setNextFocusableComponent(cmbGenero);
-        cmbEditorial.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmbEditorialActionPerformed(evt);
-            }
-        });
         pnlLibro.add(cmbEditorial, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 150, 290, -1));
 
         lblAnio.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -380,11 +363,6 @@ public class Libros extends javax.swing.JInternalFrame {
         txtAnio.setDocument(new InputType(InputType.TIPO_SOLO_NUMEROS, 4, false, false));
         txtAnio.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtAnio.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txtAnio.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtAnioActionPerformed(evt);
-            }
-        });
         pnlLibro.add(txtAnio, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 30, 130, 20));
 
         pnlTableList.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Lista de libros", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N
@@ -416,11 +394,6 @@ public class Libros extends javax.swing.JInternalFrame {
         pnlTableList.add(lblTitulo1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, -1, 25));
 
         txtFiltro.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        txtFiltro.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtFiltroActionPerformed(evt);
-            }
-        });
         txtFiltro.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtFiltroKeyReleased(evt);
@@ -857,11 +830,6 @@ public class Libros extends javax.swing.JInternalFrame {
         LlenaTablaAutores();               
     }//GEN-LAST:event_formInternalFrameClosing
     
-    // No se usa
-    private void cmbIdiomaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbIdiomaActionPerformed
-        
-    }//GEN-LAST:event_cmbIdiomaActionPerformed
-
     // Borra a un autor de un libro
     private void btnRmveAutoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRmveAutoriaActionPerformed
         // Verifica si se selecciono un elemento de la tabla
@@ -954,10 +922,6 @@ public class Libros extends javax.swing.JInternalFrame {
         CancelaEdit();
     }//GEN-LAST:event_EditGeneroActionPerformed
 
-    private void txtAnioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtAnioActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtAnioActionPerformed
-
     private void EditIdiomaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditIdiomaActionPerformed
         // Hace visible la ventana para agregar idiomas
         add_idioma.setLocationRelativeTo(this);
@@ -967,18 +931,6 @@ public class Libros extends javax.swing.JInternalFrame {
         LlenadoIdiomas();
         CancelaEdit();
     }//GEN-LAST:event_EditIdiomaActionPerformed
-
-    private void cmbPaisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbPaisActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cmbPaisActionPerformed
-
-    private void cmbEditorialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbEditorialActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cmbEditorialActionPerformed
-
-    private void txtFiltroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFiltroActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtFiltroActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton EditEditorial;

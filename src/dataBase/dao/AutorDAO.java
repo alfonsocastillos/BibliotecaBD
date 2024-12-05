@@ -12,48 +12,7 @@ import java.sql.*;
  *
  * @author alfonso
  */
-public class AutorDAO extends Conexion {
-    
-    // Obtiene todos los autores disponibles
-    public Object [][] GetAllAutores(){
-       conectar();
-       Object [][] autores;
-       int i = 0;
-       int count = 0;
-       try{
-           sentenciaSQL = "SELECT COUNT(*) FROM AUTOR"; // Numero de actores           
-           ps = conn.prepareStatement(sentenciaSQL);    // Convierte el str a un sentencia utilizable en SQL           
-           rs = ps.executeQuery();                      // Resultado de la consulta
-           
-           // Numero de actores (COUNT)
-           if (rs.next()){
-               count = rs.getInt(1);
-           }
-           
-           // Arreglo de todos los autores (ID, Nombre Completo)
-           autores = new Object[count][2];           
-           sentenciaSQL  = "SELECT AUTOR_ID, NOMBRE || ' ' || APELLIDO_PAT FROM AUTOR ORDER BY 2";           
-           ps = conn.prepareStatement(sentenciaSQL);
-           rs = ps.executeQuery();
-           
-           // Agregar a todos los autores al arreglo (migrar de rs a actores)
-           while (rs.next()){
-               autores[i][0] = (rs.getString(1));
-               autores[i][1] = (rs.getString(2));  
-               i++;
-           }           
-           return autores;
-        }
-        catch (SQLException ex){
-            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + ConfigDataBase.DB_ERR_QUERY + 
-                    "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "GetAllAutores");
-            return null;
-        }
-       finally{
-           desconectar();           
-       }
-    }  
-    
+public class AutorDAO extends Conexion {    
     // Obtiene un autor mediante su ID (id, nombre, apellido, pais)
     public Object[] GetAutorById(String id){
        conectar();
@@ -234,7 +193,7 @@ public class AutorDAO extends Conexion {
             return id;
         }
         catch (SQLException ex){
-            System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
+            System.out.println(ConfigDataBase.DB_T_ERROR +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
                     "\n\n" + sentenciaSQL + "\n\nUbicación: " + "SaveAutor");
             return null;
         }
@@ -258,7 +217,7 @@ public class AutorDAO extends Conexion {
             return 1;
         }
         catch (SQLException ex){
-            System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
+            System.out.println(ConfigDataBase.DB_T_ERROR +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
                     "\n\n" + sentenciaSQL + "\n\nUbicación: " + "SaveAutoria");
             return 0;
         }
@@ -289,7 +248,7 @@ public class AutorDAO extends Conexion {
             return autor[0].toString();
         }
         catch (SQLException ex){
-            System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
+            System.out.println(ConfigDataBase.DB_T_ERROR +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
                     "\n\n" + sentenciaSQL + "\n\nUbicación: " + "UpdateAutor");
             return null;
         }
@@ -315,7 +274,7 @@ public class AutorDAO extends Conexion {
             return 1;
         }
         catch (SQLException ex){
-            System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
+            System.out.println(ConfigDataBase.DB_T_ERROR +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
                     "\n\n" + sentenciaSQL + "\n\nUbicación: " + "DeleteAutor");
             if (ex.getErrorCode() ==  2292)
                 return 1;
@@ -345,7 +304,7 @@ public class AutorDAO extends Conexion {
             return 1;
         }
         catch (SQLException ex){
-            System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
+            System.out.println(ConfigDataBase.DB_T_ERROR +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
                     "\n\n" + sentenciaSQL + "\n\nUbicación: " + "DeleteAutoria");
             if (ex.getErrorCode() ==  2292)
                 return 1;
@@ -373,7 +332,7 @@ public class AutorDAO extends Conexion {
             return 1;
         }
         catch (SQLException ex){
-            System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
+            System.out.println(ConfigDataBase.DB_T_ERROR +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
                     "\n\n" + sentenciaSQL + "\n\nUbicación: " + "DeleteAutoriaFromLibro");
             if (ex.getErrorCode() ==  2292)
                 return 1;

@@ -48,11 +48,11 @@ public class ReporteLibrosPDF extends Conexion {
            Desktop.getDesktop().open(path);
        }
        catch (JRException ex){
-           System.out.println("Error " + ex.getMessage() + 
+           System.out.println(ConfigDataBase.DB_T_ERROR + ex.getMessage() + 
                     "\n\n" + sentenciaSQL + "\n\nUbicación: " + "getReport");
        }
        catch (IOException ex){
-           System.out.println("Error " + ex.getMessage() + 
+           System.out.println(ConfigDataBase.DB_T_ERROR + ex.getMessage() + 
                     "\n\n" + sentenciaSQL + "\n\nUbicación: " + "getReport");
        }
       

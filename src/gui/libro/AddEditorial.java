@@ -37,7 +37,7 @@ public class AddEditorial extends javax.swing.JDialog {
         LlenaTabla();
     }
     
-    // ? ? ? 
+    // Establece el Id de la editorial seleccionada
     public void SetEditorialId(String editorial_id){   
         // Asigna el id del libro
         this.editorial_id = editorial_id;
@@ -100,11 +100,6 @@ public class AddEditorial extends javax.swing.JDialog {
 
             }
         ));
-        tableList.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tableListMouseClicked(evt);
-            }
-        });
         scpTableList.setViewportView(tableList);
 
         pnlTableList.add(scpTableList, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 180, 170));
@@ -179,11 +174,6 @@ public class AddEditorial extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    // Hacer doble click no hace nada
-    private void tableListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableListMouseClicked
-       
-    }//GEN-LAST:event_tableListMouseClicked
 
     // Abre una ventana que posibilida crear una EDITORIAL
     private void btnNewEditorialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewEditorialActionPerformed

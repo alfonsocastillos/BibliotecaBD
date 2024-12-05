@@ -79,7 +79,7 @@ public class UtilsTable {
         
         // Ancho de los renglones
         for (int i = 0; i< tabla.getRowCount(); i++)
-            rowZise(tabla,i,20);
+            rowSize(tabla,i,20);
         
         tabla.getTableHeader().setFont(new Font("Arial", Font.PLAIN, 12));
      }
@@ -100,6 +100,16 @@ public class UtilsTable {
     public static Object obtenerValor(JTable tabla, int fila, int columna) {
         return tabla.getModel().getValueAt(fila, columna);
     }
+    
+    public static void agregarFila(JTable tabla, Object[] valor) {
+        DefaultTableModel model = (DefaultTableModel) tabla.getModel();
+        model.addRow(valor);
+    }
+    
+    public static void quitarFila(JTable tabla, int fila) {
+        DefaultTableModel model = (DefaultTableModel) tabla.getModel();
+        model.removeRow(fila);
+    }
            
     
     // Asigna el ancho de la columna
@@ -111,9 +121,9 @@ public class UtilsTable {
     }
     
     // Alto de las filas 
-    private static void rowZise(javax.swing.JTable tabla, int row, int size){
+    private static void rowSize(javax.swing.JTable tabla, int row, int size){
         // Da tamaño a las columnas de la tabla     
-         tabla.setRowHeight(row, size);
+        tabla.setRowHeight(row, size);
     }
     
     // Alineación del texto en las celdas

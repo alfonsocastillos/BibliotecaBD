@@ -4,6 +4,7 @@
 package dataBase.dao;
 
 import dataBase.Conexion;
+import dataBase.ConfigDataBase;
 import java.sql.*;
 import java.util.Calendar;
 
@@ -11,66 +12,7 @@ import java.util.Calendar;
     Clase que realiza todas las transacciones a la base de datos, hereda de la
     clase conexión para ahorrar codigo
 */
-public class LibroDAO extends Conexion {
-
-    // Regresa todos los libros (LIBRO_ID, TITULO, EDICION, EDITORIAL, GENERO, ANIO, NUM_PAGINAS, IDIOMA)
-    public Object [][] GetAllLibros(){
-        // se conecta a la base de datos
-        conectar();
-        // crea un arreglo de beans para guardar los datos
-        Object [][] libros;
-        // Contador
-        int i = 0;
-        // Para guardar la cantidad de registros
-        int count = 0;
-        try{
-            // Cuenta los registros en la base de datos
-            sentenciaSQL = "SELECT COUNT (*) FROM LIBRO";
-            ps = conn.prepareStatement(sentenciaSQL);
-            rs = ps.executeQuery();
-            
-            if (rs.next()){
-                count = rs.getInt(1);
-            }
-            // Consulta los registros 
-            libros = new Object[count][8];    
-            sentenciaSQL =  "SELECT LIBRO_ID, TITULO, EDICION, EDITORIAL, GENERO, ANIO, NUM_PAGINAS, IDIOMA " +
-                            "FROM LIBRO " +
-                            "JOIN EDITORIAL USING (EDITORIAL_ID) " +
-                            "JOIN IDIOMA USING (IDIOMA_ID) " +
-                            "JOIN GENERO USING (GENERO_ID)" +
-                            "ORDER BY TITULO;"; 
-
-            // prepara la sentencia 
-            ps = conn.prepareStatement(sentenciaSQL);
-            // Ejecuta la sentencia y la asigna al result set 
-            rs = ps.executeQuery();
-            // Recorre el result set para obtener los datos y asignarlos al arreglo de beans
-            while (rs.next()){
-                libros[i][0] = rs.getInt(1);                    // Id del libro
-                libros[i][1] = rs.getString(2);                 // Titulo del libro
-                libros[i][2] = rs.getInt(3);                    // Edicion del libro
-                libros[i][3] = rs.getString(4);                 // Editorial del libro
-                libros[i][4] = rs.getString(5);                 // Genero del libro
-                Calendar calendar = Calendar.getInstance();     // Año de publicacion del libro
-                calendar.setTime(rs.getDate(6));
-                libros[i][5] = calendar.get(Calendar.YEAR);
-                libros[i][6] = rs.getInt(7);                    // Numero de paginas 
-                libros[i][7] = rs.getString(8);                 // Idioma del libro
-                i++;
-            }           
-            return libros;
-        }
-        catch (SQLException ex){
-            System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
-                    "\n\n" + sentenciaSQL + "\n\nUbicación: " + "GetAllLibros");
-            return null;
-        }
-       finally{
-           desconectar();           
-       }
-    }
-    
+public class LibroDAO extends Conexion {    
     // Regresa todos los libros con un titulo o genero parecido (LIBRO_ID, TITULO, EDICION, EDITORIAL, GENERO, ANIO, NUM_PAGINAS, IDIOMA)
     public Object [][] GetLibrosByDescripcion(String descripcion){
         // se conecta a la base de datos
@@ -135,7 +77,7 @@ public class LibroDAO extends Conexion {
             return libros;
         }
         catch (SQLException ex){
-            System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
+            System.out.println(ConfigDataBase.DB_T_ERROR +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
                     "\n\n" + sentenciaSQL + "\n\nUbicación: " + "GetLibrosByDescripcion");
             return null;
         }
@@ -180,7 +122,7 @@ public class LibroDAO extends Conexion {
             return libro;
        }
        catch (SQLException ex){
-            System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
+            System.out.println(ConfigDataBase.DB_T_ERROR +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
                     "\n\n" + sentenciaSQL + "\n\nUbicación: " + "GetLibroById");
             return null;
         }
@@ -226,7 +168,7 @@ public class LibroDAO extends Conexion {
             return id;
         }
         catch (SQLException ex){
-            System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
+            System.out.println(ConfigDataBase.DB_T_ERROR +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
                     "\n\n" + sentenciaSQL + "\n\nUbicación: " + "SaveLibro");
             return 0;
         }
@@ -269,7 +211,7 @@ public class LibroDAO extends Conexion {
             return (Integer) libro[0];                  // Regresar el id
         }
         catch (SQLException ex){
-            System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
+            System.out.println(ConfigDataBase.DB_T_ERROR +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
                     "\n\n" + sentenciaSQL + "\n\nUbicación: " + "UpdateLibro");
             return 0;
         }
@@ -299,7 +241,7 @@ public class LibroDAO extends Conexion {
                 return 1;
             }
             catch (SQLException ex){
-                System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
+                System.out.println(ConfigDataBase.DB_T_ERROR +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
                         "\n\n" + sentenciaSQL + "\n\nUbicación: " + "DeleteLibro");
                 if (ex.getErrorCode() ==  2292)
                     return 1;
@@ -312,9 +254,4 @@ public class LibroDAO extends Conexion {
         else
             return 0;
     }
-
-    public Object[][] getLibrosByTitleDesc(String trim) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
 }
