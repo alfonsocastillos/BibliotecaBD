@@ -3,16 +3,17 @@
  */
 package dataBase.dao;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import dataBase.Conexion;
 import dataBase.ConfigDataBase;
 import java.sql.*;
    
 public class PrestamoDAO extends Conexion { 
     
-    public String SavePrestamo (Object[] Libro){ // Guarda un libro y se conecta a la base de datos
-        
+    public int SavePrestamo(Object[] prestamo) {        
         conectar();
-        try{
+        try {
             String id = null;
          
             // genera el nuevo id
@@ -23,31 +24,28 @@ public class PrestamoDAO extends Conexion {
             rs = ps.executeQuery();
             
             // guarda el nuevo id
-            if (rs.next()){
+            if (rs.next()) {
                 id = rs.getString(1);
-                System.out.println(id+"texto");
             }
             
-            sentenciaSQL = "INSERT INTO PRESTAMO VALUES (?,?,?,?,?)";
+            sentenciaSQL = "INSERT INTO PRESTAMO VALUES (?, ?, ?, ?, ?)";
             ps = conn.prepareStatement(sentenciaSQL);
-            ps.setString(1, id);
-            // Asigna los valores del arreglo            
-            //ps.setString(2, Libro [0].toString());
-            ps.setString(2,Libro [1].toString());
-            ps.setString(3,Libro [3].toString());
-            ps.setString(4,Libro[2].toString());
-            ps.setString(5,Libro [4].toString());        
+            ps.setInt(1, Integer.valueOf(id));          // Id del prestamo
+            ps.setString(2, prestamo[0].toString());    // Fecha inicio
+            ps.setString(3, prestamo[1].toString());    // Fecha entrega
+            ps.setInt(4, (int) prestamo[2]);            // Id del cliente 
+            ps.setString(5, prestamo[3].toString());    // Id del empleado
             ps.executeUpdate();
-            return id;
+            return Integer.valueOf(id);
         }
-        catch (SQLException ex){
+        catch (SQLException ex) {
             System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
                     "\n\n" + sentenciaSQL + "\n\nUbicación: " + "saveLibro");
-            return null;
+            return 0;
         }
-       finally{
-           desconectar();
-       }
+        finally{
+            desconectar();
+        }
     }   
 
     // Modificar un prestamo
@@ -160,33 +158,73 @@ public class PrestamoDAO extends Conexion {
         finally{
            desconectar();           
         }
+    }
+    
+    // Consultar un prestamo  por id
+    public Object[][] GetPrestamosByCliente(int cliente_id) {
+        conectar();
+        try{                    
+            sentenciaSQL  = "SELECT COUNT(*) FROM PRESTAMO " +
+                            "JOIN DETALLES_PRESTAMO USING (PRESTAMO_ID) " +
+                            "WHERE CLIENTE_ID = ?";
+            ps = conn.prepareStatement(sentenciaSQL);
+            ps.setInt(1, cliente_id);
+            rs = ps.executeQuery();
 
+            int count = 0;
+            while(rs.next()) {
+                count = rs.getInt(1);                
+            }
+            
+            Object[][] prestamos = new Object[count][3];
+            sentenciaSQL =  "SELECT TITULO, FECHA_PRESTAMO, FECHA_ENTREGA FROM PRESTAMO " +
+                            "JOIN DETALLES_PRESTAMO USING (PRESTAMO_ID)" +
+                            "JOIN LIBRO USING (LIBRO_ID) " +
+                            "WHERE CLIENTE_ID = ? ORDER BY 2";
+            ps = conn.prepareStatement(sentenciaSQL);
+            ps.setInt(1, cliente_id);
+            rs = ps.executeQuery();
+            
+            int i = 0;
+            while(rs.next()) {
+                prestamos[i][0] = rs.getString(1);                      // Titulo del libro     
+                                 
+                DateTimeFormatter from_format = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss.A");
+                DateTimeFormatter to_format = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                LocalDateTime fecha_prestamo = LocalDateTime.parse(rs.getString(2), from_format);
+                prestamos[i][1] = to_format.format(fecha_prestamo);   // Fecha prestamo
+                
+                LocalDateTime fecha_entrega = LocalDateTime.parse(rs.getString(3), from_format);
+                prestamos[i][2] = to_format.format(fecha_entrega);    // Fecha entrega
+                i++;
+            }           
+            return prestamos;
+        }
+        catch (SQLException ex ){
+            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + ConfigDataBase.DB_ERR_QUERY + 
+                    "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "GetPrestamoById");
+            return null;
+        }
+        finally {
+            desconectar();           
+        }
     }
     
     // Borrar un prestamo
-    public int DeletePrestamo(String prestamo_id){
+    public int DeletePrestamo(int prestamo_id){
         conectar(); // Conecta a la base de datos
         try{
-            // Cambiar a NULL el prestamo de cualquier cliente/empleado con el prestamo a borrar
-            sentenciaSQL =  "UPDATE CLIENTE" +
-                            "SET PRESTAMO_ID = NULL " +
+            // Borrar cualquier detalle relacionado
+            sentenciaSQL =  "DELETE FROM DETALLES_PRESTAMO " +
                             "WHERE PRESTAMO_ID = ?";
             ps = conn.prepareStatement(sentenciaSQL);
-            ps.setString(1, prestamo_id);
-            ps.executeUpdate();
+            ps.setInt(1, prestamo_id);
             
-            sentenciaSQL =  "UPDATE EMPLEADO" +
-                            "SET PRESTAMO_ID = NULL " +
-                            "WHERE PRESTAMO_ID = ?";
-            ps = conn.prepareStatement(sentenciaSQL);
-            ps.setString(1, prestamo_id);
-            ps.executeUpdate();
-            
-            // Borrar el idioma
+            // Borrar el prestamo
             sentenciaSQL = "DELETE FROM PRESTAMO " +
                             "WHERE PRESTAMO_ID = ?";
             ps = conn.prepareStatement(sentenciaSQL);
-            ps.setString(1, prestamo_id);
+            ps.setInt(1, prestamo_id);
             int res = ps.executeUpdate();
             if (res == 1){
                 return 0;

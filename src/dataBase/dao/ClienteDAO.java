@@ -7,11 +7,8 @@ import dataBase.Conexion;
 import dataBase.ConfigDataBase;
 import java.math.BigDecimal;
 import java.sql.*;
-import java.util.Arrays;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import dataBase.dao.DireccionDAO;
-import dataBase.dao.CredencialDAO;
 
 public class ClienteDAO extends Conexion {
      

@@ -11,10 +11,10 @@ import tools.UtilsTable;
  * Ventana que permite agregar paliculas a la renta
  */
 public class AddLibrosPrestamo extends javax.swing.JDialog {
-       int id = 0;
-       LibroDAO daoLibros;
-       Object librosLista [][];
-       public Object libros[];
+    int id = 0;
+    LibroDAO daoLibros;
+    Object librosLista [][];
+    public Object libro[];
 
     /**
      * Creates new form AddPeliculasRentaD
@@ -39,17 +39,13 @@ public class AddLibrosPrestamo extends javax.swing.JDialog {
         // consulta los datos de las peliculas
        librosLista = daoLibros.GetLibrosByDescripcion(txtFiltro.getText().trim());
         // Titulos de la tabla
-        String[] T_FILMS = {"","Título"};
+        String[] T_LIBROS = {"", "Título"};
         // alineación de las celdas
         int[][] cellAlignment = {{0,javax.swing.SwingConstants.LEFT}};
         // Tamaño de las celdas
         int[][] cellSize = {{0,0},
                             {1,305}};
-        /*
-            Metodo que llena las tablas, recibe la tabla, los datos, los titulos,
-            la alineación y el tamaño de las celdas
-        */
-        UtilsTable.llenaTabla(tableList, librosLista, T_FILMS, cellAlignment, cellSize);
+        UtilsTable.llenaTabla(tableList, librosLista, T_LIBROS, cellAlignment, cellSize);
     }
     
     
@@ -198,18 +194,12 @@ public class AddLibrosPrestamo extends javax.swing.JDialog {
             // Suena un beep
             Toolkit.getDefaultToolkit().beep();
             // Muestra un mensage de aviso
-            JOptionPane.showMessageDialog(this, "Seleccione un libro.", "Aviso",2);            
-        }
-        else{      
-            /*
-                si selecciono un elemento, guarda los datos de la pelicula 
-                en un arreglo que retornará los datos a la pantalla anterior
-            */
-            libros = new Object [3];    
+            JOptionPane.showMessageDialog(this, "Seleccione un libro.", "Aviso", 2);            
+        } else {      
+            libro = new Object [2];    
             // Guarda id, nombre y costo de la pelicula
-            libros [0] = librosLista[tableList.getSelectedRow()][0];
-            libros [1] = librosLista[tableList.getSelectedRow()][1];
-            libros [2] = librosLista[tableList.getSelectedRow()][6];
+            libro [0] = librosLista[tableList.getSelectedRow()][0];
+            libro [1] = librosLista[tableList.getSelectedRow()][1];
             
             // Cierra la ventana
             dispose();   

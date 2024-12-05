@@ -9,25 +9,25 @@ import java.sql.*;
 
 public class DPrestamoDAO extends Conexion { // Para llamar procedimientos almacenados
     
-       public int saveDPrestamo (String idPrestamo, int idLibro){ // Guarda un prestamo y  se conecta a la base de datos
+       public int saveDPrestamo(int idPrestamo, int idLibro) {
         conectar();
-        try{
+        try {
 
-            sentenciaSQL = " INSERT INTO DETALLES_PRESTAMO VALUES (?,?)";
+            sentenciaSQL = "INSERT INTO DETALLES_PRESTAMO VALUES (?,?)";
             ps = conn.prepareStatement(sentenciaSQL);
-            ps.setString(1, idPrestamo);
-            ps.setInt(2, idLibro);
+            ps.setInt(1, idLibro);
+            ps.setInt(2, idPrestamo);            
             ps.executeUpdate();
             return 1;
         }
-        catch (SQLException ex){
+        catch (SQLException ex) {
             System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
                     "\n\n" + sentenciaSQL + "\n\nUbicación: " + "saveDPrestamo");
             return 0;
         }
-       finally{
-           desconectar();
-       }
+        finally {
+            desconectar();
+        }
     }  
         
     // Modificar detalles de prestamo
