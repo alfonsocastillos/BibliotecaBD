@@ -224,19 +224,6 @@ public class Prestamo extends javax.swing.JInternalFrame {
 
             }
         ));
-        tableList.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tableListMouseClicked(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                tableListMouseExited(evt);
-            }
-        });
-        tableList.addComponentListener(new java.awt.event.ComponentAdapter() {
-            public void componentMoved(java.awt.event.ComponentEvent evt) {
-                tableListComponentMoved(evt);
-            }
-        });
         scpTableList.setViewportView(tableList);
 
         pnlTableList.add(scpTableList, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 710, 120));
@@ -277,19 +264,6 @@ public class Prestamo extends javax.swing.JInternalFrame {
 
             }
         ));
-        tableListPrestamos.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tableListPrestamosMouseClicked(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                tableListPrestamosMouseExited(evt);
-            }
-        });
-        tableListPrestamos.addComponentListener(new java.awt.event.ComponentAdapter() {
-            public void componentMoved(java.awt.event.ComponentEvent evt) {
-                tableListPrestamosComponentMoved(evt);
-            }
-        });
         scpTableList1.setViewportView(tableListPrestamos);
 
         pnlTableListPrestamos.add(scpTableList1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, 710, 210));
@@ -359,16 +333,6 @@ public class Prestamo extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_btnGuardaActionPerformed
 
-    private void tableListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableListMouseClicked
-     
-    }//GEN-LAST:event_tableListMouseClicked
-
-    private void tableListMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableListMouseExited
-    }//GEN-LAST:event_tableListMouseExited
-
-    private void tableListComponentMoved(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_tableListComponentMoved
-    }//GEN-LAST:event_tableListComponentMoved
-
     private void btnAddPeliculaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddPeliculaActionPerformed
         if (tableList.getRowCount()== 3){
             // Suena un beep
@@ -427,18 +391,6 @@ public class Prestamo extends javax.swing.JInternalFrame {
             lblNombreCliente.setText(cliente_nombre);
         }
     }//GEN-LAST:event_lblNombreClienteMouseClicked
-
-    private void tableListPrestamosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableListPrestamosMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tableListPrestamosMouseClicked
-
-    private void tableListPrestamosMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableListPrestamosMouseExited
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tableListPrestamosMouseExited
-
-    private void tableListPrestamosComponentMoved(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_tableListPrestamosComponentMoved
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tableListPrestamosComponentMoved
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddPelicula;

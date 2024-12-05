@@ -1,6 +1,5 @@
 package gui.clientes;
 
-import gui.clientes.*;
 import dataBase.dao.EscolaridadDAO;
 import java.awt.Toolkit;
 import javax.swing.JOptionPane;
@@ -34,14 +33,6 @@ public class AddEscolaridad extends javax.swing.JDialog {
         LlenaTabla();
     }
     
-    // ? ? ? 
-    public void SetPaisId(int id_escolaridad){   
-        // Asigna el id del libro
-        this.escolaridad_id = id_escolaridad;
-        txtFiltro.setText("");
-        LlenaTabla();
-    }
-    
     // Llena y despliega la tabla de autores 
     private void LlenaTabla(){     
         // Consulta todos los autores (id, nombre apellido)
@@ -53,10 +44,6 @@ public class AddEscolaridad extends javax.swing.JDialog {
         // Tamaño de las celdas
         int[][] cellSize = {{0,0},
                             {1,170}};
-        /*
-            Metodo que llena las tablas, recibe la tabla, los datos, los titulos,
-            la alineación y el tamaño de las celdas
-        */
        
         UtilsTable.llenaTabla(tableList,lista_escolaridad, T_ESCOLARIDAD, cellAlignment, cellSize);
     }
@@ -97,11 +84,6 @@ public class AddEscolaridad extends javax.swing.JDialog {
 
             }
         ));
-        tableList.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tableListMouseClicked(evt);
-            }
-        });
         scpTableList.setViewportView(tableList);
 
         pnlTableList.add(scpTableList, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 180, 170));
@@ -176,11 +158,6 @@ public class AddEscolaridad extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    // Hacer doble click no hace nada
-    private void tableListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableListMouseClicked
-       
-    }//GEN-LAST:event_tableListMouseClicked
 
     // Abre una ventana que posibilida crear un PAIS
     private void btnNewEscolaridadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewEscolaridadActionPerformed

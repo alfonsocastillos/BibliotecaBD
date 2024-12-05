@@ -47,9 +47,7 @@ public class AddLibrosPrestamo extends javax.swing.JDialog {
                             {1,305}};
         UtilsTable.llenaTabla(tableList, librosLista, T_LIBROS, cellAlignment, cellSize);
     }
-    
-    
-    
+           
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -59,7 +57,6 @@ public class AddLibrosPrestamo extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        buttonGroup1 = new javax.swing.ButtonGroup();
         btnAceptar = new javax.swing.JButton();
         pnlTableList = new javax.swing.JPanel();
         scpTableList = new javax.swing.JScrollPane();
@@ -243,7 +240,6 @@ public class AddLibrosPrestamo extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAceptar;
     private javax.swing.JButton btnBorrarFiltro;
-    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JLabel lblTitulo1;
     private javax.swing.JPanel pnlTableList;
     private javax.swing.JScrollPane scpTableList;

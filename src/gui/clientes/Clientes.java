@@ -12,7 +12,6 @@ import tools.UtilsTable;
  * Ventana que registra clientes
  */
 public class Clientes extends javax.swing.JInternalFrame {
-    boolean editando = false;
     int cliente_id;
     Object clientes_lista[][];
     // Dao´s que traen los datos de la DB
@@ -84,6 +83,7 @@ public class Clientes extends javax.swing.JInternalFrame {
             // llena los datos de escolaridades en el combo 
             cmbEscolaridad.addItem(escolaridad[1].toString());
         }
+        cmbEscolaridad.setSelectedIndex(-1);
     }
     
     // Popula el ComboBox de paises disponibles
@@ -184,13 +184,9 @@ public class Clientes extends javax.swing.JInternalFrame {
     private void initComponents() {
 
         pnlTableList9 = new javax.swing.JPanel();
-        EditEscolaridad5 = new javax.swing.JButton();
         pnlTableList10 = new javax.swing.JPanel();
-        EditEscolaridad6 = new javax.swing.JButton();
         pnlTableList11 = new javax.swing.JPanel();
-        EditEscolaridad7 = new javax.swing.JButton();
-        pnlTableList12 = new javax.swing.JPanel();
-        EditEscolaridad8 = new javax.swing.JButton();
+        pnlTableList12 = new javax.swing.JPanel();        
         pnlClientes = new javax.swing.JPanel();
         btnGuarda = new javax.swing.JButton();
         lblCliente = new javax.swing.JLabel();
@@ -222,11 +218,8 @@ public class Clientes extends javax.swing.JInternalFrame {
         pnlTableList13 = new javax.swing.JPanel();
         btnEditarPaises = new javax.swing.JButton();
         pnlTableList14 = new javax.swing.JPanel();
-        EditEscolaridad10 = new javax.swing.JButton();
         pnlTableList15 = new javax.swing.JPanel();
-        EditEscolaridad11 = new javax.swing.JButton();
         pnlTableList16 = new javax.swing.JPanel();
-        EditEscolaridad12 = new javax.swing.JButton();
         btnRefrescar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
         pnlTableList = new javax.swing.JPanel();
@@ -241,50 +234,18 @@ public class Clientes extends javax.swing.JInternalFrame {
         btnEdit = new javax.swing.JButton();
 
         pnlTableList9.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Escolaridad", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N
-        pnlTableList9.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        EditEscolaridad5.setText("Editar escolaridades");
-        EditEscolaridad5.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                EditEscolaridad5ActionPerformed(evt);
-            }
-        });
-        pnlTableList9.add(EditEscolaridad5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, 160, -1));
+        pnlTableList9.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());        
 
         pnlTableList10.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Escolaridad", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N
         pnlTableList10.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        EditEscolaridad6.setText("Editar escolaridades");
-        EditEscolaridad6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                EditEscolaridad6ActionPerformed(evt);
-            }
-        });
-        pnlTableList10.add(EditEscolaridad6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, 160, -1));
 
         pnlTableList9.add(pnlTableList10, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 90, 190, 60));
 
         pnlTableList11.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Escolaridad", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N
         pnlTableList11.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        EditEscolaridad7.setText("Editar escolaridades");
-        EditEscolaridad7.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                EditEscolaridad7ActionPerformed(evt);
-            }
-        });
-        pnlTableList11.add(EditEscolaridad7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, 160, -1));
-
         pnlTableList12.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Escolaridad", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N
-        pnlTableList12.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        EditEscolaridad8.setText("Editar escolaridades");
-        EditEscolaridad8.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                EditEscolaridad8ActionPerformed(evt);
-            }
-        });
-        pnlTableList12.add(EditEscolaridad8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, 160, -1));
+        pnlTableList12.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());        
 
         pnlTableList11.add(pnlTableList12, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 90, 190, 60));
 
@@ -420,37 +381,13 @@ public class Clientes extends javax.swing.JInternalFrame {
         pnlTableList14.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Escolaridad", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N
         pnlTableList14.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        EditEscolaridad10.setText("Editar escolaridades");
-        EditEscolaridad10.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                EditEscolaridad10ActionPerformed(evt);
-            }
-        });
-        pnlTableList14.add(EditEscolaridad10, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, 160, -1));
-
         pnlTableList13.add(pnlTableList14, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 90, 190, 60));
 
         pnlTableList15.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Escolaridad", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N
         pnlTableList15.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        EditEscolaridad11.setText("Editar escolaridades");
-        EditEscolaridad11.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                EditEscolaridad11ActionPerformed(evt);
-            }
-        });
-        pnlTableList15.add(EditEscolaridad11, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, 160, -1));
-
         pnlTableList16.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Escolaridad", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N
         pnlTableList16.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        EditEscolaridad12.setText("Editar escolaridades");
-        EditEscolaridad12.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                EditEscolaridad12ActionPerformed(evt);
-            }
-        });
-        pnlTableList16.add(EditEscolaridad12, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, 160, -1));
 
         pnlTableList15.add(pnlTableList16, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 90, 190, 60));
 
@@ -612,7 +549,6 @@ public class Clientes extends javax.swing.JInternalFrame {
             javax.swing.JOptionPane.showMessageDialog(this, "Datos guardados con éxito.", "Información", 1);
             LlenaTablaClientes();
             UtilsTable.mueveTabla(tableListClientes, UtilsTable.getRow(clientes_lista, cliente_id));
-            editando = true;
             TextFieldNombre.requestFocus();
             CancelaEdit();
         }
@@ -627,12 +563,14 @@ public class Clientes extends javax.swing.JInternalFrame {
         // Hace visible la ventana para agregar paises
         add_escolaridad.setLocationRelativeTo(this);
         add_escolaridad.setVisible(true);
+        LlenadoEscolaridades();
     }//GEN-LAST:event_btnEditEscolaridadesActionPerformed
 
     private void tableListClientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableListClientesMouseClicked
         // Muestra un ballon si es necesarios
-        if (evt.getClickCount() == 2)
-        btnEditActionPerformed(null);
+        if (evt.getClickCount() == 2) {
+            btnEditActionPerformed(null);
+        }        
     }//GEN-LAST:event_tableListClientesMouseClicked
 
     private void TextFieldFiltroKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TextFieldFiltroKeyReleased
@@ -652,18 +590,6 @@ public class Clientes extends javax.swing.JInternalFrame {
         LlenadoEstados();
     }//GEN-LAST:event_cmbPaisActionPerformed
 
-    private void EditEscolaridad5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditEscolaridad5ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_EditEscolaridad5ActionPerformed
-
-    private void EditEscolaridad6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditEscolaridad6ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_EditEscolaridad6ActionPerformed
-
-    private void EditEscolaridad7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditEscolaridad7ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_EditEscolaridad7ActionPerformed
-
     private void EditEscolaridad8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditEscolaridad8ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_EditEscolaridad8ActionPerformed
@@ -677,18 +603,6 @@ public class Clientes extends javax.swing.JInternalFrame {
         LlenadoPaises();
         CancelaEdit();
     }//GEN-LAST:event_btnEditarPaisesActionPerformed
-
-    private void EditEscolaridad10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditEscolaridad10ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_EditEscolaridad10ActionPerformed
-
-    private void EditEscolaridad11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditEscolaridad11ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_EditEscolaridad11ActionPerformed
-
-    private void EditEscolaridad12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditEscolaridad12ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_EditEscolaridad12ActionPerformed
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
         // Botón que consulta el registro selecionado de la tabla para editar
@@ -715,9 +629,6 @@ public class Clientes extends javax.swing.JInternalFrame {
                     TextFieldNoInterior.setText(cliente_edit[11].toString());   // Numero Interior
                 }                
                 cmbEscolaridad.setSelectedItem(cliente_edit[12].toString());    // Estado                                
-                
-                // indica que está editando
-                editando = true;
             }
         }
     }//GEN-LAST:event_btnEditActionPerformed
@@ -765,13 +676,6 @@ public class Clientes extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton EditEscolaridad10;
-    private javax.swing.JButton EditEscolaridad11;
-    private javax.swing.JButton EditEscolaridad12;
-    private javax.swing.JButton EditEscolaridad5;
-    private javax.swing.JButton EditEscolaridad6;
-    private javax.swing.JButton EditEscolaridad7;
-    private javax.swing.JButton EditEscolaridad8;
     private javax.swing.JTextField TextFieldAlcaldia;
     private javax.swing.JTextField TextFieldApellidoMat;
     private javax.swing.JTextField TextFieldApellidoPat;

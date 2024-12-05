@@ -12,8 +12,7 @@ import java.sql.*;
  * @author alfonso
  */
 
-public class PaisDAO extends Conexion {
-    
+public class PaisDAO extends Conexion {    
     // Crear un pais
     public int SavePais(String pais) 
     {
@@ -41,7 +40,7 @@ public class PaisDAO extends Conexion {
             return id;
         }
         catch (SQLException ex){
-            System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
+            System.out.println(ConfigDataBase.DB_T_ERROR +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
                     "\n\n" + sentenciaSQL + "\n\nUbicación: " + "SavePais");
             return 0;
         }
@@ -70,7 +69,7 @@ public class PaisDAO extends Conexion {
             return (Integer) pais[0];               // Regresa el id del pais
         }
         catch (SQLException ex){
-            System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
+            System.out.println(ConfigDataBase.DB_T_ERROR +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
                     "\n\n" + sentenciaSQL + "\n\nUbicación: " + "UpdatePais");
             return 0;
         }
@@ -147,86 +146,8 @@ public class PaisDAO extends Conexion {
            desconectar();           
         }
 
-    }
-    
-    // Consulta el pais de un libro
-    public Object[] GetPaisByLibro(int id_libro){
-        // Conecta a la base de datos
-        conectar();
-        Object[] pais = new Object[2];
-        // Contador
-        try{
-            sentenciaSQL  = "SELECT PAIS_ID, PAIS " +
-                            "FROM LIBRO " +
-                            "JOIN PAIS USING (PAIS_ID) " +
-                            "WHERE LIBRO_ID = ?";           
-            ps = conn.prepareStatement(sentenciaSQL);
-            ps.setInt(1, id_libro);
-            rs = ps.executeQuery();
-
-            // Recorre el result set para obtener los datos y asignarlos al arreglo
-            while (rs.next()){
-                pais[0] = rs.getInt(1);     // Id del pais
-                pais[1] = rs.getInt(2);     // Pais
-            }     
-            return pais;
-        }
-        catch (SQLException ex){
-            System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
-                    "\n\n" + sentenciaSQL + "\n\nUbicación: " + "GetPaisByLibro");
-            return null;
-        }
-        finally{
-           desconectar();           
-        }
-    }
-    
-    // Consultar todos los libros de un pais
-    public Object[][] GetLibrosByPais(int pais_id){
-       conectar();
-       Object[][] libros;
-       int i = 0;
-       int count = 0;
-       try{
-           // Primero se cuenta el numero de autores en el libro
-           sentenciaSQL =   "SELECT COUNT (PAIS_ID) " +
-                            "FROM PAIS " +
-                            "JOIN LIBRO USING (PAIS_ID) " +
-                            "WHERE PAIS_ID = ? ";
-
-            ps = conn.prepareStatement(sentenciaSQL);   // prepara la sentencia 
-            ps.setInt(1, pais_id);
-            rs = ps.executeQuery();                     // Ejecuta la sentencia y la asigna al result set    
-           
-           if (rs.next()){
-               count = rs.getInt(1);
-            }
-           
-           libros = new Object[count][2];           
-           sentenciaSQL  =  "SELECT LIBRO_ID, TITULO " +
-                            "FROM LIBRO " +
-                            "WHERE PAIS_ID = ? " +
-                            "ORDER BY 2";   // Ordenar por la segunda columna     
-           ps = conn.prepareStatement(sentenciaSQL);
-           ps.setInt(1, pais_id);
-           rs = ps.executeQuery();
-           while (rs.next()){
-               libros[i][0] = (rs.getInt(1));       // Id del libro
-               libros[i][1] = (rs.getString(2));    // Titulos del libro
-               i++;
-           }           
-           return libros;
-        }
-        catch (SQLException ex){
-            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + ConfigDataBase.DB_ERR_QUERY + 
-                    "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "GetLibrosByPais");
-            return null;
-        }
-        finally{
-           desconectar();           
-        }
-    }
-    
+    }        
+        
     // Consultar paises con nombre parecido (id, pais)
     public Object[][] GetPaisesByNombre(String pais){
        conectar();
@@ -295,7 +216,7 @@ public class PaisDAO extends Conexion {
             return 1;
         }
         catch (SQLException ex){
-            System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
+            System.out.println(ConfigDataBase.DB_T_ERROR +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
                     "\n\n" + sentenciaSQL + "\n\nUbicación: " + "DeletePais");
             if (ex.getErrorCode() ==  2292)
                 return 1;

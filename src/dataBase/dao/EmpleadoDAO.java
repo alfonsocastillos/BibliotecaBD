@@ -4,6 +4,7 @@
 package dataBase.dao;
 
 import dataBase.Conexion;
+import dataBase.ConfigDataBase;
 import java.sql.*;
 
 /* 
@@ -47,7 +48,7 @@ public class EmpleadoDAO extends Conexion {
             return employee;
         }
         catch (SQLException ex){
-           System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
+           System.out.println(ConfigDataBase.DB_T_ERROR +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
                     "\n\n" + sentenciaSQL + "\n\nUbicación: " + "GetEmpleadoByUsr");
             return null;
         }

@@ -47,7 +47,7 @@ public class EstadoDAO extends Conexion {
             return Integer.valueOf(id);
         }
         catch (SQLException ex){
-            System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
+            System.out.println(ConfigDataBase.DB_T_ERROR +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
                     "\n\n" + sentenciaSQL + "\n\nUbicación: " + "SaveEstado");
             return 0;
         }
@@ -75,7 +75,7 @@ public class EstadoDAO extends Conexion {
             return (int) estado[0];                 // Regresa el id del estado
         }
         catch (SQLException ex){
-            System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
+            System.out.println(ConfigDataBase.DB_T_ERROR +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
                     "\n\n" + sentenciaSQL + "\n\nUbicación: " + "UpdateEstado");
             return 0;
         }
@@ -158,83 +158,7 @@ public class EstadoDAO extends Conexion {
         }
 
     }
-    
-    // Consulta el estado de una direccion
-    public String GetEstadoByDireccion(String id_dir){
-        // Conecta a la base de datos
-       conectar();
-       String estado = "";
-       // Contador
-       try{
-           sentenciaSQL  =  "SELECT ESTADO " +
-                            "FROM DIRECCION " +
-                            "JOIN ESTADO USING (ESTADO_ID) " +
-                            "WHERE LIBRO_ID = ?";           
-           ps = conn.prepareStatement(sentenciaSQL);
-           ps.setString(1, id_dir);
-           rs = ps.executeQuery();
-              
-           // Recorre el result set para obtener los datos y asignarlos al arreglo
-           while (rs.next()){
-               estado = rs.getString(1);
-           }     
-           return estado;
-        }
-        catch (SQLException ex){
-            System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
-                    "\n\n" + sentenciaSQL + "\n\nUbicación: " + "GetEstadoByDireccion");
-            return null;
-        }
-        finally{
-           desconectar();           
-        }
-    }
-    
-    // Consultar todas las dir en un estado
-    public Object [][] GetDireccionesByEstado(String estado_id){
-       conectar();
-       Object [][] dirs;
-       int i = 0;
-       int count = 0;
-       try{
-           // Primero se cuenta el numero de autores en el libro
-           sentenciaSQL =   "SELECT COUNT (DIRECCION_ID) " +
-                            "FROM DIRECCION " +                            
-                            "WHERE ESTADO_ID = ? ";
-
-            ps = conn.prepareStatement(sentenciaSQL);   // prepara la sentencia 
-            ps.setString(1, estado_id);
-            rs = ps.executeQuery();                     // Ejecuta la sentencia y la asigna al result set    
            
-           if (rs.next()){
-               count = rs.getInt(1);
-            }
-           
-           dirs = new Object[count][2];           
-           sentenciaSQL  =  "SELECT DIRECCION_ID, CALLE || ' ' || ALCALDIA " +
-                            "FROM DIRECCION " +
-                            "WHERE ESTADO_ID = ? " +
-                            "ORDER BY 2";   // Ordenar por la segunda columna     
-           ps = conn.prepareStatement(sentenciaSQL);
-           ps.setString(1, estado_id);
-           rs = ps.executeQuery();
-           while (rs.next()){
-               dirs[i][0] = (rs.getString(1));  // Ids de direcciones
-               dirs[i][1] = (rs.getString(2));  // Direcciones
-               i++;
-           }           
-           return dirs;
-        }
-        catch (SQLException ex){
-            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + ConfigDataBase.DB_ERR_QUERY + 
-                    "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "GetDireccionesByEstado");
-            return null;
-        }
-        finally{
-           desconectar();           
-        }
-    }
-    
     // Consultar estados con nombre parecido
     public Object [][] GetEstadosByNombre(int pais_id, String estado){
        conectar();
@@ -322,7 +246,7 @@ public class EstadoDAO extends Conexion {
             return 1;
         }
         catch (SQLException ex){
-            System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
+            System.out.println(ConfigDataBase.DB_T_ERROR +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
                     "\n\n" + sentenciaSQL + "\n\nUbicación: " + "DeleteEstado");
             if (ex.getErrorCode() ==  2292)
                 return 1;

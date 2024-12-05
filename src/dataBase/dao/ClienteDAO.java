@@ -10,52 +10,7 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class ClienteDAO extends Conexion {
-     
-    public Object [][] getCustomers(){
-        // se conecta a la base de datos
-        conectar();
-        // crea un arreglo de beans para guardar los datos
-        Object[][] customers; 
-        // Contador
-        int i = 0;
-        int count = 0;
-        
-        try{
-            sentenciaSQL = "SELECT COUNT(*) FROM CLIENTE";
-            ps = conn.prepareStatement(sentenciaSQL);
-            rs = ps.executeQuery();
-
-            if (rs.next()){
-                count = rs.getInt(1);
-            }
-
-            customers = new Object[count][4];
-            sentenciaSQL  = "SELECT cliente_id, nombre, apellido_pat, apellido_mat FROM CLIENTE";           
-            ps = conn.prepareStatement(sentenciaSQL);
-            rs = ps.executeQuery();
-            
-            // Recorre el result set para obtener los datos y asignarlos
-            // al arreglo de beans
-            while (rs.next()){
-                customers[i][0]=(rs.getString(1));
-                customers[i][1]=(rs.getString(2));  
-                customers[i][2]=(rs.getString(3)); 
-                customers[i][3]=(rs.getString(4));
-                i++;
-            }      
-            return customers;
-        }
-        catch (SQLException ex){
-            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + ConfigDataBase.DB_ERR_QUERY + 
-                    "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "getCustomers");
-            return null;
-        }
-        finally{
-            desconectar();           
-        }
-    }
-    
+public class ClienteDAO extends Conexion {        
     public Object [] getClienteById(int cliente_id){
         // se conecta a la base de datos
         conectar();
@@ -102,7 +57,6 @@ public class ClienteDAO extends Conexion {
             desconectar();           
         }
     }
-
             
     // Método para guardar un usuario
     public String saveCliente(Object[] cliente) {
@@ -160,88 +114,7 @@ public class ClienteDAO extends Conexion {
         } finally {
             desconectar();
         }
-    }
-
-    // Método para actualizar un usuario
-    public String updateUsuario(Object[] usuario) {
-        conectar();
-        try {
-            String sentenciaSQL = "UPDATE CLIENTE SET " +
-                    "NOMBRE = ?, " +
-                    "APELLIDO_PAT = ?, " +
-                    "APELLIDO_MAT = ?, " +
-                    "CORREO = ?, " +
-                    "DIRECCION_ID = ?, " +
-                    "ESCOLARIDAD_ID = ?, " +
-                    "CREDENCIAL_ID = ? " +
-                    "WHERE CLIENTE_ID = ?";
-            PreparedStatement ps = conn.prepareStatement(sentenciaSQL);
-
-            ps.setString(1, usuario[0].toString());  // Nuevo nombre
-            ps.setString(2, usuario[1].toString());  // Nuevo apellido paterno
-            ps.setString(3, usuario[2].toString());  // Nuevo apellido materno
-            ps.setString(4, usuario[3].toString());  // Nuevo correo
-            ps.setString(5, usuario[4].toString());  // Nuevo id de dirección
-            ps.setString(6, usuario[5].toString());  // Nuevo id de escolaridad
-            ps.setString(7, usuario[6].toString());  // Nuevo id de credencial
-            ps.setString(8, usuario[7].toString());  // Id del usuario a modificar
-
-            ps.executeUpdate();
-            return usuario[7].toString();  // Regresa el id del usuario
-        } catch (SQLException ex) {
-            System.out.println("Error " + ex.getSQLState() + "\n\n" + ex.getMessage() +
-                    "\n\n" + sentenciaSQL + "\n\nUbicación: " + "updateUsuario");
-            return null;
-        } finally {
-            desconectar();
-        }
-    }
-
-    // Método para consultar todas las direcciones de un usuario por estado
-    public Object[][] getAllDireccionesByUsuario(String usuario_id) {
-        conectar();
-        Object[][] dirs;
-        int i = 0;
-        int count = 0;
-        try {
-            String sentenciaSQL = "SELECT COUNT(*) FROM CLIENTE WHERE CLIENTE_ID = ?";
-            PreparedStatement ps = conn.prepareStatement(sentenciaSQL);
-            ps.setString(1, usuario_id);
-            ResultSet rs = ps.executeQuery();
-
-            // Verificar si el usuario existe
-            if (rs.next()) {
-                count = 1;  // El usuario existe, por lo que solo habrá una dirección
-            }
-
-            dirs = new Object[count][8];
-            sentenciaSQL = "SELECT CLIENTE_ID, NOMBRE, APELLIDO_PAT, APELLIDO_MAT, CORREO, DIRECCION_ID, ESCOLARIDAD_ID " +
-               "FROM CLIENTE WHERE CLIENTE_ID = ?";
-            
-            ps = conn.prepareStatement(sentenciaSQL);
-            ps.setString(1, usuario_id);
-            rs = ps.executeQuery();
-
-            while (rs.next()) {
-                dirs[i][0] = rs.getString(1);  // Id del usuario
-                dirs[i][1] = rs.getString(2);  // Nombre
-                dirs[i][2] = rs.getString(3);  // Apellido Paterno
-                dirs[i][3] = rs.getString(4);  // Apellido Materno
-                dirs[i][4] = rs.getString(5);  // Correo
-                dirs[i][5] = rs.getString(6);  // Id de dirección
-                dirs[i][6] = rs.getString(7);  // Id de escolaridad
-                dirs[i][7] = rs.getString(8);  // Id de credencial
-                i++;
-            }
-            return dirs;
-        } catch (SQLException ex) {
-            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + ConfigDataBase.DB_ERR_QUERY +
-                    "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "getAllDireccionesByUsuario");
-            return null;
-        } finally {
-            desconectar();
-        }
-    }
+    }    
     
     // Regresa todos los clientes que coincidan con el filtro
     public Object [][] GetClientesByFilter(String filtro){
@@ -307,7 +180,7 @@ public class ClienteDAO extends Conexion {
             return clientes;
         }
         catch (SQLException ex) {
-            System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
+            System.out.println(ConfigDataBase.DB_T_ERROR +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
                     "\n\n" + sentenciaSQL + "\n\nUbicación: " + "GetClientesByFilter");
             return null;
         }
@@ -322,17 +195,25 @@ public class ClienteDAO extends Conexion {
         conectar();
         try{
             // Buscar la direccion asociada con este cliente            
-            sentenciaSQL =  "SELECT DIRECCION_ID FROM CLIENTE " +
+            sentenciaSQL =  "SELECT DIRECCION_ID, CREDENCIAL_ID FROM CLIENTE " +
                             "WHERE CLIENTE_ID = ?";
             ps = conn.prepareStatement(sentenciaSQL);
             ps.setInt(1, cliente_id);
             rs = ps.executeQuery();
             
             String dir_id = "";
+            int cred_id = 0;
             if(rs.next()) {
                 dir_id = rs.getString(1);
+                cred_id = rs.getInt(2);
             }            
-                                    
+            
+            // Borrar la credencial asociada
+            sentenciaSQL =  "DELETE FROM CREDENCIAL " + 
+                            "WHERE CREDENCIAL_ID = ?";
+            ps = conn.prepareStatement(sentenciaSQL);
+            ps.setInt(1, cred_id);
+            
             // Borrar el cliente
             sentenciaSQL = "DELETE FROM CLIENTE " +
                             "WHERE CLIENTE_ID = ?";
@@ -345,7 +226,7 @@ public class ClienteDAO extends Conexion {
                             "WHERE DIRECCION_ID = ?";
             ps = conn.prepareStatement(sentenciaSQL);
             ps.setString(1, dir_id);
-            ps.executeUpdate();
+            ps.executeUpdate();                        
 
             if (res == 1){
                 return 0;
@@ -354,7 +235,7 @@ public class ClienteDAO extends Conexion {
             return 1;
         }
         catch (SQLException ex){
-            System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
+            System.out.println(ConfigDataBase.DB_T_ERROR +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
                     "\n\n" + sentenciaSQL + "\n\nUbicación: " + "DeleteCliente");
             if (ex.getErrorCode() ==  2292)
                 return 1;

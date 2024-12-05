@@ -1,10 +1,7 @@
 package gui.libro;
 
-import gui.libro.*;
 import dataBase.dao.AutorDAO;
 import java.awt.Toolkit;
-import java.util.HashSet;
-import java.util.Set;
 import javax.swing.JOptionPane;
 import tools.UtilsTable;
 
@@ -41,7 +38,7 @@ public class AddAutores extends javax.swing.JDialog {
         LlenaTabla();
     }
     
-    // ? ? ? 
+    // Establece el Id del libro siendo editado
     public void SetLibroId(int id_libro){   
         // Asigna el id del libro
         this.libro_id = id_libro;
@@ -60,10 +57,6 @@ public class AddAutores extends javax.swing.JDialog {
         // Tamaño de las celdas
         int[][] cellSize = {{0,0},
                             {1,170}};
-        /*
-            Metodo que llena las tablas, recibe la tabla, los datos, los titulos,
-            la alineación y el tamaño de las celdas
-        */
        
         UtilsTable.llenaTabla(tableList,lista_autores, T_AUTOR, cellAlignment, cellSize);
     }

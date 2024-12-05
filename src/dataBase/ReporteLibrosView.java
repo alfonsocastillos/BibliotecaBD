@@ -48,7 +48,7 @@ public class ReporteLibrosView extends Conexion {
            return jrv;
        }
        catch (JRException ex){
-           System.out.println("Error " + ex.getMessage() + 
+           System.out.println(ConfigDataBase.DB_T_ERROR + ex.getMessage() + 
                     "\n\n" + sentenciaSQL + "\n\nUbicación: " + "getReport");
            return null;
        }

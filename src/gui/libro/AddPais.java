@@ -37,7 +37,7 @@ public class AddPais extends javax.swing.JDialog {
         LlenaTabla();
     }
     
-    // ? ? ? 
+    // Establece el id del pais siendo editado
     public void SetPaisId(int id_pais){   
         // Asigna el id del libro
         this.pais_id = id_pais;
@@ -55,12 +55,7 @@ public class AddPais extends javax.swing.JDialog {
         int[][] cellAlignment = {{0,javax.swing.SwingConstants.LEFT}};
         // Tamaño de las celdas
         int[][] cellSize = {{0,0},
-                            {1,170}};
-        /*
-            Metodo que llena las tablas, recibe la tabla, los datos, los titulos,
-            la alineación y el tamaño de las celdas
-        */
-       
+                            {1,170}};       
         UtilsTable.llenaTabla(tableList,lista_paises, T_PAIS, cellAlignment, cellSize);
     }
     
@@ -100,11 +95,6 @@ public class AddPais extends javax.swing.JDialog {
 
             }
         ));
-        tableList.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tableListMouseClicked(evt);
-            }
-        });
         scpTableList.setViewportView(tableList);
 
         pnlTableList.add(scpTableList, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 180, 170));
@@ -179,11 +169,6 @@ public class AddPais extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    // Hacer doble click no hace nada
-    private void tableListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableListMouseClicked
-       
-    }//GEN-LAST:event_tableListMouseClicked
 
     // Abre una ventana que posibilida crear un PAIS
     private void btnNewPaisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewPaisActionPerformed

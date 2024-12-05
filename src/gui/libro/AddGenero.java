@@ -37,7 +37,7 @@ public class AddGenero extends javax.swing.JDialog {
         LlenaTabla();
     }
     
-    // ? ? ? 
+    // Establece el genero siendo editado
     public void SetGeneroId(int genero_id){   
         // Asigna el id del libro
         this.genero_id = genero_id;

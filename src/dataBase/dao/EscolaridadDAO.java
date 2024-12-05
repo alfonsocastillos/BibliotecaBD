@@ -6,9 +6,6 @@ package dataBase.dao;
 import dataBase.Conexion;
 import dataBase.ConfigDataBase;
 import java.sql.*;
-import java.util.List;
-import java.util.ArrayList;
-
 
 public class EscolaridadDAO extends Conexion {
     
@@ -39,7 +36,7 @@ public class EscolaridadDAO extends Conexion {
             return id;
         }
         catch (SQLException ex){
-            System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
+            System.out.println(ConfigDataBase.DB_T_ERROR +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
                     "\n\n" + sentenciaSQL + "\n\nUbicación: " + "SaveEscolaridad");
             return 0;
         }
@@ -67,7 +64,7 @@ public class EscolaridadDAO extends Conexion {
             return (Integer) escolaridad[0];               // Regresa el id Escolaridad
         }
         catch (SQLException ex){
-            System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
+            System.out.println(ConfigDataBase.DB_T_ERROR +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
                     "\n\n" + sentenciaSQL + "\n\nUbicación: " + "UpdateEscolaridad");
             return 0;
         }
@@ -146,88 +143,7 @@ public class EscolaridadDAO extends Conexion {
         }
 
     }
-    
-    
-    // Consulta la escolariad de un cliente
-    public Object[] GetEscolariadByCliente(int id_cliente){
-        // Conecta a la base de datos
-        conectar();
-        Object[] escolaridad = new Object[2];
-        // Contador
-        try{
-            sentenciaSQL  = "SELECT ESCOLARIDAD_ID, NIVEL " +
-                            "FROM CLIENTE " +
-                            "JOIN ESCOLARIDAD USING (ESCOLARIDAD_ID) " +
-                            "WHERE CLIENTE_ID = ?";           
-            ps = conn.prepareStatement(sentenciaSQL);
-            ps.setInt(1, id_cliente);
-            rs = ps.executeQuery();
-
-            // Recorre el result set para obtener los datos y asignarlos al arreglo
-            while (rs.next()){
-                escolaridad[0] = rs.getInt(1);     // Id de la escolaridad
-                escolaridad[1] = rs.getInt(2);     // escolaridad
-            }     
-            return escolaridad;
-        }
-        catch (SQLException ex){
-            System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
-                    "\n\n" + sentenciaSQL + "\n\nUbicación: " + "GetEscolariadByCliente");
-            return null;
-        }
-        finally{
-           desconectar();           
-        }
-    }
-    
-    
-    // Consultar todos los clientes de una escolariad
-    public Object[][] GetClientesByEscolariad(int escolaridad_id){
-       conectar();
-       Object[][] clientes;
-       int i = 0;
-       int count = 0;
-       try{
-           // Primero se cuenta el numero
-           sentenciaSQL =   "SELECT COUNT (ESCOLARIDAD_ID) " +
-                            "FROM ESCOLARIDAD " +
-                            "JOIN CLIENTE USING (ESCOLARIDAD_ID) " +
-                            "WHERE ESCOLARIDAD_ID = ? ";
-
-            ps = conn.prepareStatement(sentenciaSQL);   // prepara la sentencia 
-            ps.setInt(1, escolaridad_id);
-            rs = ps.executeQuery();                     // Ejecuta la sentencia y la asigna al result set    
-           
-           if (rs.next()){
-               count = rs.getInt(1);
-            }
-           
-           clientes = new Object[count][2];           
-           sentenciaSQL  =  "SELECT CLIENTE_ID, NOMBRE " +
-                            "FROM CLIENTE " +
-                            "WHERE ESCOLARIDAD_ID = ? " +
-                            "ORDER BY 2";   // Ordenar por la segunda columna     
-           ps = conn.prepareStatement(sentenciaSQL);
-           ps.setInt(1, escolaridad_id);
-           rs = ps.executeQuery();
-           while (rs.next()){
-               clientes[i][0] = (rs.getInt(1));       // Id del libro
-               clientes[i][1] = (rs.getString(2));    // Titulos del libro
-               i++;
-           }           
-           return clientes;
-        }
-        catch (SQLException ex){
-            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + ConfigDataBase.DB_ERR_QUERY + 
-                    "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "GetClientesByEscolaridad");
-            return null;
-        }
-        finally{
-           desconectar();           
-        }
-    }
-    
-    
+                    
      // Consultar paises con nombre parecido (id, pais)
     public Object[][] GetEscolaridadByNombre(String escolaridad){
        conectar();
@@ -277,9 +193,7 @@ public class EscolaridadDAO extends Conexion {
            desconectar();           
        }
     }
-    
-    
-    
+        
     // Eliminar una escolaridad
     public int DeleteEscolaridad(int escolaridad_id){
         // Conecta a la base de datos
@@ -298,7 +212,7 @@ public class EscolaridadDAO extends Conexion {
             return 1;
         }
         catch (SQLException ex){
-            System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
+            System.out.println(ConfigDataBase.DB_T_ERROR +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
                     "\n\n" + sentenciaSQL + "\n\nUbicación: " + "DeleteEscolaridad");
             if (ex.getErrorCode() ==  2292)
                 return 1;
@@ -308,7 +222,4 @@ public class EscolaridadDAO extends Conexion {
            desconectar();
        }
     }
-    
-
-    
 }

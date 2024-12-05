@@ -109,11 +109,6 @@ public class AddNewAutor extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Autor");
         setIconImage(java.awt.Toolkit.getDefaultToolkit().getImage( getClass().getResource("/img/user_icon.png")));
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosed(java.awt.event.WindowEvent evt) {
-                formWindowClosed(evt);
-            }
-        });
 
         pnlTableList.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N
         pnlTableList.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -147,11 +142,6 @@ public class AddNewAutor extends javax.swing.JDialog {
         pnlTableList.add(lblNombre1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 140, -1, 25));
 
         cmbPaises.setFont(new java.awt.Font("C059", 0, 12)); // NOI18N
-        cmbPaises.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmbPaisesActionPerformed(evt);
-            }
-        });
         pnlTableList.add(cmbPaises, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 140, 150, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -211,15 +201,6 @@ public class AddNewAutor extends javax.swing.JDialog {
         }                    
     }//GEN-LAST:event_btnGuardarActionPerformed
     
-    // Descartar cambios al cerrar la ventana
-    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-        
-    }//GEN-LAST:event_formWindowClosed
-
-    private void cmbPaisesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbPaisesActionPerformed
-        
-    }//GEN-LAST:event_cmbPaisesActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGuardar;
     private javax.swing.JComboBox<String> cmbPaises;

@@ -45,7 +45,7 @@ public class EditorialDAO extends Conexion {
             return id;
         }
         catch (SQLException ex){
-            System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
+            System.out.println(ConfigDataBase.DB_T_ERROR +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
                     "\n\n" + sentenciaSQL + "\n\nUbicación: " + "SaveEditorial");
             return null;
         }
@@ -73,7 +73,7 @@ public class EditorialDAO extends Conexion {
             return editorial[0].toString();            // Regresa el id de la editorial
         }
         catch (SQLException ex){
-            System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
+            System.out.println(ConfigDataBase.DB_T_ERROR +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
                     "\n\n" + sentenciaSQL + "\n\nUbicación: " + "UpdateEditorial");
             return null;
         }
@@ -150,83 +150,7 @@ public class EditorialDAO extends Conexion {
            desconectar();           
         }
 
-    }
-
-    // Consultar la editorial de un libro
-    public String GetEditorialByLibro(String id_libro){
-        // Conecta a la base de datos
-        conectar();
-        String editorial = "";
-        // Contador
-        try{
-            sentenciaSQL  = "SELECT EDITORIAL " +
-                            "FROM LIBRO " +
-                            "JOIN EDITORIAL USING (EDITORIAL_ID) " +
-                            "WHERE LIBRO_ID = ?";           
-           ps = conn.prepareStatement(sentenciaSQL);
-           ps.setString(1, id_libro);
-           rs = ps.executeQuery();
-              
-           // Recorre el result set para obtener los datos y asignarlos al arreglo
-           while (rs.next()){
-               editorial = rs.getString(1);
-           }     
-           return editorial;
-        }
-        catch (SQLException ex){
-            System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
-                    "\n\n" + sentenciaSQL + "\n\nUbicación: " + "GetEditorialByLibro");
-            return null;
-        }
-        finally{
-           desconectar();           
-        }
-    }
-    
-    // Consultar todos los libros con una editorial
-    public Object [] GetLibrosByEditorial(String editorial_id){
-       conectar();
-       Object [] libros;
-       int i = 0;
-       int count = 0;
-       try{
-           // Primero se cuenta el numero de libros por editorial
-           sentenciaSQL =   "SELECT COUNT (EDITORIAL_ID) " +
-                            "FROM EDITORIAL " +
-                            "JOIN LIBRO USING (EDITORIAL_ID) " +
-                            "WHERE EDITORIAL_ID = ? ";
-
-            ps = conn.prepareStatement(sentenciaSQL);   // prepara la sentencia 
-            ps.setString(1, editorial_id);
-            rs = ps.executeQuery();                     // Ejecuta la sentencia y la asigna al result set    
-           
-           if (rs.next()){
-               count = rs.getInt(1);
-            }
-           
-           libros = new Object[count][2];           
-           sentenciaSQL  =  "SELECT TITULO " +
-                            "FROM LIBRO" +
-                            "WHERE EDITORIAL_ID = ? " +
-                            "ORDER BY 2";   // Ordenar por la segunda columna     
-           ps = conn.prepareStatement(sentenciaSQL);
-           ps.setString(1, editorial_id);
-           rs = ps.executeQuery();
-           while (rs.next()){
-               libros[i] = (rs.getString(1));  // Titulos del libro
-               i++;
-           }           
-           return libros;
-        }
-        catch (SQLException ex){
-            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + ConfigDataBase.DB_ERR_QUERY + 
-                    "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "GetLibrosByEditorial");
-            return null;
-        }
-        finally{
-           desconectar();           
-        }
-    }
+    }        
 
     // Consultar todas las editoriales con un nombre parecido
     public Object[][] GetEditorialByNombre(String editorial){
@@ -296,7 +220,7 @@ public class EditorialDAO extends Conexion {
             return 1;
         }
         catch (SQLException ex){
-            System.out.println("Error " +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
+            System.out.println(ConfigDataBase.DB_T_ERROR +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
                     "\n\n" + sentenciaSQL + "\n\nUbicación: " + "DeleteEditorial");
             if (ex.getErrorCode() ==  2292)
                 return 1;
@@ -306,5 +230,4 @@ public class EditorialDAO extends Conexion {
            desconectar();
        }
     }
-
 }

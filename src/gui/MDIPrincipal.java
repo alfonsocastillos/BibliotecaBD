@@ -4,7 +4,6 @@ package gui;
 import gui.libro.Libros;
 import gui.prestamo.Prestamo;
 import gui.clientes.Clientes;
-import gui.reportes.Reportes;
 import java.awt.Dimension;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
@@ -21,7 +20,6 @@ public class MDIPrincipal extends javax.swing.JFrame {
     String id_sucursal;
     // Para guardar los nombres de la tienda y empleado para mostralos
     // en la interfaz
-    String sucursal;
     String empleado_nombre;
     // Declara las ventanas
     Libros vtn_libros;
@@ -40,8 +38,6 @@ public class MDIPrincipal extends javax.swing.JFrame {
         // Obtiene los valores que consultó la ventana de inicio de sesión 
         this.id_sucursal = id_sucursal;
         this.id_empleado = id_empleado;
-        // Nombre de la sucursal
-        this.sucursal = sucursal;
         // Nombre del empleado
         this.empleado_nombre = empleado_nombre;
         
@@ -376,11 +372,6 @@ public class MDIPrincipal extends javax.swing.JFrame {
         AbreLibros();
     }//GEN-LAST:event_menuPeliculaActionPerformed
     
-    // Abrir la ventana de libros
-    private void menuClienteActionPerformed(java.awt.event.ActionEvent evt) {                                             
-        AbreClientes();
-    } 
-    
     private void menuActorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuActorActionPerformed
         // Accion del menu actor
 
@@ -406,19 +397,13 @@ public class MDIPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnClientesActionPerformed
 
     private void btnReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportesActionPerformed
-        // TODO add your handling code here:
         AbreReportes();
     }//GEN-LAST:event_btnReportesActionPerformed
 
     private void menuEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuEmpleadoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_menuEmpleadoActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    
-
+  
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToolBar barVent;
     private javax.swing.JToolBar barraDeAcceso;

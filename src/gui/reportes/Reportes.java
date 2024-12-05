@@ -1,9 +1,7 @@
 package gui.reportes;
 
 import dataBase.ReporteLibrosPDF1;
-import gui.reportes.VentanaReporte1;
 import dataBase.ReporteLibrosPDF2;
-import gui.reportes.VentanaReporte2;
 /**
  *
  * @author Jordi
@@ -124,9 +122,7 @@ public class Reportes extends javax.swing.JInternalFrame {
         ReporteLibrosPDF2 reporte = new ReporteLibrosPDF2();
         reporte.genReport();
     }//GEN-LAST:event_btnReportePDF2ActionPerformed
-
-    
-    
+       
     private void btnReporte1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporte1ActionPerformed
         // Empleado que realiza mas préstamos
         VentanaReporte1 reporte_libros1 = new VentanaReporte1();
