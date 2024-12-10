@@ -1,229 +1,220 @@
-/*
- * Clase encargada de consultar, insertar, eliminar y modificar la tabla Pais
- */
 package dataBase.dao;
 
-import dataBase.Conexion;
+import dataBase.CustomConnection;
 import dataBase.ConfigDataBase;
 import java.sql.*;
 
 /**
- *
+ * Clase encargada de consultar, insertar, eliminar y modificar la tabla Pais.
  * @author alfonso
  */
 
-public class PaisDAO extends Conexion {    
-    // Crear un pais
-    public int SavePais(String pais) 
-    {
-        // Se conecta a la base de datos
-        conectar();
-        try{
-            int id = 0;
-            // genera el nuevo id            
-            sentenciaSQL =  "SELECT MAX(PAIS_ID) + 1 FROM PAIS";
-            ps = conn.prepareStatement(sentenciaSQL);            
-            rs = ps.executeQuery();
+public class PaisDAO extends CustomConnection {
+    
+    /**
+     * Crear un pais.
+     * @param pais nombre del pais.
+     * @return int con el Id del pais creado.
+     */
+    public int savePais(String pais) {
+        connect();
+        int paisId = 0;
+        try {
             
-            // guarda el nuevo id
-            if (rs.next()){
-                id = rs.getInt(1);
+            // Genera el nuevo id.
+            sentenciaSQL = "SELECT MAX(PAIS_ID) + 1 FROM PAIS";
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
+            resultSet = preparedStatement.executeQuery();
+            
+            // Guarda el nuevo id.
+            if(resultSet.next()) {
+                paisId = resultSet.getInt(1);
             }
             
-            // inserta mandando todos los datos, incluido en nuevo id
+            // Inserta mandando todos los datos, incluido en nuevo Id.
             sentenciaSQL = "INSERT INTO PAIS VALUES(?, ?, SYSDATE)";
-            ps = conn.prepareStatement(sentenciaSQL);
-            // Asigna los valores del arreglo            
-            ps.setInt(1, id);       // Id (calculado)
-            ps.setString(2, pais);  // Pais (provisto)            
-            ps.executeUpdate();
-            return id;
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
+            preparedStatement.setInt(1, paisId);    // Id (calculado).
+            preparedStatement.setString(2, pais);   // Pais (provisto).
+            preparedStatement.executeUpdate();
+        } catch(SQLException ex) {
+            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "savePais");
+            paisId = 0;
+        } finally {
+           disconnect();
         }
-        catch (SQLException ex){
-            System.out.println(ConfigDataBase.DB_T_ERROR +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
-                    "\n\n" + sentenciaSQL + "\n\nUbicación: " + "SavePais");
-            return 0;
-        }
-        finally{
-           desconectar();
-       }
-
+        return paisId;
     }
     
-    // Modificar un pais (id, pais)
-    public int UpdatePais(Object[] pais)
+    /**
+     * Modificar un pais.
+     * @param pais datos del pais a modificar (id, nuevo nombre del pais).
+     * @return int con el Id del pais modificado.
+     */
+    public int updatePais(Object[] pais)
     {       
-        // se conecta a la base de datos
-       conectar();
-       try{
-           // actualiza los datos
-           sentenciaSQL = "UPDATE PAIS SET " +
-                          "PAIS = ?, " +
-                          "LAST_UPDATE = SYSDATE " +
-                          "WHERE PAIS_ID = ?";
-            ps = conn.prepareStatement(sentenciaSQL);
-            
-            ps.setString(1, pais[1].toString());    // Nuevo nombre pais
-            ps.setInt(2, (Integer) pais[0]);        // Id del pais
-            ps.executeUpdate();
-            return (Integer) pais[0];               // Regresa el id del pais
+        connect();
+        int paisId = 0;
+        try {
+            sentenciaSQL = "UPDATE PAIS SET PAIS = ?, LAST_UPDATE = SYSDATE WHERE PAIS_ID = ?";
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
+            preparedStatement.setString(1, pais[1].toString());    // Nuevo nombre pais.
+            preparedStatement.setInt(2, (Integer) pais[0]);        // Id del pais.
+            preparedStatement.executeUpdate();
+            paisId = (int) pais[0];
+        } catch(SQLException ex) {
+            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "updatePais");
+            paisId = 0;
+        } finally {
+           disconnect();
         }
-        catch (SQLException ex){
-            System.out.println(ConfigDataBase.DB_T_ERROR +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
-                    "\n\n" + sentenciaSQL + "\n\nUbicación: " + "UpdatePais");
-            return 0;
-        }
-        finally{
-           desconectar();
-       }
+        return paisId;
     }
     
-    // Consultar todos los paises (id, pais)
-    public Object [][] GetAllPaises(){
-        conectar();
-        Object [][] paises;
-        int i = 0;
+    /**
+     * Consultar todos los paises.
+     * @return Object[][] con los datos de todos los paises consultados (id, pais).
+     */
+    public Object[][] getAllPaises() {
+        connect();
+        Object[][] paises = null;
         int count = 0;
-        try{
-            sentenciaSQL = "SELECT COUNT(*) FROM PAIS";      // Numero de paises           
-            ps = conn.prepareStatement(sentenciaSQL);        // Convierte el str a un sentencia utilizable en SQL           
-            rs = ps.executeQuery();                          // Resultado de la consulta
+        try {
+            
+            // Numero de paises.
+            sentenciaSQL = "SELECT COUNT(*) FROM PAIS";
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
+            resultSet = preparedStatement.executeQuery();
 
-            // Numero de idiomas (COUNT)
-            if (rs.next()){
-                count = rs.getInt(1);
+            // Numero de paises (COUNT).
+            if(resultSet.next()) {
+                count = resultSet.getInt(1);
             }
+                       
+            sentenciaSQL = "SELECT PAIS_ID, PAIS FROM PAIS ORDER BY 2";
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
+            resultSet = preparedStatement.executeQuery();
 
-            // Arreglo de todos los paises (ID, pais)
-            paises = new Object[count][2];           
-            sentenciaSQL  = "SELECT PAIS_ID, PAIS FROM PAIS ORDER BY 2";           
-            ps = conn.prepareStatement(sentenciaSQL);
-            rs = ps.executeQuery();
-
-            // Agregar a todos los paises al arreglo (migrar de rs a paises)
-            while (rs.next()){
-                paises[i][0] = (rs.getInt(1));      // Id del pais
-                paises[i][1] = (rs.getString(2));   // Nombre del pais
+            // Agregar a todos los paises al arreglo (migrar de resultSet a paises).
+            int i = 0;
+            paises = new Object[count][2];
+            while(resultSet.next()) {
+                paises[i][0] = (resultSet.getInt(1));      // Id del pais.
+                paises[i][1] = (resultSet.getString(2));   // Nombre del pais.
                 i++;
-            }           
-            return paises;
+            }
+        } catch(SQLException ex) {
+            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + ConfigDataBase.DB_ERR_QUERY + "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + 
+                    "\n\nUbicación: " + "getAllPaises");
+            paises = null;
+        } finally {
+           disconnect();
         }
-        catch (SQLException ex){
-            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + ConfigDataBase.DB_ERR_QUERY + 
-                    "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "GetAllPaises");
-            return null;
-        }
-        finally{
-           desconectar();           
-       }
+        return paises;
     }  
 
-    // Consulta el pais para un id (id, pais)
-    public Object[] GetPaisById(int pais_id)
+    /**
+     * Consulta el pais para un id. 
+     * @param paisId Id del pais a consultar.
+     * @return Object[] con los datos del pais consultado (id, pais).
+     */
+    public Object[] getPaisById(int paisId)
     {
-        conectar();
-        Object [] pais = new Object[2];
-       
-        try{                    
-            sentenciaSQL  = "SELECT PAIS_ID, PAIS FROM PAIS WHERE PAIS_ID = ?";           
-            ps = conn.prepareStatement(sentenciaSQL);
-            ps.setInt(1, pais_id);    // Reemplaza el parámetro index (simbolo ?) con el str x
-            rs = ps.executeQuery();
+        connect();
+        Object[] pais = null;
+        try {
+            sentenciaSQL = "SELECT PAIS_ID, PAIS FROM PAIS WHERE PAIS_ID = ?";
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
+            preparedStatement.setInt(1, paisId);
+            resultSet = preparedStatement.executeQuery();
 
-            // Llena el arreglo pais con el resultado
-            while (rs.next()){
-                pais[0] = (rs.getInt(1));
-                pais[1] = (rs.getString(2));  
-            }           
-            return pais;
+            // Llena el arreglo pais con el resultado.
+            pais = new Object[2];
+            while(resultSet.next()) {
+                pais[0] = (resultSet.getInt(1));
+                pais[1] = (resultSet.getString(2));
+            }
+        } catch(SQLException ex) {
+            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + ConfigDataBase.DB_ERR_QUERY + "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + 
+                    "\n\nUbicación: " + "getPaisById");
+            pais = null;
+        } finally {
+           disconnect();
         }
-         catch (SQLException ex){
-             System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + ConfigDataBase.DB_ERR_QUERY + 
-                     "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "GetPaisById");
-             return null;
-        }
-        finally{
-           desconectar();           
-        }
-
-    }        
+        return pais;
+    }
         
-    // Consultar paises con nombre parecido (id, pais)
-    public Object[][] GetPaisesByNombre(String pais){
-       conectar();
-       Object[][] paises;
-       int i = 0;
-       int count = 0;
+    /**
+     * Consultar paises con nombre parecido.
+     * @param pais nombre del pais a consultar.
+     * @return Object[][] con los datos de los paises consultados (id, pais).
+     */
+    public Object[][] getPaisesByNombre(String pais) {
+       connect();
+       Object[][] paises = null;
        pais = "%" + pais + "%";
-       try{
-            // Cuenta todos los actores que tengan un nombre parecido
-            sentenciaSQL =  "SELECT COUNT(PAIS_ID) " +
-                            "FROM PAIS " +
-                            "WHERE UPPER (PAIS) LIKE UPPER(?)";   // Todos los paises que tengan un nombre parecido
+       try {
+            
+            // Cuenta todos los paises que tengan un nombre parecido.
+            sentenciaSQL = "SELECT COUNT(PAIS_ID) FROM PAIS WHERE UPPER (PAIS) LIKE UPPER(?)";
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
+            preparedStatement.setString(1, pais);
+            resultSet = preparedStatement.executeQuery();
 
-
-             ps = conn.prepareStatement(sentenciaSQL);   // prepara la sentencia 
-             ps.setString(1, pais);
-             rs = ps.executeQuery();                     // Ejecuta la sentencia y la asigna al result set         
-
-            if (rs.next()){
-                count = rs.getInt(1);
+            int count = 0;
+            if(resultSet.next()) {
+                count = resultSet.getInt(1);
             }
            
-            // Misma consulta, pero ahora puede ser guardada en el arreglo
-            paises = new Object[count][2];           
-            sentenciaSQL =  "SELECT PAIS_ID, PAIS " +
-                            "FROM PAIS " +
-                            "WHERE UPPER (PAIS) LIKE UPPER(?) " +
-                            "ORDER BY PAIS";
-
-            ps = conn.prepareStatement(sentenciaSQL);
-            ps.setString(1, pais);
-            rs = ps.executeQuery();
+            // Misma consulta, pero ahora puede ser guardada en el arreglo.
+            sentenciaSQL = "SELECT PAIS_ID, PAIS FROM PAIS WHERE UPPER (PAIS) LIKE UPPER(?) ORDER BY PAIS";
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
+            preparedStatement.setString(1, pais);
+            resultSet = preparedStatement.executeQuery();
            
-            while (rs.next()){
-               paises[i][0] = (rs.getInt(1));
-               paises[i][1] = (rs.getString(2));
+            int i = 0;
+            paises = new Object[count][2];
+            while(resultSet.next()) {
+               paises[i][0] = (resultSet.getInt(1));
+               paises[i][1] = (resultSet.getString(2));
                i++;
-           }           
-           return paises;
-        }
-        catch (SQLException ex){
-            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + ConfigDataBase.DB_ERR_QUERY + 
-                    "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "GetPaisesByNombre");
-            return null;
-        }
-        finally{
-           desconectar();           
+            }
+        } catch(SQLException ex) {
+            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + ConfigDataBase.DB_ERR_QUERY + "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + 
+                    "\n\nUbicación: " + "getPaisesByNombre");
+            paises = null;
+        } finally {
+           disconnect();
        }
+       return paises;
     }
 
-    // Eliminar un pais
-    public int DeletePais(int pais_id){
-        // Conecta a la base de datos
-        conectar();
-        try{            
-            // Borrar el pais
-            sentenciaSQL = "DELETE FROM PAIS " +
-                            "WHERE PAIS_ID = ?";
-            ps = conn.prepareStatement(sentenciaSQL);
-            ps.setInt(1, pais_id);
-            int res = ps.executeUpdate();
-            if (res == 1){
-                return 0;
-            }
+    /**
+     * Eliminar un pais.
+     * @param paisId
+     * @return int que representa el resultado de la transaccion.
+     */
+    public int deletePais(int paisId) {
+        connect();
+        int status = 0;
+        try {
             
-            return 1;
+            // Borrar el pais.
+            sentenciaSQL = "DELETE FROM PAIS WHERE PAIS_ID = ?";
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
+            preparedStatement.setInt(1, paisId);
+            status = preparedStatement.executeUpdate();
+        } catch(SQLException ex) {
+            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + "\n\n" + ex.getMessage() + 
+                    "\n\n" + sentenciaSQL + "\n\nUbicación: " + "deletePais");
+            if(ex.getErrorCode() == 2292) {
+                status = 0;
+            } else {
+                status = 2;
+            }
+        } finally {
+           disconnect();
         }
-        catch (SQLException ex){
-            System.out.println(ConfigDataBase.DB_T_ERROR +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
-                    "\n\n" + sentenciaSQL + "\n\nUbicación: " + "DeletePais");
-            if (ex.getErrorCode() ==  2292)
-                return 1;
-            return 2;
-        }
-        finally{
-           desconectar();
-       }
+        return status;
     }
 }

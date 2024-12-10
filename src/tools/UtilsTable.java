@@ -23,27 +23,27 @@ import javax.swing.table.TableColumnModel;
 public class UtilsTable {
    
     // Funciones para tablas
-   public static int getRow(Object datos [][], int id){
+   public static int getRow(Object datos [][], int id) {
         int row = 0;
         for (int i = 0; i < datos.length ;i++)
-            if (Integer.parseInt(datos[i][0].toString())==id){
+            if(Integer.parseInt(datos[i][0].toString())==id) {
                 row = i;
                 break;
             }
         return row;
     }
    
-   public static int getRow(Object datos [][], String id){
+   public static int getRow(Object datos [][], String id) {
         int row = 0;
         for (int i = 0; i < datos.length ;i++)
-            if (datos[i][0].toString().equals(id)){
+            if(datos[i][0].toString().equals(id)) {
                 row = i;
                 break;
             }
         return row;
     }
     // Mueve la tabla para que se muestre el contenido
-    public static int mueveTabla(javax.swing.JTable tabla, int a){
+    public static int mueveTabla(javax.swing.JTable tabla, int a) {
         // Cuando de agrega un registro
         //Selecciona el registro
         tabla.setRowSelectionInterval(a,a);
@@ -54,7 +54,7 @@ public class UtilsTable {
     
     // Pone el contenido en la tabla
     public static void llenaTabla(javax.swing.JTable tabla, Object[][] datos, String[] titulos, int[][] cellAlignment,
-             int[][] cellSize){
+             int[][] cellSize) {
         tabla.setModel(new javax.swing.table.DefaultTableModel(datos,titulos)
         {
             @Override
@@ -84,7 +84,7 @@ public class UtilsTable {
         tabla.getTableHeader().setFont(new Font("Arial", Font.PLAIN, 12));
      }
   
-    public static void limpiaTabla(JTable tabla){
+    public static void limpiaTabla(JTable tabla) {
         DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
          for (int i = 0; i < tabla.getRowCount(); i++) {
            modelo.removeRow(i);
@@ -113,7 +113,7 @@ public class UtilsTable {
            
     
     // Asigna el ancho de la columna
-    private static void columnSize(javax.swing.JTable tabla,int column, int size){
+    private static void columnSize(javax.swing.JTable tabla,int column, int size) {
         // Da tamaño a las columnas de la tabla     
         tabla.getColumnModel().getColumn(column).setMaxWidth(size);
         tabla.getColumnModel().getColumn(column).setMinWidth(size);
@@ -121,13 +121,13 @@ public class UtilsTable {
     }
     
     // Alto de las filas 
-    private static void rowSize(javax.swing.JTable tabla, int row, int size){
+    private static void rowSize(javax.swing.JTable tabla, int row, int size) {
         // Da tamaño a las columnas de la tabla     
         tabla.setRowHeight(row, size);
     }
     
     // Alineación del texto en las celdas
-    private static void cellAlignment(javax.swing.JTable tabla,int column, int cellAlignment){
+    private static void cellAlignment(javax.swing.JTable tabla,int column, int cellAlignment) {
         javax.swing.table.DefaultTableCellRenderer tcr = new javax.swing.table.DefaultTableCellRenderer();
         tcr.setHorizontalAlignment(cellAlignment);
         tabla.getColumnModel().getColumn(column).setCellRenderer(tcr);

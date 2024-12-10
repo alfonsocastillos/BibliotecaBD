@@ -1,7 +1,7 @@
 package gui.prestamo;
 
 import dataBase.dao.ClienteDAO;
-import dataBase.dao.DPrestamoDAO;
+import dataBase.dao.DetallePrestamoDAO;
 import dataBase.dao.PrestamoDAO;
 import java.awt.Toolkit;
 import java.time.LocalDateTime;
@@ -54,12 +54,12 @@ public class Prestamo extends javax.swing.JInternalFrame {
         LlenaDatos();
     }
     
-    private void LlenaDatos(){
+    private void LlenaDatos() {
         LlenaTablaLibros();
         LlenaTablaPrestamos();
     }
     
-    private void LlenaTablaLibros(){            
+    private void LlenaTablaLibros() {            
         int[][] cellAlignment = {{0,javax.swing.SwingConstants.LEFT, javax.swing.SwingConstants.RIGHT}};
         int[][] cellSize = {{0,0},
                             {1,700}};
@@ -70,7 +70,7 @@ public class Prestamo extends javax.swing.JInternalFrame {
     }
     
     private void LlenaTablaPrestamos() {
-        prestamos = prestamo_dao.GetPrestamosByCliente(cliente_id);
+        prestamos = prestamo_dao.getPrestamosByCliente(cliente_id);
         int[][] cellAlignment = {{0,javax.swing.SwingConstants.LEFT, javax.swing.SwingConstants.RIGHT}};
         int[][] cellSize = {{0, 460},
                             {1, 120},
@@ -81,13 +81,13 @@ public class Prestamo extends javax.swing.JInternalFrame {
     }
     
     // Valida si se llenaron los datos
-    private boolean EstanLlenos(){        
-        if (lblNombreCliente.getText().equals("Seleccione un cliente")){
+    private boolean EstanLlenos() {        
+        if(lblNombreCliente.getText().equals("Seleccione un cliente")) {
             Toolkit.getDefaultToolkit().beep();
             JOptionPane.showMessageDialog(this, "Seleccione un cliente.", "Aviso", 2);
             
             return false;
-        } else if (tableList.getRowCount() == 0){
+        } else if(tableList.getRowCount() == 0) {
             Toolkit.getDefaultToolkit().beep();
             javax.swing.JOptionPane.showMessageDialog(this, "No hay libros en prestamo.", "Aviso", 2);
             return false;
@@ -96,7 +96,7 @@ public class Prestamo extends javax.swing.JInternalFrame {
         return true;
     }       
     
-    private void CancelaEdit(){
+    private void CancelaEdit() {
         lblNombreCliente.setText("Seleccione un cliente");     
         lblFechaIn.setText("");
         UtilsTable.limpiaTabla(tableList);
@@ -105,7 +105,7 @@ public class Prestamo extends javax.swing.JInternalFrame {
     
     private boolean VerificaRepetido(int idLibro) {
         for (int i = 0; i < tableList.getRowCount(); i++) {            
-            if ((int) UtilsTable.obtenerValor(tableList, i, 0) == idLibro) {
+            if((int) UtilsTable.obtenerValor(tableList, i, 0) == idLibro) {
                 return false;
             }               
         }
@@ -217,7 +217,7 @@ public class Prestamo extends javax.swing.JInternalFrame {
 
         tableList.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         tableList.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+            new Object[][] {
 
             },
             new String [] {
@@ -257,7 +257,7 @@ public class Prestamo extends javax.swing.JInternalFrame {
 
         tableListPrestamos.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         tableListPrestamos.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+            new Object[][] {
 
             },
             new String [] {
@@ -302,7 +302,7 @@ public class Prestamo extends javax.swing.JInternalFrame {
 
     private void btnGuardaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardaActionPerformed
 //         Guarda y actualiza los datos
-        if (EstanLlenos()){
+        if(EstanLlenos()) {
             // Guarda datos de los controles en un arreglo de objetos
             Object[] prestamo = new Object[4];
             prestamo[0] = lblFechaOut.getText();
@@ -310,16 +310,16 @@ public class Prestamo extends javax.swing.JInternalFrame {
             prestamo[2] = cliente_id;
             prestamo[3] = empleado_id;
             // Guarda la prestamo y recupera el id            
-            int prestamo_id = prestamo_dao.SavePrestamo(prestamo);
+            int prestamo_id = prestamo_dao.savePrestamo(prestamo);
             if(prestamo_id != 0) {        
                 // si guardo el prestamo, guarda los datos del detalle
-                DPrestamoDAO daoDPrestamo = new DPrestamoDAO();
+                DetallePrestamoDAO daoDPrestamo = new DetallePrestamoDAO();
                 int i;
                 for (i = 0; i < tableList.getRowCount(); i++) {
-                    int result = daoDPrestamo.saveDPrestamo(prestamo_id, (int) UtilsTable.obtenerValor(tableList, i, 0));
+                    int result = daoDPrestamo.saveDetallePrestamo(prestamo_id, (int) UtilsTable.obtenerValor(tableList, i, 0));
                     if(result == 0) {
                         javax.swing.JOptionPane.showMessageDialog(this, "Error al guardar el detalle.", "Información", 1);
-                        prestamo_dao.DeletePrestamo(prestamo_id);
+                        prestamo_dao.deletePrestamo(prestamo_id);
                         break;
                     }
                 }       
@@ -334,7 +334,7 @@ public class Prestamo extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnGuardaActionPerformed
 
     private void btnAddPeliculaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddPeliculaActionPerformed
-        if (tableList.getRowCount()== 3){
+        if(tableList.getRowCount()== 3) {
             // Suena un beep
             Toolkit.getDefaultToolkit().beep();
             javax.swing.JOptionPane.showMessageDialog(this, "No se pueden agregar mas de 3\nlibros al prestamo.", "Aviso", 2);
@@ -347,8 +347,8 @@ public class Prestamo extends javax.swing.JInternalFrame {
             addLibrosPrestamo.setVisible(true);
             // cuando cierra la ventana agrega el libro seleccionado a la tabla de detalle de prestamo
             // si selecciono un registro, pone el libro
-            if (addLibrosPrestamo.tableList.getSelectedRow() >= 0){
-                if (VerificaRepetido((int) addLibrosPrestamo.libro[0])) {
+            if(addLibrosPrestamo.tableList.getSelectedRow() >= 0) {
+                if(VerificaRepetido((int) addLibrosPrestamo.libro[0])) {
                     UtilsTable.agregarFila(tableList, addLibrosPrestamo.libro);                    
                     DateTimeFormatter date_format = DateTimeFormatter.ofPattern("dd/MM/yyyy");                
                     String fecha_entrega = date_format.format(LocalDateTime.now().plusDays(3 * tableList.getRowCount()));
@@ -361,7 +361,7 @@ public class Prestamo extends javax.swing.JInternalFrame {
     private void btnBorrarPelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarPelActionPerformed
         // Borrar peliucula del detalle
         // valida si selecciono la fila
-        if (tableList.getSelectedRow() < 0){
+        if(tableList.getSelectedRow() < 0) {
             // Suena un beep
             Toolkit.getDefaultToolkit().beep();
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila.","Aviso",2);
@@ -376,7 +376,7 @@ public class Prestamo extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnCancelaActionPerformed
 
     private void lblNombreClienteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblNombreClienteMouseClicked
-        if (evt.getClickCount() == 2){  
+        if(evt.getClickCount() == 2) {  
             // Abre la ventana para seleccionar usuario
             // Localización de la ventana
             selectCliente.setLocationRelativeTo(this);

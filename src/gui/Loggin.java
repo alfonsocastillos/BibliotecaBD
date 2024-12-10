@@ -29,12 +29,12 @@ public class Loggin extends javax.swing.JFrame {
      */
     public Loggin() {
         initComponents();   // Generado automáticamente
-         // instancia el Dao
+        // instancia el Dao
         empleado_dao = new EmpleadoDAO();
         configComponents();
-    }
+    }       
     
-    private void configComponents(){
+    private void configComponents() {
         // Aspecto gráfico
         UtilsGUI.setLookAndFeel(this);
         // Titulo de la ventana
@@ -145,10 +145,10 @@ public class Loggin extends javax.swing.JFrame {
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
         // Busca el usuario y contrasenia
         // Crea un bean para guardar los datos
-        Object employee[] = empleado_dao.GetEmpleadoByUsr(txtUser.getText().trim(), txtPsw.getPassword());
+        Object employee[] = empleado_dao.getEmpleadoByUsr(txtUser.getText().trim(), txtPsw.getPassword());
         //System.out.println(employee[0]);
         // si regresa un id mayor a 0, es válido
-        if (Integer.parseInt(employee[0].toString()) > 0){
+        if(Integer.parseInt(employee[0].toString()) > 0) {
             // Guarda los datos encontrados
             id_empleado = employee[0].toString();
             id_sucursal = employee[1].toString();
@@ -167,7 +167,7 @@ public class Loggin extends javax.swing.JFrame {
             // Muestra mensaje de error
             JOptionPane.showMessageDialog(this, "Usuario o contraseña invalidos", "Error", 0);
             txtUser.requestFocus();
-            if (intent > 2)
+            if(intent > 2)
                 System.exit(0);
         }
     }//GEN-LAST:event_btnAceptarActionPerformed
@@ -188,18 +188,18 @@ public class Loggin extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
+        } catch(ClassNotFoundException ex) {
             java.util.logging.Logger.getLogger(Loggin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
+        } catch(InstantiationException ex) {
             java.util.logging.Logger.getLogger(Loggin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
+        } catch(IllegalAccessException ex) {
             java.util.logging.Logger.getLogger(Loggin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch(javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Loggin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>

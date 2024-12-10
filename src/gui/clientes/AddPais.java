@@ -41,9 +41,9 @@ public class AddPais extends javax.swing.JDialog {
     }  
     
     // Llena y despliega la tabla de autores 
-    private void LlenaTabla(){     
+    private void LlenaTabla() {     
         // Consulta todos los autores (id, nombre apellido)
-        lista_paises = pais_dao.GetPaisesByNombre(TextFieldPais.getText().trim());
+        lista_paises = pais_dao.getPaisesByNombre(TextFieldPais.getText().trim());
         // Titulos de la tabla
         String[] T_PAIS = {"","Pais"};
         // alineación de las celdas
@@ -62,7 +62,7 @@ public class AddPais extends javax.swing.JDialog {
     
     private void LlenaEstados() {
         EstadoDAO estado_dao = new EstadoDAO();
-        lista_estados = estado_dao.GetEstadosByNombre(pais_id, TextFieldEstado.getText().trim());
+        lista_estados = estado_dao.getEstadosByNombre(pais_id, TextFieldEstado.getText().trim());
         UtilsTable.limpiaTabla(tableListEstados);                        
         String[] T_ESTADOS = {"","Estado"};
         // alineación de las celdas
@@ -144,7 +144,7 @@ public class AddPais extends javax.swing.JDialog {
 
         tableListPaises.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         tableListPaises.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+            new Object[][] {
 
             },
             new String [] {
@@ -209,7 +209,7 @@ public class AddPais extends javax.swing.JDialog {
 
         tableListEstados.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         tableListEstados.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+            new Object[][] {
 
             },
             new String [] {
@@ -340,7 +340,7 @@ public class AddPais extends javax.swing.JDialog {
     private void btnDelPaisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelPaisActionPerformed
         // Eliminar un registro
         // si no selecciona fila, le avisa al usuario
-        if (tableListPaises.getSelectedRow() < 0){
+        if(tableListPaises.getSelectedRow() < 0) {
              // suena un beep
             java.awt.Toolkit.getDefaultToolkit().beep();
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila","Aviso", 2);
@@ -354,12 +354,12 @@ public class AddPais extends javax.swing.JDialog {
                           tableListPaises, tableListPaises.getSelectedRow(), 1).toString() + "?",
                  "Seleccione", JOptionPane.YES_NO_OPTION);
             // evalua la respuesta 
-            if (res == 0){
+            if(res == 0) {
                 String msj = "";
                 // si la respuesta es afirmativa, elimina el registro
-                int ret = pais_dao.DeletePais((Integer) UtilsTable.obtenerValor(
+                int ret = pais_dao.deletePais((Integer) UtilsTable.obtenerValor(
                           tableListPaises, tableListPaises.getSelectedRow(), 0));
-                if (ret == 1){
+                if(ret != 1) {
                     msj = "No se pudo eliminar por que tiene registros asignados.";
                     javax.swing.JOptionPane.showMessageDialog(this, msj, "Información", 1);
                 }                
@@ -372,7 +372,7 @@ public class AddPais extends javax.swing.JDialog {
     // Abre una ventana para poder editar al pais seleccionado
     private void btnEditPaisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditPaisActionPerformed
         // Botón que edita el registro selecionado de la tabla
-        if (tableListPaises.getSelectedRow() < 0){
+        if(tableListPaises.getSelectedRow() < 0) {
             // Suena un beep
             Toolkit.getDefaultToolkit().beep();
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila", "Información", 1);
@@ -395,7 +395,7 @@ public class AddPais extends javax.swing.JDialog {
     }//GEN-LAST:event_btnEditPaisActionPerformed
 
     private void tableListPaisesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableListPaisesMouseClicked
-        if (evt.getClickCount() == 2) {
+        if(evt.getClickCount() == 2) {
             pais_id = (int) UtilsTable.obtenerValor(tableListPaises, tableListPaises.getSelectedRow(), 0);
             LlenaEstados();
         }
@@ -419,7 +419,7 @@ public class AddPais extends javax.swing.JDialog {
     }//GEN-LAST:event_btnNewEstadoActionPerformed
 
     private void btnEditEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditEstadoActionPerformed
-        if (tableListEstados.getSelectedRow() < 0){
+        if(tableListEstados.getSelectedRow() < 0) {
             // Suena un beep
             Toolkit.getDefaultToolkit().beep();
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila", "Información", 1);
@@ -441,7 +441,7 @@ public class AddPais extends javax.swing.JDialog {
     }//GEN-LAST:event_btnEditEstadoActionPerformed
 
     private void tableListEstadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableListEstadosMouseClicked
-        if (evt.getClickCount() == 2) {
+        if(evt.getClickCount() == 2) {
             estado_id = (int) UtilsTable.obtenerValor(tableListEstados, tableListEstados.getSelectedRow(), 0);
             btnEditEstadoActionPerformed(null);
         }                    
@@ -450,7 +450,7 @@ public class AddPais extends javax.swing.JDialog {
     private void btnDelEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelEstadoActionPerformed
         // Eliminar un registro
         // si no selecciona fila, le avisa al usuario
-        if (tableListEstados.getSelectedRow() < 0){
+        if(tableListEstados.getSelectedRow() < 0) {
              // suena un beep
             java.awt.Toolkit.getDefaultToolkit().beep();
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila","Aviso", 2);
@@ -464,13 +464,13 @@ public class AddPais extends javax.swing.JDialog {
                           tableListEstados, tableListEstados.getSelectedRow(), 1).toString() + "?",
                  "Seleccione", JOptionPane.YES_NO_OPTION);
             // evalua la respuesta 
-            if (res == 0){
+            if(res == 0) {
                 String msj = "";
                 // si la respuesta es afirmativa, elimina el registro
                 EstadoDAO estado_dao = new EstadoDAO();
-                int ret = estado_dao.DeleteEstado((Integer) UtilsTable.obtenerValor(
+                int ret = estado_dao.deleteEstado((Integer) UtilsTable.obtenerValor(
                           tableListEstados, tableListEstados.getSelectedRow(), 0));
-                if (ret == 1){
+                if(ret != 1) {
                     msj = "No se pudo eliminar por que tiene registros asignados.";
                     javax.swing.JOptionPane.showMessageDialog(this, msj, "Información", 1);
                 }                

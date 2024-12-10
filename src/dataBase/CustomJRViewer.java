@@ -1,4 +1,3 @@
-
 package dataBase;
 
 import java.util.Locale;
@@ -9,20 +8,35 @@ import net.sf.jasperreports.swing.JRViewerToolbar;
 import net.sf.jasperreports.view.JRSaveContributor;
 import net.sf.jasperreports.view.save.JRPdfSaveContributor;
 
-
-public class MyJRViewer extends JRViewer {
-    //define the constructor that you use
-    public MyJRViewer(JasperPrint jasperPrint) {
+/**
+ * Clase encargada de visualizar los reportes de Jasper Reports.
+ * @author Carlos Cortés Bazán
+ */
+public class CustomJRViewer extends JRViewer {    
+    
+    /**
+     * Constructor de la clase.
+     * @param jasperPrint reporte a visualizar.
+     */
+    public CustomJRViewer(JasperPrint jasperPrint) {
         super(jasperPrint);
     }
 
+    /**
+     * Crea un visualizador para los reportes de Jasper Reports.
+     * @return el Toolbar de Jasper Reports creado.
+     */
     @Override
     protected JRViewerToolbar createToolbar() {
         JRViewerToolbar toolbar = super.createToolbar();
-        Locale locale = viewerContext.getLocale();  // Información regional 
-        // Contiene objetos que varían conforme al Locale
+        
+        // Información regional.
+        Locale locale = viewerContext.getLocale();
+        
+        // Contiene objetos que varían conforme al Locale.
         ResourceBundle resBundle = viewerContext.getResourceBundle();
-        // Especifica que el reporte se hará en PDF con el Locale apropiado (?)
+        
+        // Especifica que el reporte se hará en PDF con el Locale apropiado.
         JRPdfSaveContributor pdf = new JRPdfSaveContributor(locale, resBundle);
         toolbar.setSaveContributors(new JRSaveContributor[] {pdf});
         return toolbar;

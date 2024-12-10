@@ -1,9 +1,12 @@
-
 package dataBase;
 
+/**
+ * Configuracion y mensajes de error y estado de la Base de Datos.
+ * @author Carlos Cortés Bazán
+ */
 public class ConfigDataBase {
 
-    //AVISOS DB
+    //AVISOS DB.
     public static final String DB_CONTACT = "Contacte al proveedor.";
     public static String DB_NOCONECT = "No se pudo conectar a la base de datos. " + DB_CONTACT;
     public static String DB_NO_DB = "No se encuentra la base de datos. " + DB_CONTACT;
@@ -14,13 +17,13 @@ public class ConfigDataBase {
     public static String DB_CLOSECON_ERR = "No se puede cerrar la base de datos. " + DB_CONTACT;
     public static String DB_CLOSESTA_ERR = "No se puede cerrar el statement. " + DB_CONTACT;
     
-    // Errores de transacción
+    // Errores de transacción.
     public static String DB_ERR_QUERY = "Error al consultar la base de datos. " + DB_CONTACT;
     public static String DB_ERR_INSERT = "Error al insertar en la base de datos. " + DB_CONTACT;
     public static String DB_ERR_UPDATE = "Error al modificar la base de datos. " + DB_CONTACT;
     public static String DB_ERR_DELATE = "Error al borrar en la base de datos. " + DB_CONTACT;
     
-    // Configuración de la conexión
+    // Configuración de la conexión.
     public static String JDBC_DRIVER_ORACLE = "oracle.jdbc.driver.OracleDriver";
     public static String JDBC_PROTOCOL = "jdbc:oracle:thin:@localhost:1521/xepdb1";
     public static String JDBC_USER = "USR_1";

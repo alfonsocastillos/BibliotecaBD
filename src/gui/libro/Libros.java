@@ -1,6 +1,6 @@
 package gui.libro;
 
-import dataBase.ReporteLibrosPDF;
+import dataBase.LibrosReportPDF;
 import dataBase.dao.AutorDAO;
 import dataBase.dao.GeneroDAO;
 import dataBase.dao.LibroDAO;
@@ -78,9 +78,9 @@ public class Libros extends javax.swing.JInternalFrame {
     }    
     
     // Popula el ComboBox de idiomas disponibles
-    private void LlenadoIdiomas(){        
+    private void LlenadoIdiomas() {        
         cmbIdioma.removeAllItems();
-        Object[][] idiomas = idioma_dao.GetAllIdiomas();
+        Object[][] idiomas = idioma_dao.getAllIdiomas();
         for (Object[] idioma : idiomas) {
             // llena los datos de idioma en el combo 
             cmbIdioma.addItem(idioma[1].toString());
@@ -90,7 +90,7 @@ public class Libros extends javax.swing.JInternalFrame {
     // Popula el ComboBox de paises disponibles
     private void LlenadoPaises() {        
         cmbPais.removeAllItems();
-        Object[][] paises = pais_dao.GetAllPaises();
+        Object[][] paises = pais_dao.getAllPaises();
         for (Object[] pais : paises) {
             // llena los datos de idioma en el combo 
             cmbPais.addItem(pais[1].toString());
@@ -100,7 +100,7 @@ public class Libros extends javax.swing.JInternalFrame {
     // Popula el ComboBox de editoriales disponibles
     private void LlenadoEditoriales() {        
         cmbEditorial.removeAllItems();
-        Object[][] editoriales = editorial_dao.GetAllEditoriales();
+        Object[][] editoriales = editorial_dao.getAllEditoriales();
         for (Object[] editorial : editoriales) {
             // llena los datos de idioma en el combo 
             cmbEditorial.addItem(editorial[1].toString());
@@ -110,7 +110,7 @@ public class Libros extends javax.swing.JInternalFrame {
     // Popula el ComboBox de generos disponibles
     private void LlenadoGeneros() {        
         cmbGenero.removeAllItems();
-        Object[][] generos = genero_dao.GetAllGeneros();
+        Object[][] generos = genero_dao.getAllGeneros();
         for (Object[] genero : generos) {
             // llena los datos de idioma en el combo 
             cmbGenero.addItem(genero[1].toString());
@@ -118,9 +118,9 @@ public class Libros extends javax.swing.JInternalFrame {
     }
     
     // Llena de datos la tabla que despliega todos los libros
-    private void LlenaTablaLibros(){       
+    private void LlenaTablaLibros() {       
         // consulta los datos de las peliculas
-        libros_lista = libro_dao.GetLibrosByDescripcion(txtFiltro.getText().trim()); // LIBRO_ID, TITULO, EDICION, EDITORIAL, GENERO, ANIO, NUM_PAGINAS, IDIOMA
+        libros_lista = libro_dao.getLibrosByDescripcion(txtFiltro.getText().trim()); // LIBRO_ID, TITULO, EDICION, EDITORIAL, GENERO, ANIO, NUM_PAGINAS, IDIOMA
         // configuración de la tabla
         String[] T_LIBROS = {"", "Libro", "Edicion", "Editorial", "Genero", "Año", "Páginas", "Idioma"};
         int[][] cellAlignment = {{0,javax.swing.SwingConstants.LEFT}};
@@ -139,9 +139,9 @@ public class Libros extends javax.swing.JInternalFrame {
     }
     
     // Llena la tabla de autores en la autoria de un libro
-    private void LlenaTablaAutores(){       
+    private void LlenaTablaAutores() {       
         // consulta los datos de los autores de autoria
-        autores_lista = autor_dao.GetAutoresByLibroId(libro_id);
+        autores_lista = autor_dao.getAutoresByLibroId(libro_id);
         // configuración de la tabla
         String[] T_AUTORES = {"","Nombre"};
         int[][] cellAlignment = {{0,javax.swing.SwingConstants.LEFT}};
@@ -152,47 +152,47 @@ public class Libros extends javax.swing.JInternalFrame {
     }
       
     // Valida si se llenaron los datos del libro antes de guardar
-    private boolean EstanLlenos(){        
-        if (txtTitulo.getText().trim().length() == 0){
+    private boolean EstanLlenos() {        
+        if(txtTitulo.getText().trim().length() == 0) {
             javax.swing.JOptionPane.showMessageDialog(this, "Introduzca el titulo.", "Aviso", 2);
             txtTitulo.requestFocus();
             return false;
         }
-        else if (cmbIdioma.getSelectedIndex() < 0)
+        else if(cmbIdioma.getSelectedIndex() < 0)
         {
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione un idioma.", "Aviso", 2);
             cmbIdioma.requestFocus();
             return false;
         }
-        else if (cmbPais.getSelectedIndex() < 0)
+        else if(cmbPais.getSelectedIndex() < 0)
         {
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione un pais.", "Aviso", 2);
             cmbPais.requestFocus();
             return false;
         }
-        else if (cmbEditorial.getSelectedIndex() < 0)
+        else if(cmbEditorial.getSelectedIndex() < 0)
         {
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una editorial.", "Aviso", 2);
             cmbEditorial.requestFocus();
             return false;
         }
-        else if (txtAnio.getText().trim().length() == 0){            
+        else if(txtAnio.getText().trim().length() == 0) {            
             javax.swing.JOptionPane.showMessageDialog(this, "Introduzca el año.", "Aviso", 2);            
             txtAnio.requestFocus();
             return false;
         }
-        else if (cmbGenero.getSelectedIndex() < 0)
+        else if(cmbGenero.getSelectedIndex() < 0)
         {
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione un genero.", "Aviso", 2);
             cmbGenero.requestFocus();
             return false;
         }
-        else if (txtEdicion.getText().trim().length() == 0){
+        else if(txtEdicion.getText().trim().length() == 0) {
             javax.swing.JOptionPane.showMessageDialog(this, "Introduzca el número de páginas.", "Aviso", 2);
             txtEdicion.requestFocus();
             return false;
         }
-        else if (txtPags.getText().trim().length() == 0){
+        else if(txtPags.getText().trim().length() == 0) {
             javax.swing.JOptionPane.showMessageDialog(this, "Introduzca el número de páginas.", "Aviso", 2);
             txtPags.requestFocus();
             return false;
@@ -202,7 +202,7 @@ public class Libros extends javax.swing.JInternalFrame {
     }
     
     // Cancela la edición y reinicia los controles a su valor predeterminado
-    private void CancelaEdit (){        
+    private void CancelaEdit () {        
         txtTitulo.setText("");
         cmbIdioma.setSelectedIndex(-1);
         cmbPais.setSelectedIndex(-1);
@@ -373,7 +373,7 @@ public class Libros extends javax.swing.JInternalFrame {
 
         tableList.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         tableList.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+            new Object[][] {
 
             },
             new String [] {
@@ -455,7 +455,7 @@ public class Libros extends javax.swing.JInternalFrame {
 
         tableListAutor.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         tableListAutor.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+            new Object[][] {
 
             },
             new String [] {
@@ -653,14 +653,14 @@ public class Libros extends javax.swing.JInternalFrame {
 
     private void btnGuardaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardaActionPerformed
         //  Guarda y actualiza los datos        
-        if (EstanLlenos()){
-            Object idioma_id = idioma_dao.GetIdiomasByNombre(cmbIdioma.getSelectedItem().toString())[0][0];
-            Object genero_id = genero_dao.GetGenerosByNombre(cmbGenero.getSelectedItem().toString())[0][0];
-            Object pais_id = pais_dao.GetPaisesByNombre(cmbPais.getSelectedItem().toString())[0][0];
-            Object editorial_id = editorial_dao.GetEditorialByNombre(cmbEditorial.getSelectedItem().toString())[0][0];
+        if(EstanLlenos()) {
+            Object idioma_id = idioma_dao.getIdiomasByNombre(cmbIdioma.getSelectedItem().toString())[0][0];
+            Object genero_id = genero_dao.getGenerosByNombre(cmbGenero.getSelectedItem().toString())[0][0];
+            Object pais_id = pais_dao.getPaisesByNombre(cmbPais.getSelectedItem().toString())[0][0];
+            Object editorial_id = editorial_dao.getEditorialByNombre(cmbEditorial.getSelectedItem().toString())[0][0];
             
             // guarda los valores de los controles en un arreglo de objetos 
-            Object [] libro = new Object[9];                            // (TITULO, EDICION, ANIO, NUM_PAGS, IDIOMA_ID, GENERO_ID, PAIS_ID, EDITORIAL_ID)
+           Object[] libro = new Object[9];                            // (TITULO, EDICION, ANIO, NUM_PAGS, IDIOMA_ID, GENERO_ID, PAIS_ID, EDITORIAL_ID)
             libro[0] = libro_id;
             libro[1] = txtTitulo.getText().trim();                      // Titulo
             libro[2] = Integer.valueOf(txtEdicion.getText().trim());    // Edicion 
@@ -671,21 +671,21 @@ public class Libros extends javax.swing.JInternalFrame {
             libro[7] = (Integer) pais_id;                               // Id pais
             libro[8] = editorial_id.toString();                         // Id editorial
                         
-            if (editando){  // Si está actualizando
+            if(editando) {  // Si está actualizando
                 libro[0] = libro_id;
                 // Actualiza los datos y regresa el id
-                libro_id = libro_dao.UpdateLibro(libro);
-                if (libro_id != 0) {
+                libro_id = libro_dao.updateLibro(libro);
+                if(libro_id != 0) {
                     javax.swing.JOptionPane.showMessageDialog(this, "Datos actualizados.", "Información", 1);
                 }                
             }            
             else{   // si está guardando un registro nuevo
                 // Guarda los datos  y regresa el id
-                libro_id = libro_dao.SaveLibro(libro);
+                libro_id = libro_dao.saveLibro(libro);
             }
             
             // Si el id no es 0, procede a llenar los demas datos
-            if (libro_id != 0){                
+            if(libro_id != 0) {                
                 javax.swing.JOptionPane.showMessageDialog(this, "Datos guardados con éxito.", "Información", 1);
                 LlenaTablaLibros();
                 UtilsTable.mueveTabla(tableList, UtilsTable.getRow(libros_lista, libro_id));
@@ -701,14 +701,14 @@ public class Libros extends javax.swing.JInternalFrame {
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
         // Botón que consulta el registro selecionado de la tabla para editar
-        if (tableList.getSelectedRow() < 0)
+        if(tableList.getSelectedRow() < 0)
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila.", "Información", 1);
         else{
             // Consulta los datos
-            Object[] libro_edit = libro_dao.GetLibroById((Integer) 
+            Object[] libro_edit = libro_dao.getLibroById((Integer) 
                     UtilsTable.obtenerValor(
                           tableList, tableList.getSelectedRow(), 0)); 
-            if (libro_edit != null){
+            if(libro_edit != null) {
                 // LIBRO_ID, TITULO, EDICION, EDITORIAL, GENERO, ANIO, NUM_PAGINAS, IDIOMA, PAIS
                 txtTitulo.setText(libro_edit[1].toString());            // Titulo
                 txtEdicion.setText(libro_edit[2].toString());           // Edicion
@@ -739,7 +739,7 @@ public class Libros extends javax.swing.JInternalFrame {
 
     // Borra el libro seleccionado
     private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
-        if (tableList.getSelectedRow() < 0)
+        if(tableList.getSelectedRow() < 0)
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila.", "Aviso", 2);
         else{
             // suena un beep
@@ -748,14 +748,14 @@ public class Libros extends javax.swing.JInternalFrame {
             int res = javax.swing.JOptionPane.showConfirmDialog(this, "¿Eliminar " + libros_lista[tableList.getSelectedRow()][1].toString() + "?",
                  "Seleccione", JOptionPane.YES_NO_OPTION);
             // evalua la respuesta 
-            if (res == 0){
+            if(res == 0) {
                 String msj = "";
                 // si la respuesta es afirmativa, elimina el registro
-                int ret = libro_dao.DeleteLibro(libro_id);
-                if (ret == 0){
+                int ret = libro_dao.deleteLibro(libro_id);
+                if(ret == 1) {
                     msj = "Se eliminó el libro.";
                 }
-                else if (ret == 1){
+                else if(ret == 0) {
                     msj = "No se pudo eliminar por que tiene registros asignados o\nno fue seleccionado apropiadamente.";
                 }
                 // suena un beep
@@ -780,7 +780,7 @@ public class Libros extends javax.swing.JInternalFrame {
     // Llena los campos con el libro seleccionado
     private void tableListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableListMouseClicked
         // Muestra un ballon si es necesarios
-        if (evt.getClickCount() == 2)
+        if(evt.getClickCount() == 2)
             btnEditActionPerformed(null);
     }//GEN-LAST:event_tableListMouseClicked
 
@@ -794,8 +794,8 @@ public class Libros extends javax.swing.JInternalFrame {
     // Crea un docuemento PDF con el reporte de los libros en el lector PDF
     private void btnReportePDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportePDFActionPerformed
         // genera y ejecuta el reporte en PDF
-        ReporteLibrosPDF reporte = new ReporteLibrosPDF();
-        reporte.genReport();
+        LibrosReportPDF reporte = new LibrosReportPDF();
+        reporte.generateReport();
     }//GEN-LAST:event_btnReportePDFActionPerformed
     
     // Llena la tabla de libros cada que se presiona una tecla en el filtro
@@ -833,7 +833,7 @@ public class Libros extends javax.swing.JInternalFrame {
     // Borra a un autor de un libro
     private void btnRmveAutoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRmveAutoriaActionPerformed
         // Verifica si se selecciono un elemento de la tabla
-        if (tableListAutor.getSelectedRow() < 0){
+        if(tableListAutor.getSelectedRow() < 0) {
             // Suena un beep
             Toolkit.getDefaultToolkit().beep();
             // Muestra un mensage de aviso
@@ -846,12 +846,12 @@ public class Libros extends javax.swing.JInternalFrame {
             int res = javax.swing.JOptionPane.showConfirmDialog(this, "¿Eliminar " + autores_lista[tableListAutor.getSelectedRow()][1].toString() + "?",
                 "Seleccione", JOptionPane.YES_NO_OPTION);
             // evalua la respuesta
-            if (res == 0){
+            if(res == 0) {
                 String msj = "";
                 // si la respuesta es afirmativa, elimina el registro
                 String autor_id = tableListAutor.getValueAt(tableListAutor.getSelectedRow(), 0).toString();
-                int ret = autor_dao.DeleteAutoria(autor_id, libro_id);
-                if (ret == 1){
+                int ret = autor_dao.deleteAutoria(autor_id, libro_id);
+                if(ret != 1) {
                     msj = "No se pudo eliminar por que tiene egistros asignados.";
                     // suena un beep
                     java.awt.Toolkit.getDefaultToolkit().beep();
@@ -868,7 +868,7 @@ public class Libros extends javax.swing.JInternalFrame {
     private void btnAddAutoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddAutoriaActionPerformed
         // Agregar casting
         // Verifica si esta editando una pelicula
-        if (!editando){
+        if(!editando) {
             // Suena un beep
             Toolkit.getDefaultToolkit().beep();
             // Muestra un mensage de aviso

@@ -31,16 +31,16 @@ public class AddNewGenero extends javax.swing.JDialog {
         getRootPane().setDefaultButton(btnGuardar);                      
     }
     
-    private void BorrarTextos(){
+    private void BorrarTextos() {
         // Borra el texto
         txtGenero.setText("");
     }
     
-    public void SetEditId(int genero_id){
+    public void SetEditId(int genero_id) {
         // Asigna el id del genero a modificar
         this.genero_id = genero_id;
         // Busca el genero
-        Object[] genero_edit = genero_dao.GetGeneroById(genero_id);
+        Object[] genero_edit = genero_dao.getGeneroById(genero_id);
         // Muestra los datos en los controles
         txtGenero.setText(genero_edit[1].toString());        
     }
@@ -104,7 +104,7 @@ public class AddNewGenero extends javax.swing.JDialog {
     
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         // Accion del boton Guardar
-        if (txtGenero.getText().trim().length() == 0){
+        if(txtGenero.getText().trim().length() == 0) {
             // Suena un beep
             Toolkit.getDefaultToolkit().beep();
             // Muestra un mensage de aviso
@@ -112,17 +112,17 @@ public class AddNewGenero extends javax.swing.JDialog {
         }
         else{                      
             String genero = txtGenero.getText().trim();
-            if (genero_id == 0){ // Guarda un nuevo genero                
-                genero_id = genero_dao.SaveGenero(genero);
+            if(genero_id == 0) { // Guarda un nuevo genero                
+                genero_id = genero_dao.saveGenero(genero);
             }
             else{ // Actualiza genero                
                 Object[] genero_obj = new Object[2];
                 genero_obj[0] = genero_id;              // Id del genero
                 genero_obj[1] = genero;                 // genero
-                genero_id = genero_dao.UpdateGenero(genero_obj);                
+                genero_id = genero_dao.updateGenero(genero_obj);                
             }
             
-            if (genero_id == 0){
+            if(genero_id == 0) {
                 // Suena un beep
                 Toolkit.getDefaultToolkit().beep();
                 JOptionPane.showMessageDialog(this, "Error al guardar el genero", "Error", 0);                

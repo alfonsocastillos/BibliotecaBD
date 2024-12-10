@@ -31,16 +31,16 @@ public class AddNewEditorial extends javax.swing.JDialog {
         getRootPane().setDefaultButton(btnGuardar);                      
     }
     
-    private void BorrarTextos(){
+    private void BorrarTextos() {
         // Borra el texto
         txtEditorial.setText("");
     }
     
-    public void SetEditId(String editorial_id){
+    public void SetEditId(String editorial_id) {
         // Asigna el id del actor a modificar
         this.editorial_id = editorial_id;
         // Busca el actor
-        Object[] editorial_edit = editorial_dao.GetEditorialById(editorial_id);
+        Object[] editorial_edit = editorial_dao.getEditorialById(editorial_id);
         // Muestra los datos en los controles
         txtEditorial.setText(editorial_edit[1].toString());        
     }
@@ -104,7 +104,7 @@ public class AddNewEditorial extends javax.swing.JDialog {
     
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         // Accion del boton Guardar
-        if (txtEditorial.getText().trim().length() == 0){
+        if(txtEditorial.getText().trim().length() == 0) {
             // Suena un beep
             Toolkit.getDefaultToolkit().beep();
             // Muestra un mensage de aviso
@@ -112,17 +112,17 @@ public class AddNewEditorial extends javax.swing.JDialog {
         }
         else{                      
             String editorial = txtEditorial.getText().trim();
-            if (editorial_id == null){ // Guarda un nuevo idioma                
-                editorial_id = editorial_dao.SaveEditorial(editorial);
+            if(editorial_id == null) { // Guarda un nuevo idioma                
+                editorial_id = editorial_dao.saveEditorial(editorial);
             }
             else{ // Actualiza idioma                
                 Object[] editorial_obj = new Object[2];
                 editorial_obj[0] = editorial_id;              // Id del editorial
                 editorial_obj[1] = editorial;                 // editorial
-                editorial_id = editorial_dao.UpdateEditorial(editorial_obj);                
+                editorial_id = editorial_dao.updateEditorial(editorial_obj);                
             }
             
-            if (editorial_id == null){
+            if(editorial_id == null) {
                 // Suena un beep
                 Toolkit.getDefaultToolkit().beep();
                 JOptionPane.showMessageDialog(this, "Error al guardar el editorial", "Error", 0);                

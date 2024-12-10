@@ -28,7 +28,7 @@ public class SelectCliente extends javax.swing.JDialog {
 
     private void LlenaClientes() {
         String filtro = TextFieldFiltro.getText().trim();
-        lista_clientes = cliente_dao.GetClientesByFilter(filtro);
+        lista_clientes = cliente_dao.getClientesByFilter(filtro);
         
         int[][] cellAlignment = {{0,javax.swing.SwingConstants.LEFT, javax.swing.SwingConstants.RIGHT}};
         int[][] cellSize = {{0, 0},
@@ -64,7 +64,7 @@ public class SelectCliente extends javax.swing.JDialog {
         jButton1 = new javax.swing.JButton();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+            new Object[][] {
                 {null, null, null, null},
                 {null, null, null, null},
                 {null, null, null, null},
@@ -94,7 +94,7 @@ public class SelectCliente extends javax.swing.JDialog {
 
         tableListClientes.setFont(new java.awt.Font("Arial", 0, 12));
         tableListClientes.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+            new Object[][] {
                 {},
                 {},
                 {},

@@ -39,7 +39,7 @@ public class AddAutores extends javax.swing.JDialog {
     }
     
     // Establece el Id del libro siendo editado
-    public void SetLibroId(int id_libro){   
+    public void SetLibroId(int id_libro) {   
         // Asigna el id del libro
         this.libro_id = id_libro;
         txtFiltro.setText("");
@@ -47,9 +47,9 @@ public class AddAutores extends javax.swing.JDialog {
     }
     
     // Llena y despliega la tabla de autores 
-    private void LlenaTabla(){     
+    private void LlenaTabla() {     
         // Consulta todos los autores (id, nombre apellido)
-        lista_autores = autor_dao.GetAutoresByNombreApellido(txtFiltro.getText().trim());
+        lista_autores = autor_dao.getAutoresByNombreApellido(txtFiltro.getText().trim());
         // Titulos de la tabla
         String[] T_AUTOR = {"","Nombre"};
         // alineación de las celdas
@@ -100,7 +100,7 @@ public class AddAutores extends javax.swing.JDialog {
 
         tableList.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         tableList.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+            new Object[][] {
 
             },
             new String [] {
@@ -194,7 +194,7 @@ public class AddAutores extends javax.swing.JDialog {
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         // Accion del boton aceptar
         // Verifica si se selecciono un elemento de la tabla
-        if (tableList.getSelectedRow() < 0){
+        if(tableList.getSelectedRow() < 0) {
             // Suena un beep
             Toolkit.getDefaultToolkit().beep();
             // Muestra un mensage de aviso
@@ -206,8 +206,8 @@ public class AddAutores extends javax.swing.JDialog {
             Object[] autoria = new Object[2];            
             autoria[0] = autor_id;
             autoria[1]= libro_id;
-            int result = autor_dao.SaveAutoria(autoria);
-            if (result == 0){
+            int result = autor_dao.saveAutoria(autoria);
+            if(result == 0) {
                 // Suena un beep
                 Toolkit.getDefaultToolkit().beep();
                 JOptionPane.showMessageDialog(this, "Error al guardar la autoria", "Error", 0);                                
@@ -226,7 +226,7 @@ public class AddAutores extends javax.swing.JDialog {
             Cuando el usuario da doble click en una fila de la tabla hace la 
             misma acción del boton aceptar
         */
-        if (evt.getClickCount() == 2){  
+        if(evt.getClickCount() == 2) {  
             btnGuardarActionPerformed(null);   
         }
     }//GEN-LAST:event_tableListMouseClicked
@@ -253,7 +253,7 @@ public class AddAutores extends javax.swing.JDialog {
     private void btnDelAutorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelAutorActionPerformed
         // Eliminar un registro
         // si no selecciona fila, le avisa al usuario
-        if (tableList.getSelectedRow() < 0){
+        if(tableList.getSelectedRow() < 0) {
              // suena un beep
             java.awt.Toolkit.getDefaultToolkit().beep();
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila","Aviso", 2);
@@ -265,11 +265,11 @@ public class AddAutores extends javax.swing.JDialog {
             int res = javax.swing.JOptionPane.showConfirmDialog(this, "¿Eliminar " + lista_autores[tableList.getSelectedRow()][1].toString() + "?",
                  "Seleccione", JOptionPane.YES_NO_OPTION);
             // evalua la respuesta 
-            if (res == 0){
+            if(res == 0) {
                 String msj = "";
                 // si la respuesta es afirmativa, elimina el registro
-                int ret = autor_dao.DeleteAutor(tableList.getValueAt(tableList.getSelectedRow(), 0).toString());
-                if (ret == 1){
+                int ret = autor_dao.deleteAutor(tableList.getValueAt(tableList.getSelectedRow(), 0).toString());
+                if(ret != 1) {
                     msj = "No se pudo eliminar por que tiene registros asignados.";
                     javax.swing.JOptionPane.showMessageDialog(this, msj,"Información",1);
                 }                
@@ -282,7 +282,7 @@ public class AddAutores extends javax.swing.JDialog {
     // Abre una ventana para poder editar al autor seleccionado
     private void btnEditAutorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditAutorActionPerformed
         // Botón que edita el registro selecionado de la tabla
-        if (tableList.getSelectedRow() < 0){
+        if(tableList.getSelectedRow() < 0) {
             // Suena un beep
             Toolkit.getDefaultToolkit().beep();
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila", "Información", 1);

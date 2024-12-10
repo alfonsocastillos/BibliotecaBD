@@ -1,6 +1,6 @@
 package gui.libro;
 
-import dataBase.ReporteLibrosView;
+import dataBase.LibrosReportView;
 import java.awt.BorderLayout;
 import java.awt.Toolkit;
 
@@ -17,11 +17,11 @@ public class VentanaReporteLibros extends javax.swing.JFrame {
         // configuración para cargar el reporte
         pnlReporte.setLayout(new BorderLayout());
         // ejecuta el reporte y lo muestra en la ventana
-        ReporteLibrosView reporte_libros = new ReporteLibrosView();    
+        LibrosReportView reporte_libros = new LibrosReportView();    
         pnlReporte.add(reporte_libros.getReport()); 
     }
     
-    private void conf(){      
+    private void conf() {      
         // localización de la ventana
         setLocationRelativeTo(null);	
         // titulo de la ventana

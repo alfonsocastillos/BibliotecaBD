@@ -34,9 +34,9 @@ public class AddEscolaridad extends javax.swing.JDialog {
     }
     
     // Llena y despliega la tabla de autores 
-    private void LlenaTabla(){     
+    private void LlenaTabla() {     
         // Consulta todos los autores (id, nombre apellido)
-        lista_escolaridad = escolaridad_dao.GetEscolaridadByNombre(txtFiltro.getText().trim());
+        lista_escolaridad = escolaridad_dao.getEscolaridadByNombre(txtFiltro.getText().trim());
         // Titulos de la tabla
         String[] T_ESCOLARIDAD = {"","Escolaridad"};
         // alineación de las celdas
@@ -77,7 +77,7 @@ public class AddEscolaridad extends javax.swing.JDialog {
 
         tableList.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         tableList.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+            new Object[][] {
 
             },
             new String [] {
@@ -181,7 +181,7 @@ public class AddEscolaridad extends javax.swing.JDialog {
     private void btnDelEscolaridadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelEscolaridadActionPerformed
         // Eliminar un registro
         // si no selecciona fila, le avisa al usuario
-        if (tableList.getSelectedRow() < 0){
+        if(tableList.getSelectedRow() < 0) {
              // suena un beep
             java.awt.Toolkit.getDefaultToolkit().beep();
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila","Aviso", 2);
@@ -193,11 +193,11 @@ public class AddEscolaridad extends javax.swing.JDialog {
             int res = javax.swing.JOptionPane.showConfirmDialog(this, "¿Eliminar " + lista_escolaridad[tableList.getSelectedRow()][1].toString() + "?",
                  "Seleccione", JOptionPane.YES_NO_OPTION);
             // evalua la respuesta 
-            if (res == 0){
+            if(res == 0) {
                 String msj = "";
                 // si la respuesta es afirmativa, elimina el registro
-                int ret = escolaridad_dao.DeleteEscolaridad((Integer) tableList.getValueAt(tableList.getSelectedRow(), 0));
-                if (ret == 1){
+                int ret = escolaridad_dao.deleteEscolaridad((Integer) tableList.getValueAt(tableList.getSelectedRow(), 0));
+                if(ret != 1) {
                     msj = "No se pudo eliminar por que tiene registros asignados.";
                     javax.swing.JOptionPane.showMessageDialog(this, msj, "Información", 1);
                 }                
@@ -210,7 +210,7 @@ public class AddEscolaridad extends javax.swing.JDialog {
     // Abre una ventana para poder editar al pais seleccionado
     private void btnEditEscolaridadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditEscolaridadActionPerformed
         // Botón que edita el registro selecionado de la tabla
-        if (tableList.getSelectedRow() < 0){
+        if(tableList.getSelectedRow() < 0) {
             // Suena un beep
             Toolkit.getDefaultToolkit().beep();
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila", "Información", 1);

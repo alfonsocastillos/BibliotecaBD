@@ -27,16 +27,16 @@ public class AddNewEscolaridad extends javax.swing.JDialog {
         getRootPane().setDefaultButton(btnGuardar);                      
     }
     
-    private void BorrarTextos(){
+    private void BorrarTextos() {
         // Borra el texto
         txtEscolaridad.setText("");
     }
     
-    public void SetEditId(int escolaridad_id){
+    public void SetEditId(int escolaridad_id) {
         // Asigna el id del pais a modificar
         this.escolaridad_id = escolaridad_id;
         // Busca el pais
-        Object[] escolaridad_edit = escolaridad_dao.GetEscolaridadById(escolaridad_id);
+        Object[] escolaridad_edit = escolaridad_dao.getEscolaridadById(escolaridad_id);
         // Muestra los datos en los controles
         txtEscolaridad.setText(escolaridad_edit[1].toString());        
     }
@@ -100,7 +100,7 @@ public class AddNewEscolaridad extends javax.swing.JDialog {
     
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         // Accion del boton Guardar
-        if (txtEscolaridad.getText().trim().length() == 0){
+        if(txtEscolaridad.getText().trim().length() == 0) {
             // Suena un beep
             Toolkit.getDefaultToolkit().beep();
             // Muestra un mensage de aviso
@@ -108,17 +108,17 @@ public class AddNewEscolaridad extends javax.swing.JDialog {
         }
         else{                      
             String escolaridad = txtEscolaridad.getText().trim();
-            if (escolaridad_id == 0){ // Guarda un nuevo idioma                
-                escolaridad_id = escolaridad_dao.SaveEscolaridad(escolaridad);                
+            if(escolaridad_id == 0) { // Guarda un nuevo idioma                
+                escolaridad_id = escolaridad_dao.saveEscolaridad(escolaridad);                
             }
             else{ // Actualiza idioma                
                 Object[] escolaridad_obj = new Object[2];
                 escolaridad_obj[0] = escolaridad_id;              // Id del pais
                 escolaridad_obj[1] = escolaridad;                 // pais
-                escolaridad_id = escolaridad_dao.UpdateEscolaridad(escolaridad_obj);                
+                escolaridad_id = escolaridad_dao.updateEscolaridad(escolaridad_obj);                
             }
             
-            if (escolaridad_id == 0){
+            if(escolaridad_id == 0) {
                 // Suena un beep
                 Toolkit.getDefaultToolkit().beep();
                 JOptionPane.showMessageDialog(this, "Error al guardar la escolaridad", "Error", 0);                

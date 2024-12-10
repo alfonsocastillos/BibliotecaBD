@@ -25,14 +25,14 @@ public class InputType extends PlainDocument{
     public static int TIPO_SOLO_LETRAS = 2;    
 
     // Constructor para hexadecimal y solo letras
-    public InputType(int tipo, int tamanio, boolean conEspacio){        
+    public InputType(int tipo, int tamanio, boolean conEspacio) {        
         this.tipo = tipo;
         this.tamanio = tamanio;
         this.conEspacio = conEspacio;
     }
     
     // Constructor para solo numeros
-    public InputType(int tipo, int tamanio, boolean conEspacio, boolean conPunto){        
+    public InputType(int tipo, int tamanio, boolean conEspacio, boolean conPunto) {        
         this.tipo = tipo;
         this.tamanio = tamanio;
         this.conPunto = conPunto;
@@ -40,7 +40,7 @@ public class InputType extends PlainDocument{
     }
     
     // Constructor para solo numeros, negativos
-    public InputType(int tipo, int tamanio, boolean conEspacio, boolean conPunto, boolean conMenos){        
+    public InputType(int tipo, int tamanio, boolean conEspacio, boolean conPunto, boolean conMenos) {        
         this.tipo = tipo;
         this.tamanio = tamanio;
         this.conPunto = conPunto;
@@ -64,10 +64,10 @@ public class InputType extends PlainDocument{
         if(insertChars.length + getLength() <= this.tamanio)
         {
             // Verifica que el str recibido no tenga espacios
-            if (!conEspacio)
+            if(!conEspacio)
             {
                 for(int i = 0; i < insertChars.length; i++)
-                    if (insertChars[i] == 32)
+                    if(insertChars[i] == 32)
                     {
                         valid = false;
                         break;
@@ -75,7 +75,7 @@ public class InputType extends PlainDocument{
             }
             
             // verifica si solo son letras
-            if (tipo == TIPO_SOLO_LETRAS)
+            if(tipo == TIPO_SOLO_LETRAS)
             {
                 for(int i = 0; i < insertChars.length; i++)
                 {
@@ -88,7 +88,7 @@ public class InputType extends PlainDocument{
             }
             
             // Verifica si solo son numeros
-            else if (tipo == TIPO_SOLO_NUMEROS)
+            else if(tipo == TIPO_SOLO_NUMEROS)
             {
                 // Checa que todos sean numeros (o signo o punto en caso de ser validos)
                 for(int i=0;i<insertChars.length;i++)
@@ -96,14 +96,14 @@ public class InputType extends PlainDocument{
                     if(!Character.isDigit(insertChars[i]))
                     {
                         valid = false;
-                        if (conPunto)
-                            if (insertChars[i] == '.' && contconPunto == 0)
+                        if(conPunto)
+                            if(insertChars[i] == '.' && contconPunto == 0)
                             {
                                 valid = true;
                                 contconPunto++;
                             }
-                        if (conMenos)
-                            if (insertChars[i] == '-' && contconMenos == 0)
+                        if(conMenos)
+                            if(insertChars[i] == '-' && contconMenos == 0)
                             {
                                 valid = true;
                                 contconMenos++;
@@ -116,7 +116,7 @@ public class InputType extends PlainDocument{
         else
             valid = false;
         // Evalua el resultado
-        if (valid)
+        if(valid)
             // Inserta el string str en la posicion offset con los atributos a
             super.insertString(offset, str, a);
         else

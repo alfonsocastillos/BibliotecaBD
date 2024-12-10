@@ -1,225 +1,222 @@
-/*
- * Clase encargada de consultar, insertar, eliminar y modificar la tabla Escolaridad
- */
 package dataBase.dao;
 
-import dataBase.Conexion;
+import dataBase.CustomConnection;
 import dataBase.ConfigDataBase;
 import java.sql.*;
 
-public class EscolaridadDAO extends Conexion {
+/**
+ * Clase encargada de consultar, insertar, eliminar y modificar la tabla Escolaridad.
+ * @author alfonso
+ */
+public class EscolaridadDAO extends CustomConnection {
     
-    // Crear una Escolaridad
-    public int SaveEscolaridad(String escolaridad) 
-    {
-        // Se conecta a la base de datos
-        conectar();
-        try{
-            int id = 0;
-            // genera el nuevo id            
-            sentenciaSQL =  "SELECT MAX(ESCOLARIDAD_ID) + 1 FROM ESCOLARIDAD";
-            ps = conn.prepareStatement(sentenciaSQL);            
-            rs = ps.executeQuery();
+    /**
+     * Crear una Escolaridad
+     * @param escolaridad nombre de la escolaridad.
+     * @return int con el Id de la escolaridad creada.
+     */
+    public int saveEscolaridad(String escolaridad) {
+        connect();
+        int escolaridadId = 0;
+        try {
             
-            // guarda el nuevo id
-            if (rs.next()){
-                id = rs.getInt(1);
+            // Genera el nuevo id.
+            sentenciaSQL = "SELECT MAX(ESCOLARIDAD_ID) + 1 FROM ESCOLARIDAD";
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
+            resultSet = preparedStatement.executeQuery();
+            
+            // Guarda el nuevo id.
+            if(resultSet.next()) {
+                escolaridadId = resultSet.getInt(1);
             }
             
-            // inserta mandando todos los datos, incluido en nuevo id
+            // Inserta mandando todos los datos, incluido en nuevo id.
             sentenciaSQL = "INSERT INTO ESCOLARIDAD VALUES(?, ?)";
-            ps = conn.prepareStatement(sentenciaSQL);
-            // Asigna los valores del arreglo            
-            ps.setInt(1, id);       // Id (calculado)
-            ps.setString(2, escolaridad);  // Pais (provisto)            
-            ps.executeUpdate();
-            return id;
-        }
-        catch (SQLException ex){
-            System.out.println(ConfigDataBase.DB_T_ERROR +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
-                    "\n\n" + sentenciaSQL + "\n\nUbicación: " + "SaveEscolaridad");
-            return 0;
-        }
-        finally{
-           desconectar();
-       }
-
-    }
-    
-     // Modificar una escolaridad (id, escolaridad)
-    public int UpdateEscolaridad(Object[] escolaridad)
-    {       
-        // se conecta a la base de datos
-       conectar();
-       try{
-           // actualiza los datos
-           sentenciaSQL = "UPDATE ESCOLARIDAD SET " +
-                          "NIVEL = ?" +
-                          "WHERE ESCOLARIDAD_ID = ?";
-            ps = conn.prepareStatement(sentenciaSQL);
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
             
-            ps.setString(1, escolaridad[1].toString());    // Nuevo nombre Escolaridad
-            ps.setInt(2, (Integer) escolaridad[0]);        // Id del Escolaridad
-            ps.executeUpdate();
-            return (Integer) escolaridad[0];               // Regresa el id Escolaridad
+            // Asigna los valores.
+            preparedStatement.setInt(1, escolaridadId);     // Id (calculado).
+            preparedStatement.setString(2, escolaridad);    // Escolaridad (provisto).
+            preparedStatement.executeUpdate();
+        } catch(SQLException ex) {
+            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "saveEscolaridad");
+            escolaridadId = 0;
+        } finally {
+           disconnect();
         }
-        catch (SQLException ex){
-            System.out.println(ConfigDataBase.DB_T_ERROR +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
-                    "\n\n" + sentenciaSQL + "\n\nUbicación: " + "UpdateEscolaridad");
-            return 0;
-        }
-        finally{
-           desconectar();
-       }
+        return escolaridadId;
     }
     
-    // Consultar todos las escolaridades (id, escolaridad)
-    public Object [][] GetAllEscolaridad(){
-        conectar();
-        Object [][] escolaridad;
-        int i = 0;
-        int count = 0;
-        try{
-            sentenciaSQL = "SELECT COUNT(*) FROM ESCOLARIDAD";      // Numero de paises           
-            ps = conn.prepareStatement(sentenciaSQL);        // Convierte el str a un sentencia utilizable en SQL           
-            rs = ps.executeQuery();                          // Resultado de la consulta
+    /**
+     * Modificar una escolaridad.
+     * @param escolaridad datos de la escolaridad (Id, nuevo nombre).
+     * @return int con el Id de la escolaridad modificada.
+     */
+    public int updateEscolaridad(Object[] escolaridad) {
+        connect();
+        int escolaridadId = 0;
+        try {
+           
+            // Actualiza los datos.
+            sentenciaSQL = "UPDATE ESCOLARIDAD SET NIVEL = ? WHERE ESCOLARIDAD_ID = ?";
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
+            preparedStatement.setString(1, escolaridad[1].toString());  // Nuevo nombre Escolaridad.
+            preparedStatement.setInt(2, (int) escolaridad[0]);          // Id del Escolaridad.
+            preparedStatement.executeUpdate();
+            escolaridadId = (int) escolaridad[0];
+        } catch(SQLException ex) {
+            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "updateEscolaridad");
+            escolaridadId = 0;
+        } finally {
+           disconnect();
+        }
+        return escolaridadId;
+    }
+    
+    /**
+     * Consultar todos las escolaridades.
+     * @return Object[][] con los datos de todas las escolaridades (Id, Escolaridad).
+     */
+    public Object[][] getAllEscolaridad() {
+        connect();
+        Object[][] escolaridades = null;
+        try {
+            
+            // Numero de escolaridades.
+            sentenciaSQL = "SELECT COUNT(*) FROM ESCOLARIDAD";
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
+            resultSet = preparedStatement.executeQuery();
 
-            // Numero de idiomas (COUNT)
-            if (rs.next()){
-                count = rs.getInt(1);
+            // Numero de escolaridades (COUNT).
+            int count = 0;
+            if(resultSet.next()) {
+                count = resultSet.getInt(1);
             }
 
-            // Arreglo de todos los paises (ID, pais)
-            escolaridad = new Object[count][2];           
-            sentenciaSQL  = "SELECT ESCOLARIDAD_ID, NIVEL FROM ESCOLARIDAD ORDER BY 2";           
-            ps = conn.prepareStatement(sentenciaSQL);
-            rs = ps.executeQuery();
+            // Arreglo de todas las escolaridades (Id, Escolaridad).
+            escolaridades = new Object[count][2];
+            sentenciaSQL = "SELECT ESCOLARIDAD_ID, NIVEL FROM ESCOLARIDAD ORDER BY 2";
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
+            resultSet = preparedStatement.executeQuery();
 
-            // Agregar a todos los paises al arreglo (migrar de rs a paises)
-            while (rs.next()){
-                escolaridad[i][0] = (rs.getInt(1));      // Id de la ESCOLARIDAD
-                escolaridad[i][1] = (rs.getString(2));   // Nombre de la ESCOLARIDAD
+            // Agregar a todas las escolaridades al arreglo.
+            int i = 0;
+            while(resultSet.next()) {
+                escolaridades[i][0] = (resultSet.getInt(1));      // Id de la ESCOLARIDAD.
+                escolaridades[i][1] = (resultSet.getString(2));   // Nombre de la ESCOLARIDAD.
                 i++;
-            }           
-            return escolaridad;
+            }
+        } catch(SQLException ex) {
+            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + ConfigDataBase.DB_ERR_QUERY + "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + 
+                    "\n\nUbicación: " + "getAllEscolaridad");
+            escolaridades = null;
+        } finally {
+           disconnect();
         }
-        catch (SQLException ex){
-            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + ConfigDataBase.DB_ERR_QUERY + 
-                    "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "GetAllEscolaridad");
-            return null;
-        }
-        finally{
-           desconectar();           
-       }
+        return escolaridades;
     }
     
-    
-    // Consulta la escolaridad para un id (id, nivel)
-    public Object[] GetEscolaridadById(int escolaridad_id)
-    {
-        conectar();
-        Object [] escolaridad = new Object[2];
-       
-        try{                    
-            sentenciaSQL  = "SELECT ESCOLARIDAD_ID, NIVEL FROM ESCOLARIDAD WHERE ESCOLARIDAD_ID = ?";           
-            ps = conn.prepareStatement(sentenciaSQL);
-            ps.setInt(1, escolaridad_id);    // Reemplaza el parámetro index (simbolo ?) con el str x
-            rs = ps.executeQuery();
+    /**
+     * Consulta la escolaridad para un Id.
+     * @param escolaridadId Id de la escolaridad a consultar.
+     * @return Object[] con los datos de la escolaridad (Id, Escolaridad).
+     */
+    public Object[] getEscolaridadById(int escolaridadId) {
+        connect();
+        Object[] escolaridad = null;
+        try {
+            sentenciaSQL = "SELECT ESCOLARIDAD_ID, NIVEL FROM ESCOLARIDAD WHERE ESCOLARIDAD_ID = ?";
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
+            preparedStatement.setInt(1, escolaridadId);
+            resultSet = preparedStatement.executeQuery();
 
-            // Llena el arreglo pais con el resultado
-            while (rs.next()){
-                escolaridad[0] = (rs.getInt(1));
-                escolaridad[1] = (rs.getString(2));  
+            // Llena el arreglo pais con el resultado.
+            escolaridad = new Object[2];
+            while(resultSet.next()) {
+                escolaridad[0] = resultSet.getInt(1);
+                escolaridad[1] = resultSet.getString(2);
             }           
-            return escolaridad;
+        } catch(SQLException ex) {
+            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + ConfigDataBase.DB_ERR_QUERY + "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + 
+                    "\n\nUbicación: " + "getEscolaridadById");
+            escolaridad = null;
+        } finally {
+           disconnect();
         }
-         catch (SQLException ex){
-             System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + ConfigDataBase.DB_ERR_QUERY + 
-                     "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "GetEscolariadById");
-             return null;
-        }
-        finally{
-           desconectar();           
-        }
-
+        return escolaridad;
     }
                     
      // Consultar paises con nombre parecido (id, pais)
-    public Object[][] GetEscolaridadByNombre(String escolaridad){
-       conectar();
-       Object[][] escolaridades;
-       int i = 0;
-       int count = 0;
+    /**
+     * Consultar escolaridades con nombre parecido.
+     * @param escolaridad nombre de la escolaridad.
+     * @return Object[][] con los datos de las escolaridades consultadas (Id, Escolaridad).
+     */
+    public Object[][] getEscolaridadByNombre(String escolaridad) {
+       connect();
+       Object[][] escolaridades = null;
        escolaridad = "%" + escolaridad + "%";
-       try{
-            // Cuenta todos los actores que tengan un nombre parecido
-            sentenciaSQL =  "SELECT COUNT(ESCOLARIDAD_ID) " +
-                            "FROM ESCOLARIDAD " +
-                            "WHERE UPPER (NIVEL) LIKE UPPER(?)";   // Todos los paises que tengan un nombre parecido
+       try {
+           
+            // Cuenta todas las escolaridades que tengan un nombre parecido.
+            sentenciaSQL = "SELECT COUNT(ESCOLARIDAD_ID) FROM ESCOLARIDAD WHERE UPPER (NIVEL) LIKE UPPER(?)";
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
+            preparedStatement.setString(1, escolaridad);
+            resultSet = preparedStatement.executeQuery();
 
-
-             ps = conn.prepareStatement(sentenciaSQL);   // prepara la sentencia 
-             ps.setString(1, escolaridad);
-             rs = ps.executeQuery();                     // Ejecuta la sentencia y la asigna al result set         
-
-            if (rs.next()){
-                count = rs.getInt(1);
+            int count = 0;
+            if(resultSet.next()) {
+                count = resultSet.getInt(1);
             }
            
-            // Misma consulta, pero ahora puede ser guardada en el arreglo
-            escolaridades = new Object[count][2];           
-            sentenciaSQL =  "SELECT ESCOLARIDAD_ID, NIVEL " +
-                            "FROM ESCOLARIDAD " +
-                            "WHERE UPPER (NIVEL) LIKE UPPER(?) " +
-                            "ORDER BY NIVEL";
-
-            ps = conn.prepareStatement(sentenciaSQL);
-            ps.setString(1, escolaridad);
-            rs = ps.executeQuery();
+            // Misma consulta, pero ahora puede ser guardada en el arreglo.
+            escolaridades = new Object[count][2];
+            sentenciaSQL = "SELECT ESCOLARIDAD_ID, NIVEL FROM ESCOLARIDAD WHERE UPPER (NIVEL) LIKE UPPER(?) ORDER BY NIVEL";
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
+            preparedStatement.setString(1, escolaridad);
+            resultSet = preparedStatement.executeQuery();
            
-            while (rs.next()){
-               escolaridades[i][0] = (rs.getInt(1));
-               escolaridades[i][1] = (rs.getString(2));
+            int i = 0;
+            while(resultSet.next()) {
+               escolaridades[i][0] = (resultSet.getInt(1));
+               escolaridades[i][1] = (resultSet.getString(2));
                i++;
-           }           
-           return escolaridades;
+            }
+        } catch(SQLException ex) {
+            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + ConfigDataBase.DB_ERR_QUERY + "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + 
+                    "\n\nUbicación: " + "getEscolaridadByNombre");
+            escolaridades = null;
+        } finally {
+           disconnect();
         }
-        catch (SQLException ex){
-            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + ConfigDataBase.DB_ERR_QUERY + 
-                    "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "GetEscolaridadByNombre");
-            return null;
-        }
-        finally{
-           desconectar();           
-       }
+        return escolaridades;
     }
         
-    // Eliminar una escolaridad
-    public int DeleteEscolaridad(int escolaridad_id){
-        // Conecta a la base de datos
-        conectar();
-        try{            
-            // Borrar el pais
-            sentenciaSQL = "DELETE FROM ESCOLARIDAD " +
-                            "WHERE ESCOLARIDAD_ID = ?";
-            ps = conn.prepareStatement(sentenciaSQL);
-            ps.setInt(1, escolaridad_id);
-            int res = ps.executeUpdate();
-            if (res == 1){
-                return 0;
-            }
+    /**
+     * Elimina una escolaridad
+     * @param escolaridadId Id de la escolaridad a eliminar.
+     * @return int representando el resultado de la transaccion.
+     */
+    public int deleteEscolaridad(int escolaridadId) {
+        connect();
+        int state = 0;
+        try {
             
-            return 1;
+            // Borrar la escolaridad.
+            sentenciaSQL = "DELETE FROM ESCOLARIDAD WHERE ESCOLARIDAD_ID = ?";
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
+            preparedStatement.setInt(1, escolaridadId);
+            state = preparedStatement.executeUpdate();
+        } catch(SQLException ex) {
+            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "deleteEscolaridad");
+            if(ex.getErrorCode() == 2292) {
+                state = 0;
+            } else {
+                state = 2;
+            }
+        } finally {
+           disconnect();
         }
-        catch (SQLException ex){
-            System.out.println(ConfigDataBase.DB_T_ERROR +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
-                    "\n\n" + sentenciaSQL + "\n\nUbicación: " + "DeleteEscolaridad");
-            if (ex.getErrorCode() ==  2292)
-                return 1;
-            return 2;
-        }
-        finally{
-           desconectar();
-       }
+        return state;
     }
 }

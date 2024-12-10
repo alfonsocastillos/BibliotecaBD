@@ -38,7 +38,7 @@ public class AddEditorial extends javax.swing.JDialog {
     }
     
     // Establece el Id de la editorial seleccionada
-    public void SetEditorialId(String editorial_id){   
+    public void SetEditorialId(String editorial_id) {   
         // Asigna el id del libro
         this.editorial_id = editorial_id;
         txtFiltro.setText("");
@@ -46,9 +46,9 @@ public class AddEditorial extends javax.swing.JDialog {
     }
     
     // Llena y despliega la tabla de autores 
-    private void LlenaTabla(){     
+    private void LlenaTabla() {     
         // Consulta todos los autores (id, nombre apellido)
-        lista_editoriales = editorial_dao.GetEditorialByNombre(txtFiltro.getText().trim());
+        lista_editoriales = editorial_dao.getEditorialByNombre(txtFiltro.getText().trim());
         // Titulos de la tabla
         String[] T_EDITORIAL = {"","Editorial"};
         // alineación de las celdas
@@ -93,7 +93,7 @@ public class AddEditorial extends javax.swing.JDialog {
 
         tableList.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         tableList.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+            new Object[][] {
 
             },
             new String [] {
@@ -197,7 +197,7 @@ public class AddEditorial extends javax.swing.JDialog {
     private void btnDelEditorialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelEditorialActionPerformed
         // Eliminar un registro
         // si no selecciona fila, le avisa al usuario
-        if (tableList.getSelectedRow() < 0){
+        if(tableList.getSelectedRow() < 0) {
              // suena un beep
             java.awt.Toolkit.getDefaultToolkit().beep();
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila","Aviso", 2);
@@ -209,11 +209,11 @@ public class AddEditorial extends javax.swing.JDialog {
             int res = javax.swing.JOptionPane.showConfirmDialog(this, "¿Eliminar " + lista_editoriales[tableList.getSelectedRow()][1].toString() + "?",
                  "Seleccione", JOptionPane.YES_NO_OPTION);
             // evalua la respuesta 
-            if (res == 0){
+            if(res != 1) {
                 String msj = "";
                 // si la respuesta es afirmativa, elimina el registro
-                int ret = editorial_dao.DeleteEditorial(tableList.getValueAt(tableList.getSelectedRow(), 0).toString());
-                if (ret == 1){
+                int ret = editorial_dao.deleteEditorial(tableList.getValueAt(tableList.getSelectedRow(), 0).toString());
+                if(ret == 0) {
                     msj = "No se pudo eliminar por que tiene registros asignados.";
                     javax.swing.JOptionPane.showMessageDialog(this, msj, "Información", 1);
                 }                
@@ -226,7 +226,7 @@ public class AddEditorial extends javax.swing.JDialog {
     // Abre una ventana para poder editar al editorial seleccionado
     private void btnEditEditorialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditEditorialActionPerformed
         // Botón que edita el registro selecionado de la tabla
-        if (tableList.getSelectedRow() < 0){
+        if(tableList.getSelectedRow() < 0) {
             // Suena un beep
             Toolkit.getDefaultToolkit().beep();
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila", "Información", 1);

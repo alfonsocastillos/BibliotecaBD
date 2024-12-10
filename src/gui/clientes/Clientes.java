@@ -12,6 +12,7 @@ import tools.UtilsTable;
  * Ventana que registra clientes
  */
 public class Clientes extends javax.swing.JInternalFrame {
+    //TODO: implementar editar cliente
     int cliente_id;
     Object clientes_lista[][];
     // Dao´s que traen los datos de la DB
@@ -59,7 +60,7 @@ public class Clientes extends javax.swing.JInternalFrame {
     }
     
     // Cancela la edición y reinicia los controles a su valor predeterminado
-    private void CancelaEdit (){        
+    private void CancelaEdit () {        
         TextFieldNombre.setText("");
         TextFieldApellidoPat.setText("");
         TextFieldApellidoMat.setText("");
@@ -78,7 +79,7 @@ public class Clientes extends javax.swing.JInternalFrame {
     // Popula el ComboBox de escolaridades disponibles
     private void LlenadoEscolaridades() {
         cmbEscolaridad.removeAllItems();
-        Object[][] escolaridades = escolaridad_dao.GetAllEscolaridad();
+        Object[][] escolaridades = escolaridad_dao.getAllEscolaridad();
         for (Object[] escolaridad : escolaridades) {
             // llena los datos de escolaridades en el combo 
             cmbEscolaridad.addItem(escolaridad[1].toString());
@@ -89,7 +90,7 @@ public class Clientes extends javax.swing.JInternalFrame {
     // Popula el ComboBox de paises disponibles
     private void LlenadoPaises() {
         cmbPais.removeAllItems();                
-        Object[][] paises = pais_dao.GetAllPaises();
+        Object[][] paises = pais_dao.getAllPaises();
         for (Object[] pais : paises) {
             // llena los datos de paises en el combo 
             cmbPais.addItem(pais[1].toString());
@@ -101,9 +102,9 @@ public class Clientes extends javax.swing.JInternalFrame {
         cmbEstado.removeAllItems();
         if(cmbPais.getSelectedIndex() >= 0) {
             String pais_elegido = cmbPais.getSelectedItem().toString();
-            int pais_id = (int) pais_dao.GetPaisesByNombre(pais_elegido)[0][0];        
+            int pais_id = (int) pais_dao.getPaisesByNombre(pais_elegido)[0][0];        
             if(pais_id > 0) {
-                Object[][] estados = estado_dao.GetAllEstadosByPais(pais_id);
+                Object[][] estados = estado_dao.getAllEstadosByPais(pais_id);
                 for (Object[] estado : estados) {
                     // llena los datos de estados en el combo 
                     cmbEstado.addItem(estado[1].toString());
@@ -113,9 +114,9 @@ public class Clientes extends javax.swing.JInternalFrame {
     }
     
     // Llena de datos la tabla que despliega todos los libros
-    private void LlenaTablaClientes(){       
+    private void LlenaTablaClientes() {       
         // consulta los datos de las peliculas
-        clientes_lista = cliente_dao.GetClientesByFilter(TextFieldFiltro.getText().trim()); 
+        clientes_lista = cliente_dao.getClientesByFilter(TextFieldFiltro.getText().trim()); 
         // configuración de la tabla
         String[] T_CLIENTES = {"", "Nombre", "Apellido Paterno", "Apellido Materno", "Correo", "Credencial"};
         int[][] cellAlignment = {{0,javax.swing.SwingConstants.LEFT}};
@@ -132,40 +133,40 @@ public class Clientes extends javax.swing.JInternalFrame {
         lblCantidad.setText(clientes_lista.length + "");
     }
     
-    private boolean EstanLlenos(){        
-        if (TextFieldNombre.getText().trim().length() == 0) {
+    private boolean EstanLlenos() {        
+        if(TextFieldNombre.getText().trim().length() == 0) {
             javax.swing.JOptionPane.showMessageDialog(this, "Introduzca un nombre.", "Aviso", 2);
             TextFieldNombre.requestFocus();
             return false;
-        } else if (TextFieldApellidoPat.getText().trim().length() == 0) {
+        } else if(TextFieldApellidoPat.getText().trim().length() == 0) {
             javax.swing.JOptionPane.showMessageDialog(this, "Introduzca un apellido paterno.", "Aviso", 2);
             TextFieldApellidoPat.requestFocus();
             return false;
-        } else if (cmbPais.getSelectedIndex() < 0) {
+        } else if(cmbPais.getSelectedIndex() < 0) {
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione un pais.", "Aviso", 2);
             cmbPais.requestFocus();
             return false;
-        } else if (cmbEstado.getSelectedIndex() < 0) {
+        } else if(cmbEstado.getSelectedIndex() < 0) {
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione un estado.", "Aviso", 2);
             cmbEstado.requestFocus();
             return false;
-        } else if (TextFieldAlcaldia.getText().trim().length() == 0) {
+        } else if(TextFieldAlcaldia.getText().trim().length() == 0) {
             javax.swing.JOptionPane.showMessageDialog(this, "Introduzca una alcaldia.", "Aviso", 2);
             TextFieldAlcaldia.requestFocus();
             return false;
-        } else if (TextFieldCP.getText().trim().length() == 0) {
+        } else if(TextFieldCP.getText().trim().length() == 0) {
             javax.swing.JOptionPane.showMessageDialog(this, "Introduzca un codigo postal.", "Aviso", 2);
             TextFieldCP.requestFocus();
             return false;
-        } else if (TextFieldCalle.getText().trim().length() == 0) {
+        } else if(TextFieldCalle.getText().trim().length() == 0) {
             javax.swing.JOptionPane.showMessageDialog(this, "Introduzca una calle.", "Aviso", 2);
             TextFieldCalle.requestFocus();
             return false;
-        } else if (TextFieldNoExterior.getText().trim().length() == 0) {
+        } else if(TextFieldNoExterior.getText().trim().length() == 0) {
             javax.swing.JOptionPane.showMessageDialog(this, "Introduzca un numero exterior.", "Aviso", 2);
             TextFieldNoExterior.requestFocus();
             return false;
-        } else if (cmbEscolaridad.getSelectedIndex() < 0) {
+        } else if(cmbEscolaridad.getSelectedIndex() < 0) {
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una escolaridad.", "Aviso", 2);
             cmbEscolaridad.requestFocus();
             return false;
@@ -425,7 +426,7 @@ public class Clientes extends javax.swing.JInternalFrame {
 
         tableListClientes.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         tableListClientes.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+            new Object[][] {
 
             },
             new String [] {
@@ -528,7 +529,7 @@ public class Clientes extends javax.swing.JInternalFrame {
         String apellidoMat = TextFieldApellidoMat.getText();
         String correo = TextFieldCorreo.getText();
         String estado = cmbEstado.getSelectedItem().toString();        
-        String estado_id = estado_dao.GetEstadosByNombre(0, estado)[0][0].toString();
+        String estado_id = estado_dao.getEstadosByNombre(estado)[0][0].toString();
         String alcaldia = TextFieldAlcaldia.getText();
         String cp = TextFieldCP.getText();
         String calle = TextFieldCalle.getText();
@@ -537,7 +538,7 @@ public class Clientes extends javax.swing.JInternalFrame {
 
         // Obtener la escolaridad seleccionada en el ComboBox
         String escolaridadSeleccionada = cmbEscolaridad.getSelectedItem().toString();
-        String escolaridad_id = escolaridad_dao.GetEscolaridadByNombre(escolaridadSeleccionada)[0][0].toString();
+        String escolaridad_id = escolaridad_dao.getEscolaridadByNombre(escolaridadSeleccionada)[0][0].toString();
 
         // Crear un objeto para representar la información del nuevo cliente
         Object[] nuevoCliente = {nombre, apellidoPat, apellidoMat, correo, alcaldia, cp, calle, noExterior, noInterior, estado_id, escolaridad_id};
@@ -545,7 +546,7 @@ public class Clientes extends javax.swing.JInternalFrame {
         // Insertar en la base de datos y obtener el nuevo ID del cliente
         String new_cliente_id = cliente_dao.saveCliente(nuevoCliente);
         // Si el id no es 0, procede a llenar los demas datos
-        if (!new_cliente_id.isEmpty()){                
+        if(!new_cliente_id.isEmpty()) {                
             javax.swing.JOptionPane.showMessageDialog(this, "Datos guardados con éxito.", "Información", 1);
             LlenaTablaClientes();
             UtilsTable.mueveTabla(tableListClientes, UtilsTable.getRow(clientes_lista, cliente_id));
@@ -568,7 +569,7 @@ public class Clientes extends javax.swing.JInternalFrame {
 
     private void tableListClientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableListClientesMouseClicked
         // Muestra un ballon si es necesarios
-        if (evt.getClickCount() == 2) {
+        if(evt.getClickCount() == 2) {
             btnEditActionPerformed(null);
         }        
     }//GEN-LAST:event_tableListClientesMouseClicked
@@ -606,14 +607,14 @@ public class Clientes extends javax.swing.JInternalFrame {
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
         // Botón que consulta el registro selecionado de la tabla para editar
-        if (tableListClientes.getSelectedRow() < 0)
+        if(tableListClientes.getSelectedRow() < 0)
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila.", "Información", 1);
         else{
             // Consulta los datos
             Object[] cliente_edit = cliente_dao.getClienteById((Integer) 
                     UtilsTable.obtenerValor(
                           tableListClientes, tableListClientes.getSelectedRow(), 0)); 
-            if (cliente_edit != null){    
+            if(cliente_edit != null) {    
                 cliente_id = (Integer) cliente_edit[0];                         // Id
                 TextFieldNombre.setText(cliente_edit[1].toString());            // Nombre
                 TextFieldApellidoPat.setText(cliente_edit[2].toString());       // Apellido Paterno
@@ -634,7 +635,7 @@ public class Clientes extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnEditActionPerformed
 
     private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
-        if (tableListClientes.getSelectedRow() < 0)
+        if(tableListClientes.getSelectedRow() < 0)
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila.", "Aviso", 2);
         else{
             // suena un beep
@@ -643,14 +644,14 @@ public class Clientes extends javax.swing.JInternalFrame {
             int res = javax.swing.JOptionPane.showConfirmDialog(this, "¿Eliminar " + clientes_lista[tableListClientes.getSelectedRow()][1].toString() + "?",
                  "Seleccione", JOptionPane.YES_NO_OPTION);
             // evalua la respuesta 
-            if (res == 0){
+            if(res == 0) {
                 String msj = "";
                 // si la respuesta es afirmativa, elimina el registro
-                int ret = cliente_dao.DeleteCliente(cliente_id);
-                if (ret == 0){
+                int ret = cliente_dao.deleteCliente(cliente_id);
+                if(ret == 1) {
                     msj = "Se dio de baja el cliente.";
                 }
-                else if (ret == 1){
+                else {
                     msj = "No se pudo dar de baja por que tiene registros asignados o\nno fue seleccionado apropiadamente.";
                 }
                 // suena un beep

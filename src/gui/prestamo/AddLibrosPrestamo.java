@@ -34,10 +34,10 @@ public class AddLibrosPrestamo extends javax.swing.JDialog {
         llenaTabla();
     }
     
-    private void llenaTabla(){        
+    private void llenaTabla() {        
         // Consulta las peliculas y lo guardaen un arreglo
         // consulta los datos de las peliculas
-       librosLista = daoLibros.GetLibrosByDescripcion(txtFiltro.getText().trim());
+       librosLista = daoLibros.getLibrosByDescripcion(txtFiltro.getText().trim());
         // Titulos de la tabla
         String[] T_LIBROS = {"", "Título"};
         // alineación de las celdas
@@ -91,7 +91,7 @@ public class AddLibrosPrestamo extends javax.swing.JDialog {
 
         tableList.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         tableList.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+            new Object[][] {
 
             },
             new String [] {
@@ -187,13 +187,13 @@ public class AddLibrosPrestamo extends javax.swing.JDialog {
         // Accion del boton aceptar
         // Verifica si se selecciono un elemento de la tabla
         //System.out.print("ffff");
-        if (tableList.getSelectedRow() < 0){
+        if(tableList.getSelectedRow() < 0) {
             // Suena un beep
             Toolkit.getDefaultToolkit().beep();
             // Muestra un mensage de aviso
             JOptionPane.showMessageDialog(this, "Seleccione un libro.", "Aviso", 2);            
         } else {      
-            libro = new Object [2];    
+            libro = new Object[2];    
             // Guarda id, nombre y costo de la pelicula
             libro [0] = librosLista[tableList.getSelectedRow()][0];
             libro [1] = librosLista[tableList.getSelectedRow()][1];
@@ -215,7 +215,7 @@ public class AddLibrosPrestamo extends javax.swing.JDialog {
         Cuando el usuario da doble click en una fila de la tabla hace la
         misma acción del boton aceptar
         */
-        if (evt.getClickCount() == 2){  
+        if(evt.getClickCount() == 2) {  
             btnAceptarActionPerformed (null);
         }
     }//GEN-LAST:event_tableListMouseClicked

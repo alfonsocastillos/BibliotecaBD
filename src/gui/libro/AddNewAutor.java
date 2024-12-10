@@ -35,14 +35,14 @@ public class AddNewAutor extends javax.swing.JDialog {
         
         // Popula el ComboBox de paises disponibles
         pais_dao = new PaisDAO();    
-        Object[][] all_paises = pais_dao.GetAllPaises();        
+        Object[][] all_paises = pais_dao.getAllPaises();        
         for (Object[] pais : all_paises) {
             // llena los datos de idioma en el combo 
             cmbPaises.addItem(pais[1].toString());
         }        
     }
     
-    private void BorrarTextos(){
+    private void BorrarTextos() {
         // Borra los controles
         txtNombre.setText("");
         txtApellido.setText("");
@@ -50,17 +50,17 @@ public class AddNewAutor extends javax.swing.JDialog {
     }
     
     private boolean EstanLlenos() {
-        if (txtNombre.getText().trim().length() == 0){
+        if(txtNombre.getText().trim().length() == 0) {
             javax.swing.JOptionPane.showMessageDialog(this, "Introduzca el nombre.", "Aviso", 2);
             txtNombre.requestFocus();
             return false;
         }
-        else if (txtApellido.getText().trim().length() == 0){
+        else if(txtApellido.getText().trim().length() == 0) {
             javax.swing.JOptionPane.showMessageDialog(this, "Introduzca el apellido.", "Aviso", 2);
             txtApellido.requestFocus();
             return false;
         }
-        else if (cmbPaises.getSelectedIndex() < 0) {
+        else if(cmbPaises.getSelectedIndex() < 0) {
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione un pais de origen.", "Aviso", 2);
             cmbPaises.requestFocus();
             return false;
@@ -71,19 +71,19 @@ public class AddNewAutor extends javax.swing.JDialog {
     }
     
     // Llena los datos del autor a editar (Id, nombre, apellido, pais_id)
-    public void SetEditId(String id){
+    public void SetEditId(String id) {
         // Asigna el id del autor a modificar
         this.autor_id = id;
         // Busca el autor
-        Object[] autor_edit = autor_dao.GetAutorById(autor_id);
+        Object[] autor_edit = autor_dao.getAutorById(autor_id);
         // Muestra los datos en los controles
         txtNombre.setText(autor_edit[1].toString());
         // si el apellido no es nulo
-        if (autor_edit[2] != null) {
+        if(autor_edit[2] != null) {
             txtApellido.setText(autor_edit[2].toString());
         }            
         // si el pais no es nulo
-        if (autor_edit[3] != null) {
+        if(autor_edit[3] != null) {
             cmbPaises.setSelectedItem(autor_edit[3].toString()); 
         }                   
     }
@@ -166,30 +166,30 @@ public class AddNewAutor extends javax.swing.JDialog {
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         // Revisa que todos los campos estan llenos
-        if (!EstanLlenos()) {
+        if(!EstanLlenos()) {
             return;
         }
 
         // Obtiene el NOMBRE del pais seleccionado
         pais = cmbPaises.getSelectedItem().toString();
 
-        if (autor_id == null){ // Guarda un nuevo autor
-            Object [] autor = new Object[3];
+        if(autor_id == null) { // Guarda un nuevo autor
+           Object[] autor = new Object[3];
             autor[0] = txtNombre.getText().trim();
             autor[1] = txtApellido.getText().trim();
-            autor[2] = pais_dao.GetPaisesByNombre(pais)[0][0];  // ID del pais
-            autor_id = autor_dao.SaveAutor(autor);
+            autor[2] = pais_dao.getPaisesByNombre(pais)[0][0];  // ID del pais
+            autor_id = autor_dao.saveAutor(autor);
         }
         else{ // Actualiza autor
-            Object [] autor = new Object[4];
+           Object[] autor = new Object[4];
             autor[0] = autor_id;
             autor[1] = txtNombre.getText().trim();
             autor[2] = txtApellido.getText().trim();
-            autor[3] = pais_dao.GetPaisesByNombre(pais)[0][0];  // ID del pais
-            autor_id =  autor_dao.UpdateAutor(autor);
+            autor[3] = pais_dao.getPaisesByNombre(pais)[0][0];  // ID del pais
+            autor_id =  autor_dao.updateAutor(autor);
         }
 
-        if (autor_id == null){
+        if(autor_id == null) {
             // Suena un beep
             Toolkit.getDefaultToolkit().beep();
             JOptionPane.showMessageDialog(this, "Error al guardar el autor", "Error", 0);                

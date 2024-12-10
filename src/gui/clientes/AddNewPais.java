@@ -31,16 +31,16 @@ public class AddNewPais extends javax.swing.JDialog {
         getRootPane().setDefaultButton(btnGuardar);                      
     }
     
-    private void BorrarTextos(){
+    private void BorrarTextos() {
         // Borra el texto
         txtPais.setText("");
     }
     
-    public void SetEditId(int pais_id){
+    public void SetEditId(int pais_id) {
         // Asigna el id del pais a modificar
         this.pais_id = pais_id;
         // Busca el pais
-        Object[] pais_edit = pais_dao.GetPaisById(pais_id);
+        Object[] pais_edit = pais_dao.getPaisById(pais_id);
         // Muestra los datos en los controles
         txtPais.setText(pais_edit[1].toString());        
     }
@@ -104,7 +104,7 @@ public class AddNewPais extends javax.swing.JDialog {
     
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         // Accion del boton Guardar
-        if (txtPais.getText().trim().length() == 0){
+        if(txtPais.getText().trim().length() == 0) {
             // Suena un beep
             Toolkit.getDefaultToolkit().beep();
             // Muestra un mensage de aviso
@@ -112,17 +112,17 @@ public class AddNewPais extends javax.swing.JDialog {
         }
         else{                      
             String pais = txtPais.getText().trim();
-            if (pais_id == 0){ // Guarda un nuevo pais                
-                pais_id = pais_dao.SavePais(pais);                
+            if(pais_id == 0) { // Guarda un nuevo pais                
+                pais_id = pais_dao.savePais(pais);                
             }
             else{ // Actualiza pais                
                 Object[] pais_obj = new Object[2];
                 pais_obj[0] = pais_id;              // Id del pais
                 pais_obj[1] = pais;                 // pais
-                pais_id = pais_dao.UpdatePais(pais_obj);                
+                pais_id = pais_dao.updatePais(pais_obj);                
             }
             
-            if (pais_id == 0){
+            if(pais_id == 0) {
                 // Suena un beep
                 Toolkit.getDefaultToolkit().beep();
                 JOptionPane.showMessageDialog(this, "Error al guardar el pais", "Error", 0);                

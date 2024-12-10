@@ -32,16 +32,16 @@ public class AddNewEstado extends javax.swing.JDialog {
         getRootPane().setDefaultButton(btnGuardar);                      
     }
     
-    private void BorrarTextos(){
+    private void BorrarTextos() {
         // Borra el texto
         TextFieldEstado.setText("");
     }
     
-    public void SetEditId(int estado_id){
+    public void SetEditId(int estado_id) {
         // Asigna el id del pais a modificar
         this.estado_id = estado_id;
         // Busca el pais
-        Object[] estado_edit = estado_dao.GetEstadoById(estado_id);
+        Object[] estado_edit = estado_dao.getEstadoById(estado_id);
         // Muestra los datos en los controles
         TextFieldEstado.setText(estado_edit[1].toString());        
     }
@@ -109,23 +109,23 @@ public class AddNewEstado extends javax.swing.JDialog {
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         // Accion del boton Guardar
         String estado = TextFieldEstado.getText().trim();
-        if (estado.length() == 0){
+        if(estado.length() == 0) {
             // Suena un beep
             Toolkit.getDefaultToolkit().beep();
             // Muestra un mensage de aviso
             JOptionPane.showMessageDialog(this, "Escriba el estado", "Aviso", 2);
         }
         else{                                  
-            if (estado_id == 0) { // Guarda un nuevo estado                
+            if(estado_id == 0) { // Guarda un nuevo estado                
                 Object[] estado_obj = {estado, pais_id};
-                estado_id = estado_dao.SaveEstado(estado_obj);                
+                estado_id = estado_dao.saveEstado(estado_obj);                
             }
             else{ // Actualiza estado                
                 Object[] estado_obj = {estado_id, estado};                
-                estado_id = estado_dao.UpdateEstado(estado_obj);                
+                estado_id = estado_dao.updateEstado(estado_obj);                
             }
             
-            if (estado_id == 0){
+            if(estado_id == 0) {
                 // Suena un beep
                 Toolkit.getDefaultToolkit().beep();
                 JOptionPane.showMessageDialog(this, "Error al guardar el estado", "Error", 0);                

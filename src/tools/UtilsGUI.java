@@ -38,9 +38,9 @@ public class UtilsGUI {
     static BalloonTip myBalloonTipTxt;              // Para mostrar los globos de dialogo en cajas de texto
        
     // Aplica el LookAndFeel a un JFrame
-    public static void setLookAndFeel (JFrame frame){
+    public static void setLookAndFeel (JFrame frame) {
         String OS = System.getProperty("os.name").toLowerCase();
-        try{
+        try {
             // Si el OS es Linux, utilizar otro LookAndFeel
             if(OS.contains("nix") || OS.contains("nux"))
             {
@@ -50,16 +50,16 @@ public class UtilsGUI {
             SwingUtilities.updateComponentTreeUI((Component)frame);
             frame.pack();
         }
-        catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+        catch(ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
             System.out.println("Error " + UB_LOOK + "\n\n" +
                     ex.getMessage()  + "\n\nUbicación: " + "setLookAndFeel");
         }
     }
     
     // Aplica el LookAndFeel a un JDialog
-    public static void setLookAndFeel (JDialog frame){
+    public static void setLookAndFeel (JDialog frame) {
         String OS = System.getProperty("os.name").toLowerCase();
-        try{
+        try {
             // Si el OS es Linux, utilizar otro LookAndFeel
             if(OS.contains("nix") || OS.contains("nux"))
             {
@@ -69,34 +69,34 @@ public class UtilsGUI {
             SwingUtilities.updateComponentTreeUI((Component)frame);
             frame.pack();
         }
-        catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+        catch(ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
             System.out.println("Error " + UB_LOOK + "\n\n" +
                     ex.getMessage()  + "\n\nUbicación: " + "setLookAndFeel");
         }
     }
     
-    public static void showBallonTxt(JTextField txtComponente){
+    public static void showBallonTxt(JTextField txtComponente) {
         hideBallonTxt();
-        if (txtComponente.getText().trim().length() > 0){
-            if (txtComponente.getHorizontalVisibility().getMaximum() > txtComponente.getHorizontalVisibility().getExtent() + 1){
+        if(txtComponente.getText().trim().length() > 0) {
+            if(txtComponente.getHorizontalVisibility().getMaximum() > txtComponente.getHorizontalVisibility().getExtent() + 1) {
                 BalloonTipStyle style = new RoundedBalloonStyle(5,5,Color.YELLOW, Color.BLACK);
                 myBalloonTipTxt = new BalloonTip(txtComponente, txtComponente.getText(), style, false);
             }
         }
     }
     
-    public static void showBallonAviso(JComponent componente, String texto, boolean isBeep){
+    public static void showBallonAviso(JComponent componente, String texto, boolean isBeep) {
         hideBallonTxt();
         BalloonTipStyle style = new RoundedBalloonStyle(5,5,Color.YELLOW, Color.BLACK);
         myBalloonTipTxt = new BalloonTip(componente, texto, style, false);
 
-        if (isBeep)
+        if(isBeep)
             java.awt.Toolkit.getDefaultToolkit().beep();
     }
     
-    public static void hideBallonTxt(){
-        if (myBalloonTipTxt != null)
-            if (myBalloonTipTxt.isVisible())
+    public static void hideBallonTxt() {
+        if(myBalloonTipTxt != null)
+            if(myBalloonTipTxt.isVisible())
                 myBalloonTipTxt.setVisible(false);
     }    
 }

@@ -38,7 +38,7 @@ public class AddGenero extends javax.swing.JDialog {
     }
     
     // Establece el genero siendo editado
-    public void SetGeneroId(int genero_id){   
+    public void SetGeneroId(int genero_id) {   
         // Asigna el id del libro
         this.genero_id = genero_id;
         txtFiltro.setText("");
@@ -46,9 +46,9 @@ public class AddGenero extends javax.swing.JDialog {
     }
     
     // Llena y despliega la tabla de generos 
-    private void LlenaTabla(){     
+    private void LlenaTabla() {     
         // Consulta todos los generos (id, genero)
-        lista_generos = genero_dao.GetGenerosByNombre(txtFiltro.getText().trim());
+        lista_generos = genero_dao.getGenerosByNombre(txtFiltro.getText().trim());
         // Titulos de la tabla
         String[] T_GENERO = {"","Genero"};
         // alineación de las celdas
@@ -93,7 +93,7 @@ public class AddGenero extends javax.swing.JDialog {
 
         tableList.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         tableList.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+            new Object[][] {
 
             },
             new String [] {
@@ -207,7 +207,7 @@ public class AddGenero extends javax.swing.JDialog {
     private void btnDelGeneroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelGeneroActionPerformed
         // Eliminar un registro
         // si no selecciona fila, le avisa al usuario
-        if (tableList.getSelectedRow() < 0){
+        if(tableList.getSelectedRow() < 0) {
              // suena un beep
             java.awt.Toolkit.getDefaultToolkit().beep();
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila","Aviso", 2);
@@ -219,11 +219,11 @@ public class AddGenero extends javax.swing.JDialog {
             int res = javax.swing.JOptionPane.showConfirmDialog(this, "¿Eliminar " + lista_generos[tableList.getSelectedRow()][1].toString() + "?",
                  "Seleccione", JOptionPane.YES_NO_OPTION);
             // evalua la respuesta 
-            if (res == 0){
+            if(res == 0) {
                 String msj = "";
                 // si la respuesta es afirmativa, elimina el registro
-                int ret = genero_dao.DeleteGenero((Integer) tableList.getValueAt(tableList.getSelectedRow(), 0));
-                if (ret == 1){
+                int ret = genero_dao.deleteGenero((Integer) tableList.getValueAt(tableList.getSelectedRow(), 0));
+                if(ret != 1) {
                     msj = "No se pudo eliminar por que tiene registros asignados.";
                     javax.swing.JOptionPane.showMessageDialog(this, msj, "Información", 1);
                 }                
@@ -236,7 +236,7 @@ public class AddGenero extends javax.swing.JDialog {
     // Abre una ventana para poder editar al genero seleccionado
     private void btnEditGeneroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditGeneroActionPerformed
         // Botón que edita el registro selecionado de la tabla
-        if (tableList.getSelectedRow() < 0){
+        if(tableList.getSelectedRow() < 0) {
             // Suena un beep
             Toolkit.getDefaultToolkit().beep();
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila", "Información", 1);

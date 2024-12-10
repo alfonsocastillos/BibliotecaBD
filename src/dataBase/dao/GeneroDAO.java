@@ -1,230 +1,222 @@
-/*
- * Clase encargada de consultar, insertar, eliminar y modificar la tabla Genero
- */
 package dataBase.dao;
 
-import dataBase.Conexion;
+import dataBase.CustomConnection;
 import dataBase.ConfigDataBase;
 import java.sql.*;
 
 /**
- *
+ * Clase encargada de consultar, insertar, eliminar y modificar la tabla Genero.
  * @author alfonso
  */
-
-public class GeneroDAO extends Conexion {
+public class GeneroDAO extends CustomConnection {
     
-    // Crear un genero
-    public int SaveGenero(String genero) 
-    {
-        // Se conecta a la base de datos
-        conectar();
-        try{
-            int id = 0;
-            // genera el nuevo id            
-            sentenciaSQL =  "SELECT MAX(GENERO_ID) + 1 FROM GENERO";
-            ps = conn.prepareStatement(sentenciaSQL);            
-            rs = ps.executeQuery();
+    /**
+     * Crear un genero.
+     * @param genero nombre del genero a crear.
+     * @return int con el Id del genero creado.
+     */
+    public int saveGenero(String genero) {
+        connect();
+        int generoId = 0;
+        try {
+
+            // Genera el nuevo id
+            sentenciaSQL = "SELECT MAX(GENERO_ID) + 1 FROM GENERO";
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
+            resultSet = preparedStatement.executeQuery();
             
-            // guarda el nuevo id
-            if (rs.next()){
-                id = rs.getInt(1);
+            // Guarda el nuevo id
+            if(resultSet.next()) {
+                generoId = resultSet.getInt(1);
             }
             
-            // inserta mandando todos los datos, incluido en nuevo id
+            // Inserta mandando todos los datos, incluido en nuevo id.
             sentenciaSQL = "INSERT INTO GENERO VALUES(?, ?, SYSDATE)";
-            ps = conn.prepareStatement(sentenciaSQL);
-            // Asigna los valores del arreglo            
-            ps.setInt(1, id);           // Id (calculado)
-            ps.setString(2, genero);    // Genero (provisto)            
-            ps.executeUpdate();
-            return id;
-        }
-        catch (SQLException ex){
-            System.out.println(ConfigDataBase.DB_T_ERROR +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
-                    "\n\n" + sentenciaSQL + "\n\nUbicación: " + "SaveGenero");
-            return 0;
-        }
-        finally{
-           desconectar();
-       }
-
-    }
-    
-    // Modificar un genero
-    public int UpdateGenero(Object[] genero)
-    {       
-        // se conecta a la base de datos
-       conectar();
-       try{
-           // actualiza los datos
-           sentenciaSQL = "UPDATE GENERO SET " +
-                          "GENERO = ?, " +
-                          "LAST_UPDATE = SYSDATE " +
-                          "WHERE GENERO_ID = ?";
-            ps = conn.prepareStatement(sentenciaSQL);
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
             
-            ps.setString(1, genero[1].toString());  // Nuevo nombre genero
-            ps.setInt(2, (Integer) genero[0]);      // Id del genero
-            ps.executeUpdate();
-            return (Integer) genero[0];             // Regresa el id del genero
+            // Asigna los valores del arreglo.
+            preparedStatement.setInt(1, generoId);      // Id (calculado).
+            preparedStatement.setString(2, genero);     // Genero (provisto).
+            preparedStatement.executeUpdate();
+        } catch(SQLException ex) {
+            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "saveGenero");
+            generoId = 0;
+        } finally {
+           disconnect();
         }
-        catch (SQLException ex){
-            System.out.println(ConfigDataBase.DB_T_ERROR +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
-                    "\n\n" + sentenciaSQL + "\n\nUbicación: " + "UpdateGenero");
-            return 0;
-        }
-        finally{
-           desconectar();
-       }
+        return generoId;
     }
     
-    // Consultar todos los idiomas (id, genero)
-    public Object [][] GetAllGeneros(){
-        conectar();
-        Object [][] generos;
-        int i = 0;
-        int count = 0;
-        try{
-            sentenciaSQL = "SELECT COUNT(*) FROM GENERO";    // Numero de generos           
-            ps = conn.prepareStatement(sentenciaSQL);        // Convierte el str a un sentencia utilizable en SQL           
-            rs = ps.executeQuery();                          // Resultado de la consulta
+    /**
+     * Modificar un genero.
+     * @param genero datos del genero (Id, nuevo nombre).
+     * @return int con Id del genero modificado.
+     */
+    public int updateGenero(Object[] genero) {
+       connect();
+       int generoId = 0;
+       try {
+           
+            // Actualiza los datos.
+            sentenciaSQL = "UPDATE GENERO SET GENERO = ?, LAST_UPDATE = SYSDATE WHERE GENERO_ID = ?";
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
+            preparedStatement.setString(1, genero[1].toString());   // Nuevo nombre genero.
+            preparedStatement.setInt(2, (int) genero[0]);       // Id del genero
+            preparedStatement.executeUpdate(); 
+            generoId = (int) genero[0];
+        } catch(SQLException ex) {
+            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "updateGenero");
+            generoId = 0;
+        } finally {
+           disconnect();
+        }
+       return generoId;
+    }
+    
+    /**
+     * Consultar todos los idiomas.
+     * @return Object[][] con los datos de los generos consultados (id, genero).
+     */
+    public Object[][] getAllGeneros() {
+        connect();
+        Object[][] generos = null;
+        try {
+            
+            // Numero de generos.
+            sentenciaSQL = "SELECT COUNT(*) FROM GENERO";
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
+            resultSet = preparedStatement.executeQuery();
 
             // Numero de generos (COUNT)
-            if (rs.next()){
-                count = rs.getInt(1);
+            int count = 0;
+            if(resultSet.next()) {
+                count = resultSet.getInt(1);
             }
 
-            // Arreglo de todos los generos (ID, genero)
-            generos = new Object[count][2];           
-            sentenciaSQL  = "SELECT GENERO_ID, GENERO FROM GENERO ORDER BY 2";           
-            ps = conn.prepareStatement(sentenciaSQL);
-            rs = ps.executeQuery();
+            // Arreglo de todos los generos (ID, genero).
+            sentenciaSQL = "SELECT GENERO_ID, GENERO FROM GENERO ORDER BY 2";
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
+            resultSet = preparedStatement.executeQuery();
 
-            // Agregar a todos los generos al arreglo (migrar de rs a generos)
-            while (rs.next()){
-                generos[i][0] = (rs.getInt(1));
-                generos[i][1] = (rs.getString(2));  
+            // Agregar a todos los generos al arreglo (migrar de resultSet a generos)
+            int i = 0;
+            generos = new Object[count][2];
+            while(resultSet.next()) {
+                generos[i][0] = (resultSet.getInt(1));
+                generos[i][1] = (resultSet.getString(2));
                 i++;
-            }           
-            return generos;
+            }
+        } catch(SQLException ex) {
+            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + ConfigDataBase.DB_ERR_QUERY + "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + 
+                    "\n\nUbicación: " + "getAllGeneros");
+            generos = null;
+        } finally {
+           disconnect();
         }
-        catch (SQLException ex){
-            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + ConfigDataBase.DB_ERR_QUERY + 
-                    "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "GetAllGeneros");
-            return null;
-        }
-       finally{
-           desconectar();           
-       }
+        return generos;
     }  
 
-    // Consulta el genero para un id
-    public Object[] GetGeneroById(int genero_id)
-    {
-        conectar();
-        Object [] genero = new Object[2];
-       
-        try{                    
-            sentenciaSQL  = "SELECT GENERO_ID, GENERO FROM GENERO WHERE GENERO_ID = ?";           
-            ps = conn.prepareStatement(sentenciaSQL);
-            ps.setInt(1, genero_id);    // Reemplaza el parámetro index (simbolo ?) con el str x
-            rs = ps.executeQuery();
+    /**
+     * Consulta el genero para un id.
+     * @param generoId Id del genero a consultar.
+     * @return Object[] con los datos del genero (Id, Genero).
+     */
+    public Object[] getGeneroById(int generoId) {
+        connect();
+        Object[] genero = null;
+        try {
+            sentenciaSQL = "SELECT GENERO_ID, GENERO FROM GENERO WHERE GENERO_ID = ?";
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
+            preparedStatement.setInt(1, generoId);
+            resultSet = preparedStatement.executeQuery();
 
-            // Llena el arreglo actor con el resultado
-            while (rs.next()){
-                genero[0] = (rs.getInt(1));
-                genero[1] = (rs.getString(2));  
-            }           
-            return genero;
+            // Llena el arreglo genero con el resultado.
+            genero = new Object[2];
+            while(resultSet.next()) {
+                genero[0] = (resultSet.getInt(1));
+                genero[1] = (resultSet.getString(2));
+            }
         }
-        catch (SQLException ex){
-            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + ConfigDataBase.DB_ERR_QUERY + 
-                    "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "GetGeneroById");
-            return null;
+        catch(SQLException ex) {
+            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + ConfigDataBase.DB_ERR_QUERY + "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + 
+                    "\n\nUbicación: " + "getGeneroById");
+            genero = null;
+        } finally {
+           disconnect();
         }
-        finally{
-           desconectar();           
-        }
-
+        return genero;
     }        
         
-    // Consultar generos con nombre parecido
-    public Object[][] GetGenerosByNombre(String genero){
-       conectar();
-       Object[][] generos;
-       int i = 0;
-       int count = 0;
+    /**
+     * Consultar generos con nombre parecido.
+     * @param genero nombre del genero.
+     * @return Object[][] con los datos de los generos consultados (Id, Genero).
+     */
+    public Object[][] getGenerosByNombre(String genero) {
+       connect();
+       Object[][] generos = null;
        genero = "%" + genero + "%";
-       try{
-            // Cuenta todos los actores que tengan un nombre parecido
-            sentenciaSQL =   "SELECT COUNT(GENERO_ID) " +
-                             "FROM GENERO " +
-                             "WHERE UPPER (GENERO) LIKE UPPER(?)";   // Todos los idiomas que tengan un nombre parecido
+       try {
+           
+            // Todos los generos que tengan un nombre parecido.
+            sentenciaSQL = "SELECT COUNT(GENERO_ID) FROM GENERO WHERE UPPER (GENERO) LIKE UPPER(?)";
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
+            preparedStatement.setString(1, genero);
+            resultSet = preparedStatement.executeQuery();
 
-
-             ps = conn.prepareStatement(sentenciaSQL);   // prepara la sentencia 
-             ps.setString(1, genero);
-             rs = ps.executeQuery();                     // Ejecuta la sentencia y la asigna al result set         
-
-            if (rs.next()){
-                count = rs.getInt(1);
+            int count = 0;
+            if(resultSet.next()) {
+                count = resultSet.getInt(1);
             }
 
-            // Misma consulta, pero ahora puede ser guardada en el arreglo
-            generos = new Object[count][2];           
-            sentenciaSQL =  "SELECT GENERO_ID, GENERO " +
-                            "FROM GENERO " +
-                            "WHERE UPPER (GENERO) LIKE UPPER(?) " +
-                            "ORDER BY GENERO";
+            // Misma consulta, pero ahora puede ser guardada en el arreglo.
+            generos = new Object[count][2];
+            sentenciaSQL = "SELECT GENERO_ID, GENERO FROM GENERO WHERE UPPER (GENERO) LIKE UPPER(?) ORDER BY GENERO";
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
+            preparedStatement.setString(1, genero);
+            resultSet = preparedStatement.executeQuery();
 
-            ps = conn.prepareStatement(sentenciaSQL);
-            ps.setString(1, genero);
-            rs = ps.executeQuery();
-
-            while (rs.next()){
-                generos[i][0] = (rs.getInt(1));
-                generos[i][1] = (rs.getString(2));
+            int i = 0;
+            while(resultSet.next()) {
+                generos[i][0] = (resultSet.getInt(1));
+                generos[i][1] = (resultSet.getString(2));
                 i++;
-            }              
-           return generos;
+            }
+        } catch(SQLException ex) {
+            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + ConfigDataBase.DB_ERR_QUERY + "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + 
+                    "\n\nUbicación: " + "getGenerosByNombre");
+            generos = null;
+        } finally {
+           disconnect();
         }
-        catch (SQLException ex){
-            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + ConfigDataBase.DB_ERR_QUERY + 
-                    "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "GetGenerosByNombre");
-            return null;
-        }
-        finally{
-           desconectar();           
-       }
+        return generos;
     }
 
-    // Eliminar un genero
-    public int DeleteGenero(int genero_id){
-        // Conecta a la base de datos
-        conectar();
-        try{            
-            // Borrar el genero
-            sentenciaSQL = "DELETE FROM GENERO " +
-                            "WHERE GENERO_ID = ?";
-            ps = conn.prepareStatement(sentenciaSQL);
-            ps.setInt(1, genero_id);
-            int res = ps.executeUpdate();
-            if (res == 1){
-                return 0;
-            }
+    /**
+     * Eliminar un genero.
+     * @param generoId Id del genero a eliminar
+     * @return int representando el resultado de la transaccion.
+     */
+    public int deleteGenero(int generoId) {
+        connect();
+        int state = 0;
+        try {
             
-            return 1;
-        }
-        catch (SQLException ex){
-            System.out.println(ConfigDataBase.DB_T_ERROR +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
-                    "\n\n" + sentenciaSQL + "\n\nUbicación: " + "DeleteGenero");
-            if (ex.getErrorCode() ==  2292)
-                return 1;
-            return 2;
-        }
-        finally{
-           desconectar();
+            // Borrar el genero.
+            sentenciaSQL = "DELETE FROM GENERO WHERE GENERO_ID = ?";
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
+            preparedStatement.setInt(1, generoId);
+            state = preparedStatement.executeUpdate();
+        } catch(SQLException ex) {
+            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "deleteGenero");
+            if(ex.getErrorCode() == 2292) {
+                state = 0;
+            } else {
+                state = 2;
+            }
+        } finally {
+           disconnect();
        }
+        return state;
     }
 }

@@ -51,7 +51,7 @@ public class MDIPrincipal extends javax.swing.JFrame {
         lblEmpleado. setText(" Empleado: " + empleado_nombre);
     }
     
-    private void configComponents(){
+    private void configComponents() {
         // Carga el aspecto grafico
         UtilsGUI.setLookAndFeel(this);
         // Localización de la ventana en la pantalla 
@@ -70,16 +70,16 @@ public class MDIPrincipal extends javax.swing.JFrame {
         pack(); // Ajusta el tamaño de la ventana al preferido por sus componentes internos
     }
       
-    private void setLocation (JInternalFrame frame){
+    private void setLocation (JInternalFrame frame) {
         // Metodo que posiciona las ventanas flotantes
         Dimension desktopSize = desktopPane.getSize();
         Dimension frameSize = frame.getSize();
         frame.setLocation((desktopSize.width - frameSize.width)/2, (desktopSize.height- frameSize.height)/2);
     }
        
-    private void abrePrestamo (){  
+    private void abrePrestamo () {  
         
-        if (!vtn_prestamo.isVisible()){
+        if(!vtn_prestamo.isVisible()) {
             // Posiciona la ventana
             setLocation(vtn_prestamo);
             //Abre la ventana renta
@@ -89,12 +89,12 @@ public class MDIPrincipal extends javax.swing.JFrame {
             vtn_prestamo.moveToFront();
     }
     
-    private void AbreLibros(){
-        if (vtn_libros == null) {
+    private void AbreLibros() {
+        if(vtn_libros == null) {
             vtn_libros = new Libros();
         }
         
-        if (!vtn_libros.isVisible()){
+        if(!vtn_libros.isVisible()) {
             // Posiciona la ventana
             setLocation(vtn_libros);
             //Abre la ventana pelicula
@@ -105,8 +105,8 @@ public class MDIPrincipal extends javax.swing.JFrame {
     }
     
     
-    private void AbreClientes(){
-                if (!vtn_clientes.isVisible()){
+    private void AbreClientes() {
+                if(!vtn_clientes.isVisible()) {
             // Posiciona la ventana
             setLocation(vtn_clientes);
             //Abre la ventana renta
@@ -116,8 +116,8 @@ public class MDIPrincipal extends javax.swing.JFrame {
             vtn_clientes.moveToFront();
     }
     
-    private void AbreReportes(){
-                /*if (!vtn_reportes.isVisible()){
+    private void AbreReportes() {
+                /*if(!vtn_reportes.isVisible()) {
             // Posiciona la ventana
             setLocation(vtn_reportes);
             //Abre la ventana renta

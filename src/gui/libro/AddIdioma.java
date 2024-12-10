@@ -38,7 +38,7 @@ public class AddIdioma extends javax.swing.JDialog {
     }
     
     // Establece el idioma siendo editado
-    public void SetIdiomaId(int id_idioma){   
+    public void SetIdiomaId(int id_idioma) {   
         // Asigna el id del libro
         this.idioma_id = id_idioma;
         txtFiltro.setText("");
@@ -46,9 +46,9 @@ public class AddIdioma extends javax.swing.JDialog {
     }
     
     // Llena y despliega la tabla de idiomas 
-    private void LlenaTabla(){     
+    private void LlenaTabla() {     
         // Consulta todos los idioma (id, idioma)
-        lista_idiomas = idioma_dao.GetIdiomasByNombre(txtFiltro.getText().trim());
+        lista_idiomas = idioma_dao.getIdiomasByNombre(txtFiltro.getText().trim());
         // Titulos de la tabla
         String[] T_IDIOMA = {"","Idioma"};
         // alineación de las celdas
@@ -93,7 +93,7 @@ public class AddIdioma extends javax.swing.JDialog {
 
         tableList.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         tableList.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+            new Object[][] {
 
             },
             new String [] {
@@ -197,7 +197,7 @@ public class AddIdioma extends javax.swing.JDialog {
     private void btnDelIdiomaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelIdiomaActionPerformed
         // Eliminar un registro
         // si no selecciona fila, le avisa al usuario
-        if (tableList.getSelectedRow() < 0){
+        if(tableList.getSelectedRow() < 0) {
              // suena un beep
             java.awt.Toolkit.getDefaultToolkit().beep();
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila","Aviso", 2);
@@ -209,10 +209,10 @@ public class AddIdioma extends javax.swing.JDialog {
             int res = javax.swing.JOptionPane.showConfirmDialog(this, "¿Eliminar " + lista_idiomas[tableList.getSelectedRow()][1].toString() + "?",
                  "Seleccione", JOptionPane.YES_NO_OPTION);
             // evalua la respuesta 
-            if (res == 0){
+            if(res == 0) {
                 // si la respuesta es afirmativa, elimina el registro
-                int ret = idioma_dao.DeleteIdioma((Integer) tableList.getValueAt(tableList.getSelectedRow(), 0));
-                if (ret == 1){
+                int ret = idioma_dao.deleteIdioma((Integer) tableList.getValueAt(tableList.getSelectedRow(), 0));
+                if(ret != 1) {
                     String msj = "No se pudo eliminar por que tiene registros asignados.";
                     javax.swing.JOptionPane.showMessageDialog(this, msj, "Información", 1);
                 }                
@@ -225,7 +225,7 @@ public class AddIdioma extends javax.swing.JDialog {
     // Abre una ventana para poder editar al idioma seleccionado
     private void btnEditIdiomaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditIdiomaActionPerformed
         // Botón que edita el registro selecionado de la tabla
-        if (tableList.getSelectedRow() < 0){
+        if(tableList.getSelectedRow() < 0) {
             // Suena un beep
             Toolkit.getDefaultToolkit().beep();
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila", "Información", 1);
