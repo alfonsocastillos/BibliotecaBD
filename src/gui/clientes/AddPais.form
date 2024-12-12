@@ -45,7 +45,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Component id="pnlTableList" max="32767" attributes="0"/>
           <Group type="102" alignment="0" attributes="0">
-              <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
+              <Component id="pnlEstados" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="0" pref="6" max="32767" attributes="0"/>
           </Group>
       </Group>
@@ -56,7 +56,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="pnlTableList" min="-2" pref="293" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
+              <Component id="pnlEstados" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
@@ -204,7 +204,7 @@
         </Component>
       </SubComponents>
     </Container>
-    <Container class="javax.swing.JPanel" name="jPanel2">
+    <Container class="javax.swing.JPanel" name="pnlEstados">
 
       <Layout>
         <DimensionLayout dim="0">

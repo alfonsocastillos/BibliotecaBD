@@ -53,7 +53,7 @@ public class AddNewEstado extends javax.swing.JDialog {
      * Asignar el Id del Pais al que pertenece el Estado.
      * @param paisId Id del pais al que pertenece el Estado.
      */
-    public void SetPaisId(int paisId) {
+    public void setPaisId(int paisId) {
         this.paisId = paisId;
     }
     /**

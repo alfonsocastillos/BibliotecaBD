@@ -771,7 +771,9 @@ public class Libros extends javax.swing.JInternalFrame {
             
             // Si la respuesta es afirmativa, elimina el registro
             if(res == 0) {
-                String msj = "";                
+                String msj = "";      
+                
+                libroId = (int) UtilsTable.obtenerValor(tblLibros.getSelectedRow(), 0, tblLibros);
                 int ret = libroDAO.deleteLibro(libroId);
                 if(ret == 1) {
                     msj = "Se eliminó el libro.";

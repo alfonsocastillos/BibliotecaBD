@@ -4,7 +4,10 @@ import dataBase.dao.PaisDAO;
 import dataBase.dao.EstadoDAO;
 import java.awt.Toolkit;
 import javax.swing.JOptionPane;
+import java.awt.Component;
 import tools.UtilsTable;
+
+// TODO: arreglar cuando se crea un Pais e inmediatamente se crea un Estado, no es posible
 
 /**
  * Ventana encargada de mostar las opciones sobre Pais y Estado.
@@ -32,6 +35,7 @@ public class AddPais extends javax.swing.JDialog {
        
         // Inicia los componentes.
         initComponents();
+        enableEstados(false);
        
         paisDAO = new PaisDAO();        
         llenaPaises();
@@ -63,7 +67,7 @@ public class AddPais extends javax.swing.JDialog {
         EstadoDAO estadoDAO = new EstadoDAO();
         estadosLista = estadoDAO.getEstadosByNombre(paisId, txtEstado.getText().trim());
         UtilsTable.limpiaTabla(tblEstados);                        
-        String[] columnasNombre = {"","Estado"};
+        String[] columnasNombre = {"", "Estado"};
        
         // Alineación de las celdas.
         int[][] cellAlignment = {{0, javax.swing.SwingConstants.LEFT}};
@@ -73,8 +77,14 @@ public class AddPais extends javax.swing.JDialog {
        
         UtilsTable.llenaTabla(cellAlignment, cellSize, columnasNombre, tblEstados, estadosLista);    
         UtilsTable.quitarColumna(0, tblEstados);
-
     }
+    
+    private void enableEstados(boolean enable) {
+        Component[] componentes = pnlEstados.getComponents();
+        for(Component componente : componentes) {
+            componente.setEnabled(enable);
+        }
+    }          
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -95,7 +105,7 @@ public class AddPais extends javax.swing.JDialog {
         btnNewPais = new javax.swing.JButton();
         btnEditPais = new javax.swing.JButton();
         btnDeletePais = new javax.swing.JButton();
-        jPanel2 = new javax.swing.JPanel();
+        pnlEstados = new javax.swing.JPanel();
         lblEstados = new javax.swing.JLabel();
         lblFiltroEstados = new javax.swing.JLabel();
         txtEstado = new javax.swing.JTextField();
@@ -250,46 +260,46 @@ public class AddPais extends javax.swing.JDialog {
             }
         });
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        javax.swing.GroupLayout pnlEstadosLayout = new javax.swing.GroupLayout(pnlEstados);
+        pnlEstados.setLayout(pnlEstadosLayout);
+        pnlEstadosLayout.setHorizontalGroup(
+            pnlEstadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlEstadosLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(pnlEstadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlEstadosLayout.createSequentialGroup()
+                        .addGroup(pnlEstadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnlEstadosLayout.createSequentialGroup()
                                 .addComponent(lblFiltroEstados)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(txtEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(scpTableList, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
+                    .addGroup(pnlEstadosLayout.createSequentialGroup()
                         .addComponent(btnNewEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnEditEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(138, 138, 138)
                         .addComponent(btnDeleteEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
-            .addGroup(jPanel2Layout.createSequentialGroup()
+            .addGroup(pnlEstadosLayout.createSequentialGroup()
                 .addGap(151, 151, 151)
                 .addComponent(lblEstados, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        pnlEstadosLayout.setVerticalGroup(
+            pnlEstadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlEstadosLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(lblEstados, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(pnlEstadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblFiltroEstados, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(scpTableList, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(pnlEstadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnDeleteEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnNewEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnEditEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -302,7 +312,7 @@ public class AddPais extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(pnlTableList, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(pnlEstados, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 6, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -311,7 +321,7 @@ public class AddPais extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(pnlTableList, javax.swing.GroupLayout.PREFERRED_SIZE, 293, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(pnlEstados, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -331,7 +341,10 @@ public class AddPais extends javax.swing.JDialog {
         
         // Cuando cierra la ventana agrega el pais a la tabla y lo selecciona.
         llenaPaises();
-        UtilsTable.mueveTabla(UtilsTable.getRow(addNewPais.paisId, paisesLista), tblPaises);
+        paisId = (int) addNewPais.paisId;
+        llenaEstados();
+        enableEstados(true);
+        UtilsTable.mueveTabla(paisId, tblPaises);
     }//GEN-LAST:event_btnNewPaisActionPerformed
 
     /**
@@ -351,7 +364,7 @@ public class AddPais extends javax.swing.JDialog {
           
             // Suena un beep y se muestra un mensaje.
             java.awt.Toolkit.getDefaultToolkit().beep();
-            javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila","Aviso", 2);
+            javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila", "Aviso", 2);
         } else {
             
             // Suena un beep y se muestra un mensaje de confirmacion.
@@ -366,10 +379,14 @@ public class AddPais extends javax.swing.JDialog {
                 if(ret != 1) {
                     msj = "No se pudo eliminar por que tiene registros asignados.";
                     javax.swing.JOptionPane.showMessageDialog(this, msj, "Información", 1);
-                }                
-                
-                // Reinicia controles y parametros.
-                llenaPaises();
+                } else {
+                    // Reinicia controles y parametros.
+                    paisId = 0;
+                    estadoId = 0;
+                    llenaPaises();
+                    llenaEstados();
+                    enableEstados(false);
+                }                                
             }
         }
     }//GEN-LAST:event_btnDeletePaisActionPerformed
@@ -386,6 +403,7 @@ public class AddPais extends javax.swing.JDialog {
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila", "Información", 1);
         } else {            
             paisId = (int) UtilsTable.obtenerValor(tblPaises.getSelectedRow(), 0, tblPaises);
+            enableEstados(true);
            
             // Abre la ventana para editar pais
             AddNewPais editPais = new AddNewPais(parent, true);                   
@@ -395,6 +413,7 @@ public class AddPais extends javax.swing.JDialog {
             
             // Cuando cierra la ventana agrega el Pais a la tabla y lo selecciona.
             llenaPaises();
+            llenaEstados();
             UtilsTable.mueveTabla(UtilsTable.getRow(editPais.paisId, paisesLista), tblPaises);
         }
     }//GEN-LAST:event_btnEditPaisActionPerformed
@@ -406,6 +425,7 @@ public class AddPais extends javax.swing.JDialog {
     private void tblPaisesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblPaisesMouseClicked
         if(evt.getClickCount() == 2) {
             paisId = (int) UtilsTable.obtenerValor(tblPaises.getSelectedRow(), 0, tblPaises);
+            enableEstados(true);
             llenaEstados();
         }
     }//GEN-LAST:event_tblPaisesMouseClicked
@@ -424,13 +444,14 @@ public class AddPais extends javax.swing.JDialog {
      */
     private void btnNewEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewEstadoActionPerformed
         AddNewEstado addNewEstado = new AddNewEstado(parent, true);        
-        addNewEstado.SetPaisId(paisId);
+        addNewEstado.setPaisId(paisId);
         addNewEstado.setLocationRelativeTo(this);
         addNewEstado.setVisible(true);               
         
         // Cuando cierra la ventana agrega el Estado a la tabla y lo selecciona.
         llenaEstados();
-        UtilsTable.mueveTabla(UtilsTable.getRow(addNewEstado.estadoId, estadosLista), tblEstados);
+        estadoId = UtilsTable.getRow(addNewEstado.estadoId, estadosLista);
+        UtilsTable.mueveTabla(estadoId, tblEstados);
     }//GEN-LAST:event_btnNewEstadoActionPerformed
 
     /**
@@ -446,7 +467,7 @@ public class AddPais extends javax.swing.JDialog {
         } else {
             estadoId = (int) UtilsTable.obtenerValor(tblEstados.getSelectedRow(), 0, tblEstados);
             AddNewEstado addNewEstado = new AddNewEstado(parent, true);        
-            addNewEstado.SetPaisId(paisId);
+            addNewEstado.setPaisId(paisId);
             addNewEstado.setEditId(estadoId);          
             addNewEstado.setLocationRelativeTo(this);
             addNewEstado.setVisible(true);               
@@ -510,11 +531,11 @@ public class AddPais extends javax.swing.JDialog {
     private javax.swing.JButton btnNewEstado;
     private javax.swing.JButton btnNewPais;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JLabel lblEstados;
     private javax.swing.JLabel lblFiltroEstados;
     private javax.swing.JLabel lblFiltroPais;
     private javax.swing.JLabel lblPais;
+    private javax.swing.JPanel pnlEstados;
     private javax.swing.JPanel pnlTableList;
     private javax.swing.JScrollPane scpTableList;
     private javax.swing.JScrollPane scpTableList1;
