@@ -6,62 +6,54 @@ import javax.swing.JOptionPane;
 import tools.UtilsTable;
 
 /**
- *
- * @author Alfonso
- * Ventana que permite agregar idiomas
+ * Ventana que permite agregar Idiomas.
+ * @author alfonso
  */
 public class AddIdioma extends javax.swing.JDialog {
-    // Para agregar el idiomas
-    int idioma_id;
-    IdiomaDAO idioma_dao;
-    // Para listar todos los idiomas 
-    Object lista_idiomas [][];  // Id, idioma
-   // public Object film[];
+    int idiomaId;
+    IdiomaDAO idiomaDAO;
+    Object[][] idiomasLista;
     java.awt.Frame parent;    
 
     /**
-     * Creates new form ???
-     * @param parent
-     * @param modal
+     * Creates new form AddIdioma.
+     * @param parent ventana padre.
+     * @param modal determina si la ventana no cede el foco a otra.
      */
     public AddIdioma(java.awt.Frame parent, boolean modal) {
-        // ventana modal
-        super(parent, modal);   // Llama al constructor del padre
+        super(parent, modal);
         this.parent= parent;
         setTitle("Idiomas");
-        // inicia los componentes
+        
+        // Inicia los componentes.
         initComponents();
-        // Crea el dao
-        idioma_dao = new IdiomaDAO();
-        // llena la tabla
-        LlenaTabla();
+        idiomaDAO = new IdiomaDAO();
+        llenaTabla();
     }
     
     // Establece el idioma siendo editado
-    public void SetIdiomaId(int id_idioma){   
+    public void SetIdiomaId(int id_idioma) {   
         // Asigna el id del libro
-        this.idioma_id = id_idioma;
+        this.idiomaId = id_idioma;
         txtFiltro.setText("");
-        LlenaTabla();
+        llenaTabla();
     }
     
-    // Llena y despliega la tabla de idiomas 
-    private void LlenaTabla(){     
-        // Consulta todos los idioma (id, idioma)
-        lista_idiomas = idioma_dao.GetIdiomasByNombre(txtFiltro.getText().trim());
-        // Titulos de la tabla
-        String[] T_IDIOMA = {"","Idioma"};
-        // alineación de las celdas
-        int[][] cellAlignment = {{0,javax.swing.SwingConstants.LEFT}};
-        // Tamaño de las celdas
-        int[][] cellSize = {{0,0},
-                            {1,170}};
-        /*
-            Metodo que llena las tablas, recibe la tabla, los datos, los titulos,
-            la alineación y el tamaño de las celdas
-        */
+    /**
+     * Llena y despliega la tabla de Idiomas.
+     */
+    private void llenaTabla() {     
+        idiomasLista = idiomaDAO.getIdiomasByNombre(txtFiltro.getText().trim());
+        
+        // Titulos de la tabla.
+        String[] columnasNombre = {"","Idioma"};
        
-        UtilsTable.llenaTabla(tableList,lista_idiomas, T_IDIOMA, cellAlignment, cellSize);
+        // Alineación de las celdas.
+        int[][] cellAlignment = {{0, javax.swing.SwingConstants.LEFT}};
+        
+        // Tamaño de las celdas.
+        int[][] cellSize = {{0, 0}, {1, 170}};       
+        UtilsTable.llenaTabla(cellAlignment, cellSize, columnasNombre, tblIdiomas, idiomasLista);
     }
     
     /**
@@ -75,12 +67,12 @@ public class AddIdioma extends javax.swing.JDialog {
 
         pnlTableList = new javax.swing.JPanel();
         scpTableList = new javax.swing.JScrollPane();
-        tableList = new javax.swing.JTable();
+        tblIdiomas = new javax.swing.JTable();
         txtFiltro = new javax.swing.JTextField();
         lblFiltro = new javax.swing.JLabel();
-        btnNewIdioma = new javax.swing.JButton();
-        btnDelIdioma = new javax.swing.JButton();
-        btnEditIdioma = new javax.swing.JButton();
+        btnNew = new javax.swing.JButton();
+        btnDelete = new javax.swing.JButton();
+        btnEdit = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setIconImage(java.awt.Toolkit.getDefaultToolkit().getImage( getClass().getResource("/img/pen.png")));
@@ -91,8 +83,8 @@ public class AddIdioma extends javax.swing.JDialog {
         scpTableList.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scpTableList.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-        tableList.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        tableList.setModel(new javax.swing.table.DefaultTableModel(
+        tblIdiomas.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        tblIdiomas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -100,7 +92,7 @@ public class AddIdioma extends javax.swing.JDialog {
 
             }
         ));
-        scpTableList.setViewportView(tableList);
+        scpTableList.setViewportView(tblIdiomas);
 
         pnlTableList.add(scpTableList, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 180, 170));
 
@@ -116,30 +108,30 @@ public class AddIdioma extends javax.swing.JDialog {
         lblFiltro.setText("Filtrar:");
         pnlTableList.add(lblFiltro, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, 25));
 
-        btnNewIdioma.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/add.png"))); // NOI18N
-        btnNewIdioma.setToolTipText("Registrar nuevo idioma");
-        btnNewIdioma.setFocusable(false);
-        btnNewIdioma.addActionListener(new java.awt.event.ActionListener() {
+        btnNew.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/add.png"))); // NOI18N
+        btnNew.setToolTipText("Registrar nuevo idioma");
+        btnNew.setFocusable(false);
+        btnNew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnNewIdiomaActionPerformed(evt);
+                btnNewActionPerformed(evt);
             }
         });
 
-        btnDelIdioma.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/borrar.png"))); // NOI18N
-        btnDelIdioma.setToolTipText("Borrar idioma");
-        btnDelIdioma.setFocusable(false);
-        btnDelIdioma.addActionListener(new java.awt.event.ActionListener() {
+        btnDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/borrar.png"))); // NOI18N
+        btnDelete.setToolTipText("Borrar idioma");
+        btnDelete.setFocusable(false);
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDelIdiomaActionPerformed(evt);
+                btnDeleteActionPerformed(evt);
             }
         });
 
-        btnEditIdioma.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/editar.png"))); // NOI18N
-        btnEditIdioma.setToolTipText("Editar idioma");
-        btnEditIdioma.setFocusable(false);
-        btnEditIdioma.addActionListener(new java.awt.event.ActionListener() {
+        btnEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/editar.png"))); // NOI18N
+        btnEdit.setToolTipText("Editar idioma");
+        btnEdit.setFocusable(false);
+        btnEdit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEditIdiomaActionPerformed(evt);
+                btnEditActionPerformed(evt);
             }
         });
 
@@ -152,11 +144,11 @@ public class AddIdioma extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(pnlTableList, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnNewIdioma, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnNew, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(39, 39, 39)
-                        .addComponent(btnEditIdioma, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(44, 44, 44)
-                        .addComponent(btnDelIdioma, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -166,95 +158,105 @@ public class AddIdioma extends javax.swing.JDialog {
                 .addComponent(pnlTableList, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnNewIdioma, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnDelIdioma, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnEditIdioma, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnNew, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    // Abre una ventana que posibilida crear un IDIOMA
-    private void btnNewIdiomaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewIdiomaActionPerformed
-        AddNewIdioma add_new_idioma = new AddNewIdioma(parent, true);        
-        // Localizacvión de la ventana        
-        add_new_idioma.setLocationRelativeTo(this);
-        // hace visible la ventana
-        add_new_idioma.setVisible(true);        
-        LlenaTabla();
-        // cuando cierra la ventana agrega el idioma a la tabla y lo selecciona
-        UtilsTable.mueveTabla(tableList, UtilsTable.getRow(lista_idiomas, add_new_idioma.idioma_id));
-    }//GEN-LAST:event_btnNewIdiomaActionPerformed
+    /**
+     * Abre una ventana que posibilida crear un Idioma.
+     * @param evt evento que dispara la funcion.
+     */
+    private void btnNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewActionPerformed
+        AddNewIdioma addNewIdioma = new AddNewIdioma(parent, true);        
+        addNewIdioma.setLocationRelativeTo(this);
+        addNewIdioma.setVisible(true);        
+                
+        // Cuando cierra la ventana agrega el Idioma a la tabla y lo selecciona,
+        llenaTabla();
+        UtilsTable.mueveTabla(UtilsTable.getRow(addNewIdioma.idiomaId, idiomasLista), tblIdiomas);
+    }//GEN-LAST:event_btnNewActionPerformed
 
-    // Llena la tabla de idiomas cada que se escribe una letra
+    /**
+     * Llena la tabla de Idiomas cada que se escribe una letra.
+     * @param evt evento que dispara la funcion.
+     */
     private void txtFiltroKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFiltroKeyReleased
-        // Filtra idiomas  
-        LlenaTabla();
+        llenaTabla();
     }//GEN-LAST:event_txtFiltroKeyReleased
 
-    // Elimina al idioma seleccionado de la tabla de IDIOMA
-    private void btnDelIdiomaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelIdiomaActionPerformed
-        // Eliminar un registro
-        // si no selecciona fila, le avisa al usuario
-        if (tableList.getSelectedRow() < 0){
-             // suena un beep
+    /**
+     * Elimina al idioma seleccionado de la tabla de Idioma.
+     * @param evt evento que dispara la funcion.
+     */
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+
+        // Si no selecciona fila, le avisa al usuario.
+        if(tblIdiomas.getSelectedRow() < 0) {
+             
+            // Suena un beep y se muestra un mensaje.
             java.awt.Toolkit.getDefaultToolkit().beep();
-            javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila","Aviso", 2);
-        }
-        else{
-            // suena un beep
+            javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila", "Aviso", 2);
+        } else {
+            
+            // Suena un beep y se muestra un mensaje de confirmacion.
             java.awt.Toolkit.getDefaultToolkit().beep();
-            // pregunta si quiere eliminar el registro y camtura la respuesta
-            int res = javax.swing.JOptionPane.showConfirmDialog(this, "¿Eliminar " + lista_idiomas[tableList.getSelectedRow()][1].toString() + "?",
-                 "Seleccione", JOptionPane.YES_NO_OPTION);
-            // evalua la respuesta 
-            if (res == 0){
-                // si la respuesta es afirmativa, elimina el registro
-                int ret = idioma_dao.DeleteIdioma((Integer) tableList.getValueAt(tableList.getSelectedRow(), 0));
-                if (ret == 1){
+            int res = javax.swing.JOptionPane.showConfirmDialog(this, "¿Eliminar " + idiomasLista[tblIdiomas.getSelectedRow()][1].toString() + "?",
+                "Seleccione", JOptionPane.YES_NO_OPTION);
+            
+            // Si la respuesta es afirmativa, elimina el registro.
+            if(res == 0) {                
+                int ret = idiomaDAO.deleteIdioma((Integer) tblIdiomas.getValueAt(tblIdiomas.getSelectedRow(), 0));
+                if(ret != 1) {
                     String msj = "No se pudo eliminar por que tiene registros asignados.";
                     javax.swing.JOptionPane.showMessageDialog(this, msj, "Información", 1);
-                }                
-                // Reinicia controles y parametros
-                LlenaTabla();
+                }         
+                
+                // Reinicia controles y parametros.
+                llenaTabla();
             }
         }
-    }//GEN-LAST:event_btnDelIdiomaActionPerformed
+    }//GEN-LAST:event_btnDeleteActionPerformed
 
-    // Abre una ventana para poder editar al idioma seleccionado
-    private void btnEditIdiomaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditIdiomaActionPerformed
-        // Botón que edita el registro selecionado de la tabla
-        if (tableList.getSelectedRow() < 0){
-            // Suena un beep
+    /**
+     * Abre una ventana para poder editar al Idioma seleccionado.
+     * @param evt evento que dispara la funcion.
+     */
+    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
+        if(tblIdiomas.getSelectedRow() < 0) {
+
+            // Suena un beep y se muestra un mensaje.
             Toolkit.getDefaultToolkit().beep();
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila", "Información", 1);
+        } else {
+            
+            // Obtiene el id del idioma seleccionado.
+            idiomaId = (Integer) tblIdiomas.getValueAt(tblIdiomas.getSelectedRow(), 0);
+            
+            // Abre la ventana para editar idioma.         
+            AddNewIdioma editIdioma = new AddNewIdioma(parent, true);        
+            editIdioma.setLocationRelativeTo(this);            
+            editIdioma.setEditId(idiomaId);
+            editIdioma.setVisible(true);
+            
+            // Cuando cierra la ventana agrega el idioma a la tabla y lo selecciona.
+            llenaTabla();
+            UtilsTable.mueveTabla(UtilsTable.getRow(editIdioma.idiomaId, idiomasLista), tblIdiomas);
         }
-        else{
-            // Obtiene el id del idioma seleccionado
-            idioma_id = (Integer) tableList.getValueAt(tableList.getSelectedRow(), 0);
-            // Abre la ventana para editar idioma
-            // Ventana para editar idioma
-            AddNewIdioma edit_idioma = new AddNewIdioma(parent, true);        
-            // Localización de la ventana
-            edit_idioma.setLocationRelativeTo(this);            
-            edit_idioma.SetEditId(idioma_id);
-            // hace visible la ventana
-            edit_idioma.setVisible(true);
-            LlenaTabla();
-            // cuando cierra la ventana agrega el idioma a la tabla y lo selecciona
-            UtilsTable.mueveTabla(tableList, UtilsTable.getRow(lista_idiomas, edit_idioma.idioma_id));
-        }
-    }//GEN-LAST:event_btnEditIdiomaActionPerformed
+    }//GEN-LAST:event_btnEditActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnDelIdioma;
-    private javax.swing.JButton btnEditIdioma;
-    private javax.swing.JButton btnNewIdioma;
+    private javax.swing.JButton btnDelete;
+    private javax.swing.JButton btnEdit;
+    private javax.swing.JButton btnNew;
     private javax.swing.JLabel lblFiltro;
     private javax.swing.JPanel pnlTableList;
     private javax.swing.JScrollPane scpTableList;
-    private javax.swing.JTable tableList;
+    private javax.swing.JTable tblIdiomas;
     private javax.swing.JTextField txtFiltro;
     // End of variables declaration//GEN-END:variables
 }

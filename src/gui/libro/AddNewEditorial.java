@@ -6,43 +6,45 @@ import java.awt.event.WindowEvent;
 import javax.swing.JOptionPane;
 
 /**
- *
- * @author Carlos
- * Ventana que permite crear, editar y eliminar idiomas del catálogo
+ * Ventana que permite agregar y editar Editoriales del catálogo.
+ * @author alfonso
  */
 public class AddNewEditorial extends javax.swing.JDialog {
-    // Para guardar el idioma
-    String editorial_id;
-    EditorialDAO editorial_dao;
+    String editorialId;
+    EditorialDAO editorialDAO;
 
     /**
-     * Creates new form 
-     * @param parent
-     * @param modal
+     * Creates new form AddNewEditorial.
+     * @param parent ventana padre.
+     * @param modal determina si la ventana no cede el foco a otra.
      */
     public AddNewEditorial(java.awt.Frame parent, boolean modal) {
-        // ventana modal
         super(parent, modal);
-        // inicia los componentes
+        
+        // Inicia los componentes
         initComponents();
         processWindowEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-        // Crea el dao para acceder a la tabla EDITORIAL
-        editorial_dao = new EditorialDAO();
+        editorialDAO = new EditorialDAO();
         getRootPane().setDefaultButton(btnGuardar);                      
     }
     
-    private void BorrarTextos(){
-        // Borra el texto
+    /**
+     * Reinicia los controladores.
+     */
+    private void borrarTextos() {
         txtEditorial.setText("");
     }
     
-    public void SetEditId(String editorial_id){
-        // Asigna el id del actor a modificar
-        this.editorial_id = editorial_id;
-        // Busca el actor
-        Object[] editorial_edit = editorial_dao.GetEditorialById(editorial_id);
-        // Muestra los datos en los controles
-        txtEditorial.setText(editorial_edit[1].toString());        
+    /**
+     * Establece el Id de la Editorial a editar.
+     * @param editorialId Id de la Editorial siendo editada. 
+     */
+    public void setEditId(String editorialId) {
+        this.editorialId = editorialId;
+        Object[] editorialEdit = editorialDAO.getEditorialById(editorialId);
+        
+        // Muestra los datos en los controles.
+        txtEditorial.setText(editorialEdit[1].toString());        
     }
     
     /**
@@ -102,33 +104,36 @@ public class AddNewEditorial extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     
+    /**
+     * Crea un registro en la tabla Editorial con los datos proporcionados.
+     * @param evt evento que dispara la funcion.
+     */
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        // Accion del boton Guardar
-        if (txtEditorial.getText().trim().length() == 0){
-            // Suena un beep
+        if(txtEditorial.getText().trim().length() == 0) {
+            
+            // Suena un beep y se muestra un mensaje.
             Toolkit.getDefaultToolkit().beep();
-            // Muestra un mensage de aviso
             JOptionPane.showMessageDialog(this, "Escriba el idioma", "Aviso", 2);
-        }
-        else{                      
-            String editorial = txtEditorial.getText().trim();
-            if (editorial_id == null){ // Guarda un nuevo idioma                
-                editorial_id = editorial_dao.SaveEditorial(editorial);
-            }
-            else{ // Actualiza idioma                
-                Object[] editorial_obj = new Object[2];
-                editorial_obj[0] = editorial_id;              // Id del editorial
-                editorial_obj[1] = editorial;                 // editorial
-                editorial_id = editorial_dao.UpdateEditorial(editorial_obj);                
+        } else {                      
+            String editorialNombre = txtEditorial.getText().trim();
+            
+            // Crear o editar una Editorial.
+            if(editorialId == null) {
+                editorialId = editorialDAO.saveEditorial(editorialNombre);
+            } else {            
+                Object[] editorial = new Object[2];
+                editorial[0] = editorialId;
+                editorial[1] = editorialNombre;
+                editorialId = editorialDAO.updateEditorial(editorial);                
             }
             
-            if (editorial_id == null){
-                // Suena un beep
+            if(editorialId == null) {
+                
+                // Suena un beep y se muestra un mensaje de error.
                 Toolkit.getDefaultToolkit().beep();
                 JOptionPane.showMessageDialog(this, "Error al guardar el editorial", "Error", 0);                
-            }
-            else{
-                BorrarTextos();
+            } else {
+                borrarTextos();
                 dispose();
             }            
         }  

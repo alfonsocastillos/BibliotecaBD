@@ -1,59 +1,49 @@
-/*
-   Operaciones a la base de datos en la tabla empleado
-*/
 package dataBase.dao;
 
-import dataBase.Conexion;
+import dataBase.CustomConnection;
 import dataBase.ConfigDataBase;
 import java.sql.*;
 
-/* 
-    Clase que realiza todas las transacciones a la base de datos, hereda de la
-    clase conexión para ahorrar codigo
-*/
-
-public class EmpleadoDAO extends Conexion {
+/**
+ * Operaciones a la base de datos en la tabla empleado.
+ * @author alfonso
+ */
+public class EmpleadoDAO extends CustomConnection {
     
-    public Object[] GetEmpleadoByUsr(String usr, char psw[]){
-        // Busca un empleado usando como parametro su usuario y contraseña
-        // Se conecta a la base de datos
-       conectar();
-       // variable que guardara los datos del empleado
-       Object employee [];
-       try{       
+    /**
+     * Consulta un empleado por su Usuario y contraseña.
+     * @param usr el usuario del empleado.
+     * @param psw la contraseña del empleado.
+     * @return Object[] con los datos del empleado (Id, Sucursal Id, Nombre de la sucursal, Nombre, Apellido Paterno + Apellido Materno).
+     */
+    public Object[] getEmpleadoByUsr(String usr, char psw[]) {
+        connect();
+        Object[] employee = null;
+        try {
+            sentenciaSQL = "SELECT EMPLEADO_ID, SUCURSAL_ID, SUCURSAL.NOMBRE, EMPLEADO.NOMBRE, APELLIDO_PAT || ' ' || APELLIDO_MAT FROM EMPLEADO " +
+                "JOIN SUCURSAL USING (SUCURSAL_ID) WHERE USUARIO LIKE ? AND CONTRASENIA LIKE ?";
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
+            preparedStatement.setString(1, usr);
+            preparedStatement.setString(2, String.valueOf(psw));
+            resultSet = preparedStatement.executeQuery();
             employee = new Object[5];
-            // consulta
-            sentenciaSQL  = "SELECT empleado_id, sucursal_id, sucursal.nombre, empleado.nombre, apellido_pat || ' ' || apellido_mat " +
-                            "FROM empleado " +
-                            "JOIN sucursal USING (sucursal_id) " +
-                            "WHERE usuario LIKE ? " +
-                            "AND contrasenia LIKE ?";           
-            ps = conn.prepareStatement(sentenciaSQL);
-            // asigna los parametros
-            ps.setString(1, usr);
-            ps.setString(2, String.valueOf(psw));
-            rs = ps.executeQuery();
-            if (rs.next()){
-                // Recupera los valores
-                employee [0] = rs.getString(1);                
-                employee [1] = rs.getString(2);               
-                employee [2] = rs.getString(3);
-                employee [3] = rs.getString(4);
-                employee [4] = rs.getString(5);
-            }
-            else {
-                employee [0] = 0;
-            }
+            if(resultSet.next()) {
                 
-            return employee;
+                // Recupera los valores
+                employee[0] = resultSet.getString(1);
+                employee[1] = resultSet.getString(2);
+                employee[2] = resultSet.getString(3);
+                employee[3] = resultSet.getString(4);
+                employee[4] = resultSet.getString(5);
+            } else {
+                employee[0] = 0;
+            }
+        } catch(SQLException ex) {
+           System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "getEmpleadoByUsr");
+           employee = null;
+        } finally {
+           disconnect();
         }
-        catch (SQLException ex){
-           System.out.println(ConfigDataBase.DB_T_ERROR +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
-                    "\n\n" + sentenciaSQL + "\n\nUbicación: " + "GetEmpleadoByUsr");
-            return null;
-        }
-        finally{
-           desconectar();           
-       }
+        return employee;
     }
 }

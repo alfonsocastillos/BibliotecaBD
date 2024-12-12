@@ -6,43 +6,47 @@ import java.awt.event.WindowEvent;
 import javax.swing.JOptionPane;
 
 /**
- *
- * @author Carlos
- * Ventana que permite crear, editar y eliminar paises del catálogo
+ * Ventana encargada de agregar y editar Paises.
+ * @author alfonso
  */
 public class AddNewPais extends javax.swing.JDialog {
-    // Para guardar el pais
-    int pais_id;
-    PaisDAO pais_dao;
+    int paisId;
+    PaisDAO paisDAO;
 
     /**
-     * Creates new form 
-     * @param parent
-     * @param modal
+     * Creates new form AddNewPais.
+     * @param parent ventana padre.
+     * @param modal determina si la ventana no cede el foco a otra.
      */
     public AddNewPais(java.awt.Frame parent, boolean modal) {
-        // ventana modal
         super(parent, modal);
-        // inicia los componentes
+        
+        // Inicia los componentes.
         initComponents();
         processWindowEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-        // Crea el dao para acceder a la tabla PAIS
-        pais_dao = new PaisDAO();
+        
+        // Crea el dao para acceder a la tabla Pais.
+        paisDAO = new PaisDAO();
         getRootPane().setDefaultButton(btnGuardar);                      
     }
     
-    private void BorrarTextos(){
-        // Borra el texto
+    /**
+     * Borra el texto.
+     */
+    private void borrarTextos() {        
         txtPais.setText("");
     }
     
-    public void SetEditId(int pais_id){
-        // Asigna el id del pais a modificar
-        this.pais_id = pais_id;
-        // Busca el pais
-        Object[] pais_edit = pais_dao.GetPaisById(pais_id);
-        // Muestra los datos en los controles
-        txtPais.setText(pais_edit[1].toString());        
+    /**
+     * Asignar el Id de la Escolaridad siendo editada.
+     * @param paisId Id del Pais siendo editado.
+     */
+    public void SetEditId(int paisId) {
+        this.paisId = paisId;
+        Object[] paisEdit = paisDAO.getPaisById(paisId);
+       
+        // Muestra los datos en los controles.
+        txtPais.setText(paisEdit[1].toString());        
     }
     
     /**
@@ -102,33 +106,34 @@ public class AddNewPais extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     
+    /**
+     * Guarda la informacion introducida en la base de datos.
+     * @param evt evento que dispara la funcion.
+     */
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        // Accion del boton Guardar
-        if (txtPais.getText().trim().length() == 0){
-            // Suena un beep
+        if(txtPais.getText().trim().length() == 0) {
+           
+            // Suena un beep y muestra un mensaje.
             Toolkit.getDefaultToolkit().beep();
-            // Muestra un mensage de aviso
             JOptionPane.showMessageDialog(this, "Escriba el pais", "Aviso", 2);
-        }
-        else{                      
-            String pais = txtPais.getText().trim();
-            if (pais_id == 0){ // Guarda un nuevo pais                
-                pais_id = pais_dao.SavePais(pais);                
-            }
-            else{ // Actualiza pais                
-                Object[] pais_obj = new Object[2];
-                pais_obj[0] = pais_id;              // Id del pais
-                pais_obj[1] = pais;                 // pais
-                pais_id = pais_dao.UpdatePais(pais_obj);                
+        } else {                      
+            String paisNombre = txtPais.getText().trim();
+            if(paisId == 0) {
+                paisId = paisDAO.savePais(paisNombre);                
+            } else {
+                Object[] pais = new Object[2];
+                pais[0] = paisId;
+                pais[1] = pais;
+                paisId = paisDAO.updatePais(pais);                
             }
             
-            if (pais_id == 0){
-                // Suena un beep
+            if(paisId == 0) {
+               
+                // Suena un beep y muestra un mensaje.
                 Toolkit.getDefaultToolkit().beep();
                 JOptionPane.showMessageDialog(this, "Error al guardar el pais", "Error", 0);                
-            }
-            else{
-                BorrarTextos();
+            } else {
+                borrarTextos();
                 dispose();
             }            
         }  

@@ -1,61 +1,58 @@
-package gui.libro;
+package gui;
 
-import dataBase.dao.GeneroDAO;
+import dataBase.dao.AutorDAO;
 import java.awt.Toolkit;
 import javax.swing.JOptionPane;
 import tools.UtilsTable;
+import gui.libro.AddNewAutor;
 
 /**
- * Ventana que permite agregar Generos.
+ * Ventana que permite agregar autores a un libro
  * @author alfonso
  */
-public class AddGenero extends javax.swing.JDialog {
-    int generoId;
-    GeneroDAO generoDAO;
-    Object[][] generosLista;
+public class AddAutores extends javax.swing.JDialog {
+    String autorId;
+    AutorDAO autorDAO;
+    
+    // Para listar todos los autores 
+    Object[][] autoresLista;
     java.awt.Frame parent;    
 
     /**
-     * Creates new form AddGenero.
+     * Creates new form AddAutores.
      * @param parent ventana padre.
      * @param modal determina si la ventana no cede el foco a otra.
      */
-    public AddGenero(java.awt.Frame parent, boolean modal) {
+    public AddAutores(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
-        this.parent= parent;
-        setTitle("Generos");
+        this.parent = parent;
+        setTitle("Autores");
         
         // Inicia los componentes.
         initComponents();
-        generoDAO = new GeneroDAO();
+        autorDAO = new AutorDAO();
         llenaTabla();
     }
-    
+        
     /**
-     * Establece el Genero siendo editado.
-     * @param generoId Id del genero siendo editado. 
-     */
-    public void SetGeneroId(int generoId) {   
-        this.generoId = generoId;
-        txtFiltro.setText("");
-        llenaTabla();
-    }
-    
-    /**
-     * Llena y despliega la tabla de generos.
+     * Llena y despliega la tabla de Autores.
      */
     private void llenaTabla() {     
-        generosLista = generoDAO.getGenerosByNombre(txtFiltro.getText().trim());
         
-        // Titulos de la tabla.
-        String[] columnasNombre = {"","Genero"};
-       
+        // Consulta todos los autores (id, nombre apellido).
+        autoresLista = autorDAO.getAutoresByNombreApellido(txtFiltro.getText().trim());
+        
+        // Titulos de la tabla
+        String[] columnasNombre = {"","Nombre"};
+        
         // Alineación de las celdas.
         int[][] cellAlignment = {{0, javax.swing.SwingConstants.LEFT}};
         
         // Tamaño de las celdas.
-        int[][] cellSize = {{0, 0}, {1, 170}};   
-        UtilsTable.llenaTabla(cellAlignment, cellSize, columnasNombre, tblGeneros, generosLista);
+        int[][] cellSize = {{0, 0}, {1, 170}, {1, 170}};
+       
+        UtilsTable.llenaTabla(cellAlignment, cellSize, columnasNombre, tblAutores, autoresLista);
+        UtilsTable.quitarColumna(0, tblAutores);
     }
     
     /**
@@ -69,7 +66,7 @@ public class AddGenero extends javax.swing.JDialog {
 
         pnlTableList = new javax.swing.JPanel();
         scpTableList = new javax.swing.JScrollPane();
-        tblGeneros = new javax.swing.JTable();
+        tblAutores = new javax.swing.JTable();
         txtFiltro = new javax.swing.JTextField();
         lblFiltro = new javax.swing.JLabel();
         btnNew = new javax.swing.JButton();
@@ -77,7 +74,7 @@ public class AddGenero extends javax.swing.JDialog {
         btnEdit = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setIconImage(java.awt.Toolkit.getDefaultToolkit().getImage( getClass().getResource("/img/user_icon.png")));
+        setIconImage(java.awt.Toolkit.getDefaultToolkit().getImage( getClass().getResource("/img/pen.png")));
 
         pnlTableList.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N
         pnlTableList.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -85,8 +82,8 @@ public class AddGenero extends javax.swing.JDialog {
         scpTableList.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scpTableList.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-        tblGeneros.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        tblGeneros.setModel(new javax.swing.table.DefaultTableModel(
+        tblAutores.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        tblAutores.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -94,9 +91,14 @@ public class AddGenero extends javax.swing.JDialog {
 
             }
         ));
-        scpTableList.setViewportView(tblGeneros);
+        tblAutores.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblAutoresMouseClicked(evt);
+            }
+        });
+        scpTableList.setViewportView(tblAutores);
 
-        pnlTableList.add(scpTableList, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 180, 170));
+        pnlTableList.add(scpTableList, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 170, 170));
 
         txtFiltro.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtFiltro.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -104,14 +106,14 @@ public class AddGenero extends javax.swing.JDialog {
                 txtFiltroKeyReleased(evt);
             }
         });
-        pnlTableList.add(txtFiltro, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 10, 140, 25));
+        pnlTableList.add(txtFiltro, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 10, 120, 25));
 
         lblFiltro.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblFiltro.setText("Filtrar:");
         pnlTableList.add(lblFiltro, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, 25));
 
         btnNew.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/add.png"))); // NOI18N
-        btnNew.setToolTipText("Registrar nuevo genero");
+        btnNew.setToolTipText("Registrar nuevo autor");
         btnNew.setFocusable(false);
         btnNew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -120,7 +122,7 @@ public class AddGenero extends javax.swing.JDialog {
         });
 
         btnDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/borrar.png"))); // NOI18N
-        btnDelete.setToolTipText("Borrar genero");
+        btnDelete.setToolTipText("Borrar autor");
         btnDelete.setFocusable(false);
         btnDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -129,7 +131,7 @@ public class AddGenero extends javax.swing.JDialog {
         });
 
         btnEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/editar.png"))); // NOI18N
-        btnEdit.setToolTipText("Editar genero");
+        btnEdit.setToolTipText("Editar autor");
         btnEdit.setFocusable(false);
         btnEdit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -143,15 +145,15 @@ public class AddGenero extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pnlTableList, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnNew, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(39, 39, 39)
-                        .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(44, 44, 44)
-                        .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(btnNew, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(34, 34, 34)
+                .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(pnlTableList, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 14, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -170,21 +172,31 @@ public class AddGenero extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     /**
-     * Abre una ventana que posibilida crear un Genero.
+     * Agrega al Autor selecciona a la Autoria al dar doble click en este.
+     * @param evt evento que dispara la funcion.
+     */
+    private void tblAutoresMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblAutoresMouseClicked
+        if(evt.getClickCount() == 2) {  
+            btnEditActionPerformed(null);   
+        }
+    }//GEN-LAST:event_tblAutoresMouseClicked
+
+    /**
+     * Abre una ventana que posibilida crear un Autor.
      * @param evt evento que dispara la funcion.
      */
     private void btnNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewActionPerformed
-        AddNewGenero addNewGenero =  new AddNewGenero(parent, true);        
-        addNewGenero.setLocationRelativeTo(this);
-        addNewGenero.setVisible(true);        
+        AddNewAutor addNewAutor = new AddNewAutor(parent, true);        
+        addNewAutor.setLocationRelativeTo(this);
+        addNewAutor.setVisible(true);        
         
-        // Cuando cierra la ventana agrega el genero a la tabla y lo selecciona.
+        // Cuando cierra la ventana agrega el autor a la tabla y lo selecciona.
         llenaTabla();
-        UtilsTable.mueveTabla(UtilsTable.getRow(addNewGenero.generoId, generosLista), tblGeneros);
+        UtilsTable.mueveTabla(UtilsTable.getRow(addNewAutor.getAutorId(), autoresLista), tblAutores);
     }//GEN-LAST:event_btnNewActionPerformed
 
     /**
-     * Llena la tabla de Generos cada que se escribe una letra.
+     * Llena la tabla de Autores cada que se escribe una letra
      * @param evt evento que dispara la funcion.
      */
     private void txtFiltroKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFiltroKeyReleased
@@ -192,28 +204,28 @@ public class AddGenero extends javax.swing.JDialog {
     }//GEN-LAST:event_txtFiltroKeyReleased
 
     /**
-     * Elimina al genero seleccionado de la tabla de Genero.
+     * Elimina al Autor seleccionado de la tabla de Autor.
      * @param evt evento que dispara la funcion.
      */
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
 
         // Si no selecciona fila, le avisa al usuario.
-        if(tblGeneros.getSelectedRow() < 0) {
+        if(tblAutores.getSelectedRow() < 0) {
             
             // Suena un beep y se muestra un mensaje.
             java.awt.Toolkit.getDefaultToolkit().beep();
-            javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila", "Aviso", 2);
+            javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila","Aviso", 2);
         } else {
             
-            // Suena un beep y se muestra un mensaje de confirmacion.
+            // suena un beep y se muestra un mensaje de confirmacion.
             java.awt.Toolkit.getDefaultToolkit().beep();            
-            int res = javax.swing.JOptionPane.showConfirmDialog(this, "¿Eliminar " + generosLista[tblGeneros.getSelectedRow()][1].toString() + "?",
+            int res = javax.swing.JOptionPane.showConfirmDialog(this, "¿Eliminar " + autoresLista[tblAutores.getSelectedRow()][1].toString() + "?",
                 "Seleccione", JOptionPane.YES_NO_OPTION);
-            
+
             // Si la respuesta es afirmativa, elimina el registro.
             if(res == 0) {
-                String msj = "";                
-                int ret = generoDAO.deleteGenero((Integer) tblGeneros.getValueAt(tblGeneros.getSelectedRow(), 0));
+                String msj = "";
+                int ret = autorDAO.deleteAutor((String) UtilsTable.obtenerValor(tblAutores.getSelectedRow(), 0, tblAutores));
                 if(ret != 1) {
                     msj = "No se pudo eliminar por que tiene registros asignados.";
                     javax.swing.JOptionPane.showMessageDialog(this, msj, "Información", 1);
@@ -226,29 +238,27 @@ public class AddGenero extends javax.swing.JDialog {
     }//GEN-LAST:event_btnDeleteActionPerformed
 
     /**
-     * Abre una ventana para poder editar al Genero seleccionado.
+     * Abre una ventana para poder editar al Autor seleccionado.
      * @param evt evento que dispara la funcion.
      */
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
-        if(tblGeneros.getSelectedRow() < 0) {
+        if(tblAutores.getSelectedRow() < 0) {
             
-            // Suena un beep y se muestra un mensaje.
+            // Suena un beep y se muestra un mensaje
             Toolkit.getDefaultToolkit().beep();
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila", "Información", 1);
         } else {
+            autorId = (String) UtilsTable.obtenerValor(tblAutores.getSelectedRow(), 0, tblAutores);
             
-            // Obtiene el id del genero seleccionado.
-            generoId = (Integer) tblGeneros.getValueAt(tblGeneros.getSelectedRow(), 0);
-
-            // Ventana para editar genero
-            AddNewGenero editGenero = new AddNewGenero(parent, true);        
-            editGenero.setLocationRelativeTo(this);            
-            editGenero.SetEditId(generoId);
-            editGenero.setVisible(true);
+            // Abre la ventana para editar Autor
+            AddNewAutor editAutor = new AddNewAutor(parent, true);                  
+            editAutor.setEditId(autorId);
+            editAutor.setLocationRelativeTo(this);            
+            editAutor.setVisible(true);
             
-            // Cuando cierra la ventana agrega el genero a la tabla y lo selecciona.
+            // Cuando cierra la ventana agrega el autor a la tabla y lo selecciona.
             llenaTabla();
-            UtilsTable.mueveTabla(UtilsTable.getRow(editGenero.generoId, generosLista), tblGeneros);
+            UtilsTable.mueveTabla(UtilsTable.getRow(editAutor.getAutorId(), autoresLista), tblAutores);
         }
     }//GEN-LAST:event_btnEditActionPerformed
 
@@ -259,7 +269,7 @@ public class AddGenero extends javax.swing.JDialog {
     private javax.swing.JLabel lblFiltro;
     private javax.swing.JPanel pnlTableList;
     private javax.swing.JScrollPane scpTableList;
-    private javax.swing.JTable tblGeneros;
+    private javax.swing.JTable tblAutores;
     private javax.swing.JTextField txtFiltro;
     // End of variables declaration//GEN-END:variables
 }

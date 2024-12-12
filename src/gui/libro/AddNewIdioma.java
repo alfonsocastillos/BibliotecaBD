@@ -6,41 +6,43 @@ import java.awt.event.WindowEvent;
 import javax.swing.JOptionPane;
 
 /**
- *
- * @author Carlos
- * Ventana que permite crear, editar y eliminar idiomas del catálogo
+ * Ventana que permite crear y editar Idiomas del catálogo
+ * @author alfonso
  */
 public class AddNewIdioma extends javax.swing.JDialog {
-    // Para guardar el idioma
-    int idioma_id;
-    IdiomaDAO idioma_dao;
+    int idiomaId;
+    IdiomaDAO idiomaDAO;
 
     /**
-     * Creates new form 
-     * @param parent
-     * @param modal
+     * Creates new form AddNewIdioma.
+     * @param parent ventana padre.
+     * @param modal determina si la ventana no cede el foco a otra.
      */
     public AddNewIdioma(java.awt.Frame parent, boolean modal) {
-        // ventana modal
         super(parent, modal);
-        // inicia los componentes
+        
+        // Inicia los componentes.
         initComponents();
         processWindowEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-        // Crea el dao para acceder a la tabla IDIOMA
-        idioma_dao = new IdiomaDAO();
+        idiomaDAO = new IdiomaDAO();
         getRootPane().setDefaultButton(btnGuardar);                      
     }
     
-    private void BorrarTextos(){
-        // Borra el texto
+    /**
+     * Borra el texto
+     */
+    private void borrarTextos() {        
         txtIdioma.setText("");
     }
     
-    public void SetEditId(int idioma_id){
-        // Asigna el id del actor a modificar
-        this.idioma_id = idioma_id;
-        // Busca el actor
-        Object[] idioma_edit = idioma_dao.GetIdiomaById(idioma_id);
+    /**
+     * Establece el Id del Idioma a editar.
+     * @param idiomaId Id del Idioma siendo editado.
+     */
+    public void setEditId(int idiomaId) {
+        this.idiomaId = idiomaId;
+        Object[] idioma_edit = idiomaDAO.getIdiomaById(idiomaId);
+        
         // Muestra los datos en los controles
         txtIdioma.setText(idioma_edit[1].toString());        
     }
@@ -102,33 +104,36 @@ public class AddNewIdioma extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     
+    /**
+     * Crea un registro en la tabla Idioma con los datos proporcionados.
+     * @param evt evento que dispara la funcion.
+     */
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        // Accion del boton Guardar
-        if (txtIdioma.getText().trim().length() == 0){
-            // Suena un beep
+        if(txtIdioma.getText().trim().length() == 0) {
+            
+            // Suena un beep y muestra un mensaje.
             Toolkit.getDefaultToolkit().beep();
-            // Muestra un mensage de aviso
             JOptionPane.showMessageDialog(this, "Escriba el idioma", "Aviso", 2);
-        }
-        else{                      
-            String idioma = txtIdioma.getText().trim();
-            if (idioma_id == 0){ // Guarda un nuevo idioma                
-                idioma_id = idioma_dao.SaveIdioma(idioma);                
-            }
-            else{ // Actualiza idioma                
-                Object[] idioma_obj = new Object[2];
-                idioma_obj[0] = idioma_id;              // Id del idioma
-                idioma_obj[1] = idioma;                 // Idioma
-                idioma_id = idioma_dao.UpdateIdioma(idioma_obj);                
+        } else {                      
+            String idiomaNombre = txtIdioma.getText().trim();
+            
+            // Crear o actualizar un Idioma.
+            if(idiomaId == 0) {
+                idiomaId = idiomaDAO.saveIdioma(idiomaNombre);                
+            } else {
+                Object[] idiomaObj = new Object[2];
+                idiomaObj[0] = idiomaId;
+                idiomaObj[1] = idiomaNombre;
+                idiomaId = idiomaDAO.updateIdioma(idiomaObj);                
             }
             
-            if (idioma_id == 0){
-                // Suena un beep
+            if(idiomaId == 0) {
+                
+                // Suena un beep y muestra un mensaje de erro.
                 Toolkit.getDefaultToolkit().beep();
                 JOptionPane.showMessageDialog(this, "Error al guardar el idioma", "Error", 0);                
-            }
-            else{
-                BorrarTextos();
+            } else {
+                borrarTextos();
                 dispose();
             }            
         }  

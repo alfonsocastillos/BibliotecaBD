@@ -6,48 +6,55 @@ import java.awt.event.WindowEvent;
 import javax.swing.JOptionPane;
 
 /**
- *
- * @author Carlos
- * Ventana que permite crear, editar y eliminar idiomas del catálogo
+ * Ventana que permite crear, editar y eliminar Estados de un Pais.
+ * @author alfonso
  */
 public class AddNewEstado extends javax.swing.JDialog {
-    // Para guardar el idioma
-    int estado_id;
-    int pais_id;
-    EstadoDAO estado_dao;
+    int estadoId;
+    int paisId;
+    EstadoDAO estadoDAO;
 
     /**
-     * Creates new form 
-     * @param parent
-     * @param modal
+     * Creates new form AddNewEstado.
+     * @param parent ventana padre.
+     * @param modal determina si la ventana no cede el foco a otra.
      */
     public AddNewEstado(java.awt.Frame parent, boolean modal) {
-        // ventana modal
         super(parent, modal);
-        // inicia los componentes
+       
+        // Inicia los componentes.
         initComponents();
         processWindowEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-        // Crea el dao para acceder a la tabla PAIS
-        estado_dao = new EstadoDAO();
+        
+        // Crea el dao para acceder a la tabla Estado.
+        estadoDAO = new EstadoDAO();
         getRootPane().setDefaultButton(btnGuardar);                      
     }
-    
-    private void BorrarTextos(){
-        // Borra el texto
-        TextFieldEstado.setText("");
+    /**
+     * Borra el texto
+     */
+    private void borrarTextos() {        
+        txtEstado.setText("");
     }
     
-    public void SetEditId(int estado_id){
-        // Asigna el id del pais a modificar
-        this.estado_id = estado_id;
-        // Busca el pais
-        Object[] estado_edit = estado_dao.GetEstadoById(estado_id);
-        // Muestra los datos en los controles
-        TextFieldEstado.setText(estado_edit[1].toString());        
+    /**
+     * Asignar el Id del Estado siendo editada.
+     * @param estadoId Id del estado siendo editado.
+     */
+    public void setEditId(int estadoId) {
+        this.estadoId = estadoId;
+        Object[] estadoEdit = estadoDAO.getEstadoById(estadoId);
+        
+        // Muestra los datos en los controles.
+        txtEstado.setText(estadoEdit[1].toString());        
     }
     
-    public void SetPaisId(int pais_id) {
-        this.pais_id = pais_id;
+    /**
+     * Asignar el Id del Pais al que pertenece el Estado.
+     * @param paisId Id del pais al que pertenece el Estado.
+     */
+    public void SetPaisId(int paisId) {
+        this.paisId = paisId;
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -59,7 +66,7 @@ public class AddNewEstado extends javax.swing.JDialog {
     private void initComponents() {
 
         pnlTableList = new javax.swing.JPanel();
-        TextFieldEstado = new javax.swing.JTextField();
+        txtEstado = new javax.swing.JTextField();
         lblNombre = new javax.swing.JLabel();
         btnGuardar = new javax.swing.JButton();
 
@@ -70,8 +77,8 @@ public class AddNewEstado extends javax.swing.JDialog {
         pnlTableList.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N
         pnlTableList.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        TextFieldEstado.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        pnlTableList.add(TextFieldEstado, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 60, 140, 25));
+        txtEstado.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        pnlTableList.add(txtEstado, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 60, 140, 25));
 
         lblNombre.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblNombre.setText("Estado:");
@@ -106,41 +113,42 @@ public class AddNewEstado extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     
+    /**
+     * Guarda la informacion introducida en la base de datos.
+     * @param evt evento que dispara la funcion.
+     */
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        // Accion del boton Guardar
-        String estado = TextFieldEstado.getText().trim();
-        if (estado.length() == 0){
-            // Suena un beep
+        String estadoNombre = txtEstado.getText().trim();
+        if(estadoNombre.length() == 0) {
+           
+            // Suena un beep y muestra un mesaje.
             Toolkit.getDefaultToolkit().beep();
-            // Muestra un mensage de aviso
             JOptionPane.showMessageDialog(this, "Escriba el estado", "Aviso", 2);
-        }
-        else{                                  
-            if (estado_id == 0) { // Guarda un nuevo estado                
-                Object[] estado_obj = {estado, pais_id};
-                estado_id = estado_dao.SaveEstado(estado_obj);                
-            }
-            else{ // Actualiza estado                
-                Object[] estado_obj = {estado_id, estado};                
-                estado_id = estado_dao.UpdateEstado(estado_obj);                
+        } else {                                  
+            if(estadoId == 0) {
+                Object[] estado = {estadoNombre, paisId};
+                estadoId = estadoDAO.saveEstado(estado);                
+            } else {
+                Object[] estado_obj = {estadoId, estadoNombre};                
+                estadoId = estadoDAO.updateEstado(estado_obj);                
             }
             
-            if (estado_id == 0){
-                // Suena un beep
+            if(estadoId == 0) {
+                
+                // Suena un beep y muestra un mesaje.
                 Toolkit.getDefaultToolkit().beep();
                 JOptionPane.showMessageDialog(this, "Error al guardar el estado", "Error", 0);                
-            }
-            else{
-                BorrarTextos();
+            } else {
+                borrarTextos();
                 dispose();
             }            
         }  
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField TextFieldEstado;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JLabel lblNombre;
     private javax.swing.JPanel pnlTableList;
+    private javax.swing.JTextField txtEstado;
     // End of variables declaration//GEN-END:variables
 }

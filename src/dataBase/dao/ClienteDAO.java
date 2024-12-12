@@ -1,248 +1,285 @@
-/*
-   Operaciones a la base de datos en la tabla cliente
-*/
 package dataBase.dao;
 
-import dataBase.Conexion;
+import dataBase.CustomConnection;
 import dataBase.ConfigDataBase;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class ClienteDAO extends Conexion {        
-    public Object [] getClienteById(int cliente_id){
-        // se conecta a la base de datos
-        conectar();
-        // crea un arreglo de beans para guardar los datos
-        Object[] customer = new Object[13];
-        
-        try{
-            sentenciaSQL  = "SELECT CLIENTE_ID, NOMBRE, APELLIDO_PAT, APELLIDO_MAT, CORREO, PAIS, ESTADO, ALCALDIA, CP, CALLE, EXTERIOR, INTERIOR, NIVEL " +
-                            "FROM CLIENTE " +
-                            "JOIN DIRECCION USING (DIRECCION_ID) " +
-                            "JOIN ESTADO USING (ESTADO_ID) " +
-                            "JOIN PAIS USING (PAIS_ID) " +
-                            "JOIN ESCOLARIDAD USING(ESCOLARIDAD_ID) " +
-                            "WHERE CLIENTE_ID = ? ";
-            ps = conn.prepareStatement(sentenciaSQL);
-            ps.setInt(1, cliente_id);
-            rs = ps.executeQuery();
+/**
+ * Operaciones a la base de datos en la tabla cliente.
+ * @author alfonso
+ */
+public class ClienteDAO extends CustomConnection {
+
+    /**
+     * Consulta la informacion para un cliente (Id, Nombre, Apellido Paterno, Apellido Materno, Correo, Pais, Estado, Alcaldia, CP, Calle, Num Exterior, Num Interior, Escolaridad).
+     * @param clienteId Id del cliente a consultar.
+     * @return 
+     */
+    public Object[] getClienteById(int clienteId) {
+        connect();
+        Object[] cliente = null;
+        try {
+            sentenciaSQL = "SELECT CLIENTE_ID, NOMBRE, APELLIDO_PAT, APELLIDO_MAT, CORREO, PAIS, ESTADO, ALCALDIA, CP, CALLE, EXTERIOR, INTERIOR, NIVEL FROM CLIENTE " +
+                    "JOIN DIRECCION USING (DIRECCION_ID) JOIN ESTADO USING (ESTADO_ID) JOIN PAIS USING (PAIS_ID) JOIN ESCOLARIDAD USING(ESCOLARIDAD_ID) WHERE CLIENTE_ID = ? ";
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
+            preparedStatement.setInt(1, clienteId);
+            resultSet = preparedStatement.executeQuery();
             
-            // Recorre el result set para obtener los datos y asignarlos
-            // al arreglo de beans
-            while (rs.next()){
-                customer[0] = rs.getInt(1);         // Id
-                customer[1] = rs.getString(2);      // Nombre
-                customer[2] = rs.getString(3);      // Apellido Paterno
-                customer[3] = rs.getString(4);      // Apellido Materno
-                customer[4] = rs.getString(5);      // Correo
-                customer[5] = rs.getString(6);      // Pais
-                customer[6] = rs.getString(7);      // Estado
-                customer[7] = rs.getString(8);      // Alcaldia
-                customer[8] = rs.getString(9);      // CP
-                customer[9] = rs.getString(10);     // Calle
-                customer[10] = rs.getString(11);    // Exterior
-                customer[11] = rs.getString(12);    // Interior
-                customer[12] = rs.getString(13);    // Escolaridad
+            // Recorre el result set para obtener los datos y asignarlos al arreglo.
+            cliente = new Object[13];
+            while(resultSet.next()) {
+                cliente[0] = resultSet.getInt(1);       // Id.
+                cliente[1] = resultSet.getString(2);    // Nombre.
+                cliente[2] = resultSet.getString(3);    // Apellido Paterno.
+                cliente[3] = resultSet.getString(4);    // Apellido Materno.
+                cliente[4] = resultSet.getString(5);    // Correo.
+                cliente[5] = resultSet.getString(6);    // Pais.
+                cliente[6] = resultSet.getString(7);    // Estado.
+                cliente[7] = resultSet.getString(8);    // Alcaldia.
+                cliente[8] = resultSet.getString(9);    // CP.
+                cliente[9] = resultSet.getString(10);   // Calle.
+                cliente[10] = resultSet.getString(11);  // Exterior.
+                cliente[11] = resultSet.getString(12);  // Interior.
+                cliente[12] = resultSet.getString(13);  // Escolaridad.
             }      
-            return customer;
+        } catch(SQLException ex) {
+            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + ConfigDataBase.DB_ERR_QUERY + "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + 
+                    "\n\nUbicación: " + "getClienteById");
+            cliente = null;
+        } finally {
+            disconnect();
         }
-        catch (SQLException ex){
-            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + ConfigDataBase.DB_ERR_QUERY + 
-                    "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "getClienteById");
-            return null;
-        }
-        finally{
-            desconectar();           
-        }
+        return cliente;
     }
-            
-    // Método para guardar un usuario
-    public String saveCliente(Object[] cliente) {
-    conectar();
-        try {            
+                
+    /**
+     * Guarda un usuario con los datos.
+     * @param cliente lista con los datos del cliente (Nombre, Apellido Paterno, Apellido Materno, Correo, Alcaldia, CP, Calle, Num Exterior, Num Interior, Id del Estado, 
+     * Id de Escolaridad).
+     * @return String con el Id del cliente creado.
+     */
+    public int saveCliente(Object[] cliente) {
+        connect();
+        int clienteId;
+        try {
             sentenciaSQL = "SELECT MAX(CLIENTE_ID) FROM CLIENTE";
-            ps = conn.prepareStatement(sentenciaSQL);
-            rs = ps.executeQuery();
-            String cliente_id = "";
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
+            resultSet = preparedStatement.executeQuery();
             
-            if (rs.next()){
-               cliente_id = Integer.toString(rs.getInt(1) + 1);
+            String newId = "";
+            if(resultSet.next()) {
+               newId = Integer.toString(resultSet.getInt(1) + 1);
             } 
             
-            // Crear registro direccion para el cliente
-            DireccionDAO dir_dao = new DireccionDAO();
+            // Crear registro direccion para el cliente.
+            DireccionDAO dirDAO = new DireccionDAO();
             Object[] dir = {
-                cliente[4], // Alcaldia
-                cliente[5], // CP
-                cliente[6], // Calle
-                cliente[7], // Exterior
-                cliente[8], // Interior
-                cliente[9]  // Estado ID
+                cliente[4], // Alcaldia.
+                cliente[5], // CP.
+                cliente[6], // Calle.
+                cliente[7], // Exterior.
+                cliente[8], // Interior.
+                cliente[9]  // Estado ID.
             };
-            String dir_id = dir_dao.SaveDireccion(dir);
+            String dirId = dirDAO.saveDireccion(dir);
             
-            LocalDateTime ldt = LocalDateTime.now().plusYears(1);
-            DateTimeFormatter date_format = DateTimeFormatter.ofPattern("dd/MM/yyyy");                
-            String next_year = date_format.format(ldt);            
+            LocalDateTime localDateTime = LocalDateTime.now().plusYears(1);
+            DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            String next_year = dateFormat.format(localDateTime);
 
-            CredencialDAO cred_dao = new CredencialDAO();
-            int cred_id = cred_dao.SaveCredencial(next_year);
+            CredencialDAO credDAO = new CredencialDAO();
+            int credId = credDAO.saveCredencial(next_year);
             
             // Resto del código para insertar el usuario en CLIENTE
             sentenciaSQL = "INSERT INTO CLIENTE VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-            ps = conn.prepareStatement(sentenciaSQL);
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
 
-            ps.setBigDecimal(1, new BigDecimal(cliente_id));                // Id (calculado)
-            ps.setString(2, cliente[0].toString());                         // Nombre
-            ps.setString(3, cliente[1].toString());                         // Apellido Paterno
-            ps.setString(4, cliente[2].toString());                         // Apellido Materno
-            ps.setString(5, cliente[3].toString());                         // Correo
-            ps.setString(6, dir_id);                                        // Id de dirección (calculado)
-            ps.setBigDecimal(7, new BigDecimal(cliente[10].toString()));    // Id de escolaridad 
-            ps.setBigDecimal(8, new BigDecimal(cred_id));                   // Id de credencial
-
-            ps.executeUpdate();
-            
-            return cliente_id;  // Regresa el nuevo ID de cliente
-        } catch (SQLException ex) {
-            // Manejo de excepciones...
-            ex.printStackTrace();
-            System.err.println("Error al insertar usuario: " + ex.getMessage());
-            return null;
+            preparedStatement.setBigDecimal(1, new BigDecimal(newId));                      // Id (calculado).
+            preparedStatement.setString(2, cliente[0].toString());                          // Nombre.
+            preparedStatement.setString(3, cliente[1].toString());                          // Apellido Paterno.
+            preparedStatement.setString(4, cliente[2].toString());                          // Apellido Materno.
+            preparedStatement.setString(5, cliente[3].toString());                          // Correo.
+            preparedStatement.setString(6, dirId);                                          // Id de dirección (calculado).
+            preparedStatement.setBigDecimal(7, new BigDecimal(cliente[10].toString()));     // Id de escolaridad.
+            preparedStatement.setBigDecimal(8, new BigDecimal(credId));                     // Id de credencial (calculado).
+            preparedStatement.executeUpdate();
+            clienteId = Integer.valueOf(newId);
+        } catch(SQLException ex) {
+            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + ConfigDataBase.DB_ERR_QUERY + "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + 
+                    "\n\nUbicación: " + "saveCliente");
+            clienteId = 0;
         } finally {
-            desconectar();
+            disconnect();
         }
+        return clienteId;
+    }
+
+    /**
+     * Actualiza la informacion de un cliente.
+     * @param clienteId Id del Cliente siendo editado.
+     * @param cliente Detalles del cliente a editar (Nombre, Apellido Paterno, Apellido Materno, Correo, Alcaldia, CP, Calle, Num Exterior, Num Interior, Id del Estado, 
+     * Id de Escolaridad).
+     * @return String con el Id del Cliente editado.
+     */
+    public int updateCliente(int clienteId, Object[] cliente) {
+        connect();
+        int clienteEditId;
+        try {             
+            
+            // Actualiza la direccion del cliente.
+            DireccionDAO dirDAO = new DireccionDAO();
+            Object[] dir = {
+                cliente[4], // Alcaldia.
+                cliente[5], // CP.
+                cliente[6], // Calle.
+                cliente[7], // Exterior.
+                cliente[8], // Interior.
+                cliente[9]  // Estado ID.
+            };
+            boolean dirActualizada = dirDAO.updateDireccion(clienteId, dir);
+            if(!dirActualizada) {
+                throw new Exception();
+            }
+                       
+            // Resto del código para actualizar el usuario en Cliente
+            sentenciaSQL = "UPDATE CLIENTE SET NOMBRE = ?, APELLIDO_PAT = ?, APELLIDO_MAT = ?, CORREO = ?, ESCOLARIDAD_ID = ? WHERE CLIENTE_ID = ?";
+            preparedStatement = connection.prepareStatement(sentenciaSQL);            
+            preparedStatement.setString(1, cliente[0].toString());                         // Nombre.
+            preparedStatement.setString(2, cliente[1].toString());                         // Apellido Paterno.
+            preparedStatement.setString(3, cliente[2].toString());                         // Apellido Materno.
+            preparedStatement.setString(4, cliente[3].toString());                         // Correo.
+            preparedStatement.setBigDecimal(5, new BigDecimal(cliente[10].toString()));    // Id de escolaridad.
+            preparedStatement.setBigDecimal(6, new BigDecimal(clienteId));                 // Id (calculado).
+            preparedStatement.executeUpdate();
+            clienteEditId = clienteId;
+        } catch(SQLException ex) {
+            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + ConfigDataBase.DB_ERR_QUERY + "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + 
+                    "\n\nUbicación: " + "updateCliente");
+            clienteEditId = 0;
+        } catch(Exception ex) {
+            System.out.println(ConfigDataBase.DB_T_ERROR + ConfigDataBase.DB_ERR_QUERY + "\n\n" + "Error al actualizar la direccion " + "\n\n" + sentenciaSQL + 
+                    "\n\nUbicación: " + "updateCliente");
+            clienteEditId = 0;
+        } finally {
+            disconnect();
+        }
+        return clienteEditId;
     }    
     
-    // Regresa todos los clientes que coincidan con el filtro
-    public Object [][] GetClientesByFilter(String filtro){
-        // se conecta a la base de datos
-        conectar();
-        // crea un arreglo de beans para guardar los datos
-        Object [][] clientes;
-        // Contador
+    /**
+     * Regresa todos los clientes que coincidan con el filtro
+     * @param filtro 
+     * @return 
+     */
+    public Object[][] getClientesByFilter(String filtro) {
+        connect();
+        Object[][] clientes = null;
         int i = 0;
-        // Para guardar la cantidad de registros
         int count = 0;
         filtro = "%" + filtro + "%";
-        try{
-            // Cuenta los registros en la base de datos
-            sentenciaSQL =  "SELECT COUNT (CLIENTE_ID) FROM (" +
-                                "SELECT CLIENTE_ID " +
-                                "FROM CLIENTE " +
-                                "WHERE UPPER(NOMBRE) LIKE UPPER(?) OR " +
-                                "UPPER(APELLIDO_PAT) LIKE UPPER(?) OR " +
-                                "UPPER(APELLIDO_MAT) LIKE UPPER(?) OR " +
-                                "UPPER(CORREO) LIKE UPPER(?) OR " +
-                                "CREDENCIAL_ID LIKE ?)";
-                        
-            ps = conn.prepareStatement(sentenciaSQL);
-            ps.setString(1, filtro);
-            ps.setString(2, filtro);
-            ps.setString(3, filtro);
-            ps.setString(4, filtro);
-            ps.setString(5, filtro);
-            rs = ps.executeQuery();
+        try {
             
-            if (rs.next()) {
-                count = rs.getInt(1);
+            // Cuenta los registros en la base de datos.
+            sentenciaSQL = "SELECT COUNT (CLIENTE_ID) FROM (" +
+                    "SELECT CLIENTE_ID FROM CLIENTE WHERE UPPER(NOMBRE) LIKE UPPER(?) OR UPPER(APELLIDO_PAT) LIKE UPPER(?) OR UPPER(APELLIDO_MAT) LIKE UPPER(?) OR " +
+                    "UPPER(CORREO) LIKE UPPER(?) OR CREDENCIAL_ID LIKE ?)";
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
+            preparedStatement.setString(1, filtro);
+            preparedStatement.setString(2, filtro);
+            preparedStatement.setString(3, filtro);
+            preparedStatement.setString(4, filtro);
+            preparedStatement.setString(5, filtro);
+            resultSet = preparedStatement.executeQuery();
+            
+            if(resultSet.next()) {
+                count = resultSet.getInt(1);
             }
-            // Consulta los registros 
-            clientes = new Object[count][6];          
-            // Cuenta los registros en la base de datos
-            sentenciaSQL =  "SELECT CLIENTE_ID, NOMBRE, APELLIDO_PAT, APELLIDO_MAT, CORREO, CREDENCIAL_ID " +
-                            "FROM CLIENTE " +
-                            "WHERE UPPER(NOMBRE) LIKE UPPER(?) OR " +
-                            "UPPER(APELLIDO_PAT) LIKE UPPER(?) OR " +
-                            "UPPER(APELLIDO_MAT) LIKE UPPER(?) OR " +
-                            "UPPER(CORREO) LIKE UPPER(?) OR " +
-                            "CREDENCIAL_ID LIKE ? ORDER BY NOMBRE";
-                        
-            ps = conn.prepareStatement(sentenciaSQL);
-            ps.setString(1, filtro);
-            ps.setString(2, filtro);
-            ps.setString(3, filtro);
-            ps.setString(4, filtro);
-            ps.setString(5, filtro);
-            rs = ps.executeQuery();
-            // Recorre el result set para obtener los datos y asignarlos al arreglo de beans
-            while (rs.next()) {
-                clientes[i][0] = rs.getInt(1);                    // Id del cliente
-                clientes[i][1] = rs.getString(2);                 // Nombre del cliente
-                clientes[i][2] = rs.getString(3);                 // Apellido Paterno del cliente
-                clientes[i][3] = rs.getString(4);                 // Apellido Materno del cliente
-                clientes[i][4] = rs.getString(5);                 // Correo del cliente                    
-                clientes[i][5] = rs.getInt(6);                    // Credencial del cliente               
+            
+            // Consulta los registros .
+            clientes = new Object[count][6];
+            
+            // Cuenta los registros en la base de datos.
+            sentenciaSQL = "SELECT CLIENTE_ID, NOMBRE, APELLIDO_PAT, APELLIDO_MAT, CORREO, CREDENCIAL_ID FROM CLIENTE WHERE UPPER(NOMBRE) LIKE UPPER(?) OR " +
+                    "UPPER(APELLIDO_PAT) LIKE UPPER(?) OR UPPER(APELLIDO_MAT) LIKE UPPER(?) OR UPPER(CORREO) LIKE UPPER(?) OR CREDENCIAL_ID LIKE ? ORDER BY NOMBRE";                        
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
+            preparedStatement.setString(1, filtro);
+            preparedStatement.setString(2, filtro);
+            preparedStatement.setString(3, filtro);
+            preparedStatement.setString(4, filtro);
+            preparedStatement.setString(5, filtro);
+            resultSet = preparedStatement.executeQuery();
+            
+            // Recorre el result set para obtener los datos y asignarlos al arreglo.
+            while(resultSet.next()) {
+                clientes[i][0] = resultSet.getInt(1);                    // Id del cliente.
+                clientes[i][1] = resultSet.getString(2);                 // Nombre del cliente.
+                clientes[i][2] = resultSet.getString(3);                 // Apellido Paterno del cliente.
+                clientes[i][3] = resultSet.getString(4);                 // Apellido Materno del cliente.
+                clientes[i][4] = resultSet.getString(5);                 // Correo del cliente.
+                clientes[i][5] = resultSet.getInt(6);                    // Credencial del cliente.
                 i++;
             }           
-            return clientes;
+        } catch(SQLException ex) {
+            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "getClientesByFilter");
+            clientes = null;
+        } finally {
+           disconnect();
         }
-        catch (SQLException ex) {
-            System.out.println(ConfigDataBase.DB_T_ERROR +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
-                    "\n\n" + sentenciaSQL + "\n\nUbicación: " + "GetClientesByFilter");
-            return null;
-        }
-        finally{
-           desconectar();           
-        }
+        return clientes;
     }
     
-    // Eliminar un estado
-    public int DeleteCliente(int cliente_id){
-        // Conecta a la base de datos
-        conectar();
-        try{
-            // Buscar la direccion asociada con este cliente            
-            sentenciaSQL =  "SELECT DIRECCION_ID, CREDENCIAL_ID FROM CLIENTE " +
-                            "WHERE CLIENTE_ID = ?";
-            ps = conn.prepareStatement(sentenciaSQL);
-            ps.setInt(1, cliente_id);
-            rs = ps.executeQuery();
+    /**
+     * Eliminar un estado
+     * @param clienteId Id del cliente a elimianar.
+     * @return int representando el resultado de la transaccion.
+     */
+    public int deleteCliente(int clienteId) {
+        connect();
+        int state = 0;
+        try {
             
-            String dir_id = "";
-            int cred_id = 0;
-            if(rs.next()) {
-                dir_id = rs.getString(1);
-                cred_id = rs.getInt(2);
-            }            
+            // Consultar los registros asociados a este cliente.
+            sentenciaSQL = "SELECT DIRECCION_ID, CREDENCIAL_ID FROM CLIENTE WHERE CLIENTE_ID = ?";
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
+            preparedStatement.setInt(1, clienteId);
+            resultSet = preparedStatement.executeQuery();
             
-            // Borrar la credencial asociada
-            sentenciaSQL =  "DELETE FROM CREDENCIAL " + 
-                            "WHERE CREDENCIAL_ID = ?";
-            ps = conn.prepareStatement(sentenciaSQL);
-            ps.setInt(1, cred_id);
-            
-            // Borrar el cliente
-            sentenciaSQL = "DELETE FROM CLIENTE " +
-                            "WHERE CLIENTE_ID = ?";
-            ps = conn.prepareStatement(sentenciaSQL);
-            ps.setInt(1, cliente_id);
-            int res = ps.executeUpdate();
-            
-            // Borrar la direccion asociada con el cliente
-            sentenciaSQL =  "DELETE FROM DIRECCION " +                            
-                            "WHERE DIRECCION_ID = ?";
-            ps = conn.prepareStatement(sentenciaSQL);
-            ps.setString(1, dir_id);
-            ps.executeUpdate();                        
-
-            if (res == 1){
-                return 0;
+            String dirId = "";
+            int credId = 0;
+            if(resultSet.next()) {
+                dirId = resultSet.getString(1);
+                credId = resultSet.getInt(2);
             }
             
-            return 1;
+            // Borrar la credencial asociada.
+            sentenciaSQL = "DELETE FROM CREDENCIAL WHERE CREDENCIAL_ID = ?";
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
+            preparedStatement.setInt(1, credId);
+            
+            // Borrar el cliente.
+            sentenciaSQL = "DELETE FROM CLIENTE WHERE CLIENTE_ID = ?";
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
+            preparedStatement.setInt(1, clienteId);
+            state = preparedStatement.executeUpdate();
+            
+            // Borrar la direccion asociada con el cliente.
+            sentenciaSQL = "DELETE FROM DIRECCION WHERE DIRECCION_ID = ?";
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
+            preparedStatement.setString(1, dirId);
+            preparedStatement.executeUpdate();
+        } catch(SQLException ex) {
+            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "deleteCliente");
+            if(ex.getErrorCode() == 2292) {
+                state = 0;
+            } else {
+                return 2;
+            }
+        } finally {
+           disconnect();
         }
-        catch (SQLException ex){
-            System.out.println(ConfigDataBase.DB_T_ERROR +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
-                    "\n\n" + sentenciaSQL + "\n\nUbicación: " + "DeleteCliente");
-            if (ex.getErrorCode() ==  2292)
-                return 1;
-            return 2;
-        }
-        finally{
-           desconectar();
-       }
+        return state;
     }
 }

@@ -7,86 +7,95 @@ import java.awt.event.WindowEvent;
 import javax.swing.JOptionPane;
 
 /**
- *
- * @author Carlos
- * Ventana que permite agregar paliculas a la renta
+ * Ventana que permite agregar y editar Autores.
+ * @author alfonso
  */
 public class AddNewAutor extends javax.swing.JDialog {
-    // Para guardar el autor
-    String autor_id;
+    String autorId;
     String pais;
-    AutorDAO autor_dao;
-    PaisDAO pais_dao;
+    AutorDAO autorDAO;
+    PaisDAO paisDAO;
 
     /**
-     * Creates new form AddPeliculasRentaD
-     * @param parent
-     * @param modal
+     * Creates new form AddNewAutor.
+     * @param parent ventana padre.
+     * @param modal determina si la ventana no cede el foco a otra.
      */
     public AddNewAutor(java.awt.Frame parent, boolean modal) {
-        // ventana modal
         super(parent, modal);
-        // inicia los componentes
+        getRootPane().setDefaultButton(btnGuardar);
+        
+        // Inicia los componentes.
         initComponents();
         processWindowEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-        // Crea el dao para acceder a la tabla AUTOR
-        autor_dao = new AutorDAO();               
-        getRootPane().setDefaultButton(btnGuardar);       
+        autorDAO = new AutorDAO();                       
         
-        // Popula el ComboBox de paises disponibles
-        pais_dao = new PaisDAO();    
-        Object[][] all_paises = pais_dao.GetAllPaises();        
-        for (Object[] pais : all_paises) {
-            // llena los datos de idioma en el combo 
+        // Popula el ComboBox de paises disponibles.
+        paisDAO = new PaisDAO();    
+        Object[][] allPaises = paisDAO.getAllPaises();        
+        for(Object[] pais : allPaises) {             
             cmbPaises.addItem(pais[1].toString());
         }        
     }
     
-    private void BorrarTextos(){
-        // Borra los controles
+    /**
+     * Llena los datos del autor a editar.
+     * @param autorId Id del autor siendo editado.
+     */
+    public void setEditId(String autorId) {
+        this.autorId = autorId;
+        
+        // Busca el autor y muestra los datos en los controles.
+        Object[] autorEdit = autorDAO.getAutorById(autorId);
+        txtNombre.setText(autorEdit[1].toString());
+        if(autorEdit[2] != null) {
+            txtApellido.setText(autorEdit[2].toString());
+        }                   
+        if(autorEdit[3] != null) {
+            cmbPaises.setSelectedItem(autorEdit[3].toString()); 
+        }                   
+    }
+    
+    /**
+     * Obtiene el Id del autor siendo creado o editado.
+     * @return Id del autor siendo creado o editado.
+     */
+    public String getAutorId() {
+        return autorId;
+    }
+
+    /**
+     * Borra los controles.
+     */    
+    private void borrarTextos() {
         txtNombre.setText("");
         txtApellido.setText("");
         cmbPaises.setSelectedIndex(-1);
     }
     
-    private boolean EstanLlenos() {
-        if (txtNombre.getText().trim().length() == 0){
+    /**
+     * Revisa si todos los campos estan llenos.
+     * @return boolean indicando si todos los campos estan llenos.
+     */
+    private boolean estanLlenos() {
+        boolean llenos;
+        if(txtNombre.getText().trim().length() == 0) {
             javax.swing.JOptionPane.showMessageDialog(this, "Introduzca el nombre.", "Aviso", 2);
             txtNombre.requestFocus();
-            return false;
-        }
-        else if (txtApellido.getText().trim().length() == 0){
+            llenos = false;
+        } else if(txtApellido.getText().trim().length() == 0) {
             javax.swing.JOptionPane.showMessageDialog(this, "Introduzca el apellido.", "Aviso", 2);
             txtApellido.requestFocus();
-            return false;
-        }
-        else if (cmbPaises.getSelectedIndex() < 0) {
+            llenos = false;
+        } else if(cmbPaises.getSelectedIndex() < 0) {
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione un pais de origen.", "Aviso", 2);
             cmbPaises.requestFocus();
-            return false;
+            llenos = false;
+        } else {
+            llenos = true;
         }
-        else {
-            return true;
-        }
-    }
-    
-    // Llena los datos del autor a editar (Id, nombre, apellido, pais_id)
-    public void SetEditId(String id){
-        // Asigna el id del autor a modificar
-        this.autor_id = id;
-        // Busca el autor
-        Object[] autor_edit = autor_dao.GetAutorById(autor_id);
-        // Muestra los datos en los controles
-        txtNombre.setText(autor_edit[1].toString());
-        // si el apellido no es nulo
-        if (autor_edit[2] != null) {
-            txtApellido.setText(autor_edit[2].toString());
-        }            
-        // si el pais no es nulo
-        if (autor_edit[3] != null) {
-            cmbPaises.setSelectedItem(autor_edit[3].toString()); 
-        }                   
-    }
+        return llenos;
+    }        
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -141,7 +150,7 @@ public class AddNewAutor extends javax.swing.JDialog {
         lblNombre1.setText("Pais:");
         pnlTableList.add(lblNombre1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 140, -1, 25));
 
-        cmbPaises.setFont(new java.awt.Font("C059", 0, 12)); // NOI18N
+        cmbPaises.setFont(new java.awt.Font("Arial", 0, 12));
         pnlTableList.add(cmbPaises, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 140, 150, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -164,41 +173,43 @@ public class AddNewAutor extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Crea un registro en la tabla Autor con los datos proporcionados.
+     * @param evt evento que dispara la funcion.
+     */
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        // Revisa que todos los campos estan llenos
-        if (!EstanLlenos()) {
-            return;
-        }
+        
+        // Revisa que todos los campos estan llenos.
+        if(estanLlenos()) {
+            pais = cmbPaises.getSelectedItem().toString();
+            
+            // Guarda o actualiza un autor
+            if(autorId == null) { 
+               Object[] autor = new Object[3];
+                autor[0] = txtNombre.getText().trim();
+                autor[1] = txtApellido.getText().trim();
+                autor[2] = paisDAO.getPaisesByNombre(pais)[0][0];
+                autorId = autorDAO.saveAutor(autor);
+            } else { 
+               Object[] autor = new Object[4];
+                autor[0] = autorId;
+                autor[1] = txtNombre.getText().trim();
+                autor[2] = txtApellido.getText().trim();
+                autor[3] = paisDAO.getPaisesByNombre(pais)[0][0];
+                autorId =  autorDAO.updateAutor(autor);
+            }
 
-        // Obtiene el NOMBRE del pais seleccionado
-        pais = cmbPaises.getSelectedItem().toString();
-
-        if (autor_id == null){ // Guarda un nuevo autor
-            Object [] autor = new Object[3];
-            autor[0] = txtNombre.getText().trim();
-            autor[1] = txtApellido.getText().trim();
-            autor[2] = pais_dao.GetPaisesByNombre(pais)[0][0];  // ID del pais
-            autor_id = autor_dao.SaveAutor(autor);
-        }
-        else{ // Actualiza autor
-            Object [] autor = new Object[4];
-            autor[0] = autor_id;
-            autor[1] = txtNombre.getText().trim();
-            autor[2] = txtApellido.getText().trim();
-            autor[3] = pais_dao.GetPaisesByNombre(pais)[0][0];  // ID del pais
-            autor_id =  autor_dao.UpdateAutor(autor);
-        }
-
-        if (autor_id == null){
-            // Suena un beep
-            Toolkit.getDefaultToolkit().beep();
-            JOptionPane.showMessageDialog(this, "Error al guardar el autor", "Error", 0);                
-        }
-        else{
-            BorrarTextos();
-            autor_id = null;
-            dispose();
-        }                    
+            if(autorId == null) {
+              
+                // Suena un beep y se muestra un mensaje de error.
+                Toolkit.getDefaultToolkit().beep();
+                JOptionPane.showMessageDialog(this, "Error al guardar el autor", "Error", 0);                
+            } else {
+                borrarTextos();
+                autorId = null;
+                dispose();
+            }  
+        }                         
     }//GEN-LAST:event_btnGuardarActionPerformed
     
     // Variables declaration - do not modify//GEN-BEGIN:variables

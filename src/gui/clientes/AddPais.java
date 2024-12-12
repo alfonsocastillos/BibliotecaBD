@@ -7,72 +7,72 @@ import javax.swing.JOptionPane;
 import tools.UtilsTable;
 
 /**
- *
- * @author Alfonso
- * Ventana que permite agregar paises
+ * Ventana encargada de mostar las opciones sobre Pais y Estado.
+ * @author alfonso
  */
 public class AddPais extends javax.swing.JDialog {
-    // Para agregar el paises
-    int pais_id;
-    int estado_id;
-    PaisDAO pais_dao;
-    // Para listar todos los paises 
-    Object lista_paises [][];  // Id, pais
-    Object lista_estados [][];
-   // public Object film[];
+    int paisId;
+    int estadoId;
+    PaisDAO paisDAO;
+    
+    // Para listar todos los Paises y Estados.
+    Object[][] paisesLista; 
+    Object[][] estadosLista;
     java.awt.Frame parent;    
 
     /**
-     * Creates new form ???
-     * @param parent
-     * @param modal
+     * Creates new form AddPais.
+     * @param parent ventana padre.
+     * @param modal determina si la ventana no cede el foco a otra.
      */
     public AddPais(java.awt.Frame parent, boolean modal) {
-        // ventana modal
-        super(parent, modal);   // Llama al constructor del padre
+        super(parent, modal);
         this.parent= parent;
         setTitle("Paises");
-        // inicia los componentes
+       
+        // Inicia los componentes.
         initComponents();
-        // Crea el dao
-        pais_dao = new PaisDAO();
-        // llena la tabla
-        LlenaTabla();
+       
+        paisDAO = new PaisDAO();        
+        llenaPaises();
     }  
     
-    // Llena y despliega la tabla de autores 
-    private void LlenaTabla(){     
-        // Consulta todos los autores (id, nombre apellido)
-        lista_paises = pais_dao.GetPaisesByNombre(TextFieldPais.getText().trim());
-        // Titulos de la tabla
-        String[] T_PAIS = {"","Pais"};
-        // alineación de las celdas
-        int[][] cellAlignment = {{0,javax.swing.SwingConstants.LEFT}};
-        // Tamaño de las celdas
-        int[][] cellSize = {{0,0},
-                            {1,400}};
-        /*
-            Metodo que llena las tablas, recibe la tabla, los datos, los titulos,
-            la alineación y el tamaño de las celdas
-        */
+    /**
+     * Llena y despliega la tabla de Paises.
+     */
+    private void llenaPaises() {     
+        paisesLista = paisDAO.getPaisesByNombre(txtPais.getText().trim());
        
-        UtilsTable.llenaTabla(tableListPaises, lista_paises, T_PAIS, cellAlignment, cellSize);       
-        UtilsTable.quitarColumna(tableListPaises, 0);
+        // Titulos de la tabla.
+        String[] columnasNombre = {"","Pais"};
+       
+        // Alineación de las celdas.
+        int[][] cellAlignment = {{0, javax.swing.SwingConstants.LEFT}};
+       
+        // Tamaño de las celdas.
+        int[][] cellSize = {{0, 0}, {1, 400}};
+       
+        UtilsTable.llenaTabla(cellAlignment, cellSize, columnasNombre, tblPaises, paisesLista);
+        UtilsTable.quitarColumna(0, tblPaises);
     }
     
-    private void LlenaEstados() {
-        EstadoDAO estado_dao = new EstadoDAO();
-        lista_estados = estado_dao.GetEstadosByNombre(pais_id, TextFieldEstado.getText().trim());
-        UtilsTable.limpiaTabla(tableListEstados);                        
-        String[] T_ESTADOS = {"","Estado"};
-        // alineación de las celdas
-        int[][] cellAlignment = {{0,javax.swing.SwingConstants.LEFT}};
-        // Tamaño de las celdas
-        int[][] cellSize = {{0,0},
-                            {1,400}};
+    /**
+     * Llena y despliega la tabla de Estados para el Pais seleccionado.
+     */
+    private void llenaEstados() {
+        EstadoDAO estadoDAO = new EstadoDAO();
+        estadosLista = estadoDAO.getEstadosByNombre(paisId, txtEstado.getText().trim());
+        UtilsTable.limpiaTabla(tblEstados);                        
+        String[] columnasNombre = {"","Estado"};
        
-        UtilsTable.llenaTabla(tableListEstados, lista_estados, T_ESTADOS, cellAlignment, cellSize);       
-        UtilsTable.quitarColumna(tableListEstados, 0);
+        // Alineación de las celdas.
+        int[][] cellAlignment = {{0, javax.swing.SwingConstants.LEFT}};
+       
+        // Tamaño de las celdas.
+        int[][] cellSize = {{0, 0}, {1, 400}};
+       
+        UtilsTable.llenaTabla(cellAlignment, cellSize, columnasNombre, tblEstados, estadosLista);    
+        UtilsTable.quitarColumna(0, tblEstados);
 
     }
     
@@ -87,23 +87,23 @@ public class AddPais extends javax.swing.JDialog {
 
         jPanel1 = new javax.swing.JPanel();
         pnlTableList = new javax.swing.JPanel();
-        TextFieldPais = new javax.swing.JTextField();
-        lblFiltro1 = new javax.swing.JLabel();
-        lblFiltro2 = new javax.swing.JLabel();
+        txtPais = new javax.swing.JTextField();
+        lblFiltroPais = new javax.swing.JLabel();
+        lblPais = new javax.swing.JLabel();
         scpTableList1 = new javax.swing.JScrollPane();
-        tableListPaises = new javax.swing.JTable();
+        tblPaises = new javax.swing.JTable();
         btnNewPais = new javax.swing.JButton();
         btnEditPais = new javax.swing.JButton();
-        btnDelPais = new javax.swing.JButton();
+        btnDeletePais = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
-        lblFiltro = new javax.swing.JLabel();
-        lblFiltro3 = new javax.swing.JLabel();
-        TextFieldEstado = new javax.swing.JTextField();
+        lblEstados = new javax.swing.JLabel();
+        lblFiltroEstados = new javax.swing.JLabel();
+        txtEstado = new javax.swing.JTextField();
         scpTableList = new javax.swing.JScrollPane();
-        tableListEstados = new javax.swing.JTable();
+        tblEstados = new javax.swing.JTable();
         btnNewEstado = new javax.swing.JButton();
         btnEditEstado = new javax.swing.JButton();
-        btnDelEstado = new javax.swing.JButton();
+        btnDeleteEstado = new javax.swing.JButton();
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -122,28 +122,28 @@ public class AddPais extends javax.swing.JDialog {
         pnlTableList.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N
         pnlTableList.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        TextFieldPais.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        TextFieldPais.addKeyListener(new java.awt.event.KeyAdapter() {
+        txtPais.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        txtPais.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                TextFieldPaisKeyReleased(evt);
+                txtPaisKeyReleased(evt);
             }
         });
-        pnlTableList.add(TextFieldPais, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 40, 340, 25));
+        pnlTableList.add(txtPais, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 40, 340, 25));
 
-        lblFiltro1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        lblFiltro1.setText("Filtrar:");
-        pnlTableList.add(lblFiltro1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, -1, 25));
+        lblFiltroPais.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        lblFiltroPais.setText("Filtrar:");
+        pnlTableList.add(lblFiltroPais, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, -1, 25));
 
-        lblFiltro2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        lblFiltro2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblFiltro2.setText("Paises");
-        pnlTableList.add(lblFiltro2, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 10, 110, 25));
+        lblPais.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        lblPais.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblPais.setText("Paises");
+        pnlTableList.add(lblPais, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 10, 110, 25));
 
         scpTableList1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scpTableList1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-        tableListPaises.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        tableListPaises.setModel(new javax.swing.table.DefaultTableModel(
+        tblPaises.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        tblPaises.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -151,12 +151,12 @@ public class AddPais extends javax.swing.JDialog {
 
             }
         ));
-        tableListPaises.addMouseListener(new java.awt.event.MouseAdapter() {
+        tblPaises.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tableListPaisesMouseClicked(evt);
+                tblPaisesMouseClicked(evt);
             }
         });
-        scpTableList1.setViewportView(tableListPaises);
+        scpTableList1.setViewportView(tblPaises);
 
         pnlTableList.add(scpTableList1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 390, 170));
 
@@ -180,35 +180,35 @@ public class AddPais extends javax.swing.JDialog {
         });
         pnlTableList.add(btnEditPais, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 250, 40, 40));
 
-        btnDelPais.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/borrar.png"))); // NOI18N
-        btnDelPais.setToolTipText("Borrar idioma");
-        btnDelPais.setFocusable(false);
-        btnDelPais.addActionListener(new java.awt.event.ActionListener() {
+        btnDeletePais.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/borrar.png"))); // NOI18N
+        btnDeletePais.setToolTipText("Borrar idioma");
+        btnDeletePais.setFocusable(false);
+        btnDeletePais.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDelPaisActionPerformed(evt);
+                btnDeletePaisActionPerformed(evt);
             }
         });
-        pnlTableList.add(btnDelPais, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 250, 40, 40));
+        pnlTableList.add(btnDeletePais, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 250, 40, 40));
 
-        lblFiltro.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        lblFiltro.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblFiltro.setText("Estados");
+        lblEstados.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        lblEstados.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblEstados.setText("Estados");
 
-        lblFiltro3.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        lblFiltro3.setText("Filtrar:");
+        lblFiltroEstados.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        lblFiltroEstados.setText("Filtrar:");
 
-        TextFieldEstado.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        TextFieldEstado.addKeyListener(new java.awt.event.KeyAdapter() {
+        txtEstado.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        txtEstado.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                TextFieldEstadoKeyReleased(evt);
+                txtEstadoKeyReleased(evt);
             }
         });
 
         scpTableList.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scpTableList.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-        tableListEstados.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        tableListEstados.setModel(new javax.swing.table.DefaultTableModel(
+        tblEstados.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        tblEstados.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -216,12 +216,12 @@ public class AddPais extends javax.swing.JDialog {
 
             }
         ));
-        tableListEstados.addMouseListener(new java.awt.event.MouseAdapter() {
+        tblEstados.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tableListEstadosMouseClicked(evt);
+                tblEstadosMouseClicked(evt);
             }
         });
-        scpTableList.setViewportView(tableListEstados);
+        scpTableList.setViewportView(tblEstados);
 
         btnNewEstado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/add.png"))); // NOI18N
         btnNewEstado.setToolTipText("Registrar nuevo idioma");
@@ -241,12 +241,12 @@ public class AddPais extends javax.swing.JDialog {
             }
         });
 
-        btnDelEstado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/borrar.png"))); // NOI18N
-        btnDelEstado.setToolTipText("Borrar idioma");
-        btnDelEstado.setFocusable(false);
-        btnDelEstado.addActionListener(new java.awt.event.ActionListener() {
+        btnDeleteEstado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/borrar.png"))); // NOI18N
+        btnDeleteEstado.setToolTipText("Borrar idioma");
+        btnDeleteEstado.setFocusable(false);
+        btnDeleteEstado.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDelEstadoActionPerformed(evt);
+                btnDeleteEstadoActionPerformed(evt);
             }
         });
 
@@ -260,9 +260,9 @@ public class AddPais extends javax.swing.JDialog {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(lblFiltro3)
+                                .addComponent(lblFiltroEstados)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(TextFieldEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(txtEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(scpTableList, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
@@ -270,27 +270,27 @@ public class AddPais extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnEditEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(138, 138, 138)
-                        .addComponent(btnDelEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnDeleteEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(151, 151, 151)
-                .addComponent(lblFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblEstados, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblEstados, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblFiltro3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(TextFieldEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblFiltroEstados, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(scpTableList, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnDelEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDeleteEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnNewEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnEditEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -318,188 +318,209 @@ public class AddPais extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    // Abre una ventana que posibilida crear un PAIS
+    /**
+     * Abre una ventana que posibilida crear un Pais.
+     * @param evt evento que dispara la funcion.
+     */
     private void btnNewPaisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewPaisActionPerformed
-        AddNewPais add_new_pais = new AddNewPais(parent, true);        
-        // Localizacvión de la ventana        
-        add_new_pais.setLocationRelativeTo(this);
-        // hace visible la ventana
-        add_new_pais.setVisible(true);        
-        LlenaTabla();
-        // cuando cierra la ventana agrega el pais a la tabla y lo selecciona
-        UtilsTable.mueveTabla(tableListPaises, UtilsTable.getRow(lista_paises, add_new_pais.pais_id));
+        AddNewPais addNewPais = new AddNewPais(parent, true);        
+       
+        // Aspectos graficos de la ventana.
+        addNewPais.setLocationRelativeTo(this);
+        addNewPais.setVisible(true);        
+        
+        // Cuando cierra la ventana agrega el pais a la tabla y lo selecciona.
+        llenaPaises();
+        UtilsTable.mueveTabla(UtilsTable.getRow(addNewPais.paisId, paisesLista), tblPaises);
     }//GEN-LAST:event_btnNewPaisActionPerformed
 
-    // Llena la tabla de paises cada que se escribe una letra
-    private void TextFieldPaisKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TextFieldPaisKeyReleased
-        // Filtra paises  
-        LlenaTabla();
-    }//GEN-LAST:event_TextFieldPaisKeyReleased
+    /**
+     * Llena la tabla de paises cada que se escribe una letra.
+     * @param evt evento que dispara la funcion.
+     */
+    private void txtPaisKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPaisKeyReleased
+        llenaPaises();
+    }//GEN-LAST:event_txtPaisKeyReleased
 
-    // Elimina al pais seleccionado de la tabla de PAIS
-    private void btnDelPaisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelPaisActionPerformed
-        // Eliminar un registro
-        // si no selecciona fila, le avisa al usuario
-        if (tableListPaises.getSelectedRow() < 0){
-             // suena un beep
+    /**
+     * Elimina al pais seleccionado de la tabla de Pais.
+     * @param evt evento que dispara la funcion.
+     */
+    private void btnDeletePaisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeletePaisActionPerformed
+        if(tblPaises.getSelectedRow() < 0) {
+          
+            // Suena un beep y se muestra un mensaje.
             java.awt.Toolkit.getDefaultToolkit().beep();
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila","Aviso", 2);
-        }
-        else{
-            // suena un beep
+        } else {
+            
+            // Suena un beep y se muestra un mensaje de confirmacion.
             java.awt.Toolkit.getDefaultToolkit().beep();
-            // pregunta si quiere eliminar el registro y camtura la respuesta            
+            int res = javax.swing.JOptionPane.showConfirmDialog(this, "¿Eliminar " + UtilsTable.obtenerValor(tblPaises.getSelectedRow(), 1, tblPaises).toString() + "?",
+                "Seleccione", JOptionPane.YES_NO_OPTION);
 
-            int res = javax.swing.JOptionPane.showConfirmDialog(this, "¿Eliminar " + UtilsTable.obtenerValor(
-                          tableListPaises, tableListPaises.getSelectedRow(), 1).toString() + "?",
-                 "Seleccione", JOptionPane.YES_NO_OPTION);
-            // evalua la respuesta 
-            if (res == 0){
+            // Si la respuesta es afirmativa, elimina el registro.
+            if(res == 0) {
                 String msj = "";
-                // si la respuesta es afirmativa, elimina el registro
-                int ret = pais_dao.DeletePais((Integer) UtilsTable.obtenerValor(
-                          tableListPaises, tableListPaises.getSelectedRow(), 0));
-                if (ret == 1){
+                int ret = paisDAO.deletePais((Integer) UtilsTable.obtenerValor(tblPaises.getSelectedRow(), 0, tblPaises));
+                if(ret != 1) {
                     msj = "No se pudo eliminar por que tiene registros asignados.";
                     javax.swing.JOptionPane.showMessageDialog(this, msj, "Información", 1);
                 }                
-                // Reinicia controles y parametros
-                LlenaTabla();
+                
+                // Reinicia controles y parametros.
+                llenaPaises();
             }
         }
-    }//GEN-LAST:event_btnDelPaisActionPerformed
+    }//GEN-LAST:event_btnDeletePaisActionPerformed
 
-    // Abre una ventana para poder editar al pais seleccionado
+    /**
+     * Abre una ventana para poder editar al pais seleccionado.
+     * @param evt evento que dispara la funcion.
+     */
     private void btnEditPaisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditPaisActionPerformed
-        // Botón que edita el registro selecionado de la tabla
-        if (tableListPaises.getSelectedRow() < 0){
-            // Suena un beep
+        if(tblPaises.getSelectedRow() < 0) {
+
+            // Suena un beep y se muestra un mensaje.
             Toolkit.getDefaultToolkit().beep();
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila", "Información", 1);
-        }
-        else{
-            // Obtiene el id del pais seleccionado
-            pais_id = (Integer) UtilsTable.obtenerValor(tableListPaises, tableListPaises.getSelectedRow(), 0);
+        } else {            
+            paisId = (int) UtilsTable.obtenerValor(tblPaises.getSelectedRow(), 0, tblPaises);
+           
             // Abre la ventana para editar pais
-            // Ventana para editar pais
-            AddNewPais edit_pais = new AddNewPais(parent, true);        
-            // Localización de la ventana
-            edit_pais.setLocationRelativeTo(this);            
-            edit_pais.SetEditId(pais_id);
-            // hace visible la ventana
-            edit_pais.setVisible(true);
-            LlenaTabla();
-            // cuando cierra la ventana agrega el pais a la tabla y lo selecciona
-            UtilsTable.mueveTabla(tableListPaises, UtilsTable.getRow(lista_paises, edit_pais.pais_id));
+            AddNewPais editPais = new AddNewPais(parent, true);                   
+            editPais.setLocationRelativeTo(this);            
+            editPais.SetEditId(paisId);
+            editPais.setVisible(true);
+            
+            // Cuando cierra la ventana agrega el Pais a la tabla y lo selecciona.
+            llenaPaises();
+            UtilsTable.mueveTabla(UtilsTable.getRow(editPais.paisId, paisesLista), tblPaises);
         }
     }//GEN-LAST:event_btnEditPaisActionPerformed
 
-    private void tableListPaisesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableListPaisesMouseClicked
-        if (evt.getClickCount() == 2) {
-            pais_id = (int) UtilsTable.obtenerValor(tableListPaises, tableListPaises.getSelectedRow(), 0);
-            LlenaEstados();
+    /**
+     * Llena la tabla de Estados al seleccionar un pais.
+     * @param evt evento que dispara la funcion.
+     */
+    private void tblPaisesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblPaisesMouseClicked
+        if(evt.getClickCount() == 2) {
+            paisId = (int) UtilsTable.obtenerValor(tblPaises.getSelectedRow(), 0, tblPaises);
+            llenaEstados();
         }
-    }//GEN-LAST:event_tableListPaisesMouseClicked
+    }//GEN-LAST:event_tblPaisesMouseClicked
 
-    private void TextFieldEstadoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TextFieldEstadoKeyReleased
-        LlenaEstados();
-    }//GEN-LAST:event_TextFieldEstadoKeyReleased
+    /**
+     * Filtra la tabla de Estados al escribir una letra en el filtro.
+     * @param evt evento que dispara la funcion.
+     */
+    private void txtEstadoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtEstadoKeyReleased
+        llenaEstados();
+    }//GEN-LAST:event_txtEstadoKeyReleased
 
+    /**
+     * Abre una ventana para agregar un Estado.
+     * @param evt evento que dispara la funcion.
+     */
     private void btnNewEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewEstadoActionPerformed
-        AddNewEstado add_new_estado = new AddNewEstado(parent, true);        
-        add_new_estado.SetPaisId(pais_id);
-        // Localizacvión de la ventana        
-        add_new_estado.setLocationRelativeTo(this);
-        // hace visible la ventana
-        add_new_estado.setVisible(true);               
+        AddNewEstado addNewEstado = new AddNewEstado(parent, true);        
+        addNewEstado.SetPaisId(paisId);
+        addNewEstado.setLocationRelativeTo(this);
+        addNewEstado.setVisible(true);               
         
-        // cuando cierra la ventana agrega el estado a la tabla y lo selecciona
-        LlenaEstados();
-        UtilsTable.mueveTabla(tableListEstados, UtilsTable.getRow(lista_estados, add_new_estado.estado_id));
+        // Cuando cierra la ventana agrega el Estado a la tabla y lo selecciona.
+        llenaEstados();
+        UtilsTable.mueveTabla(UtilsTable.getRow(addNewEstado.estadoId, estadosLista), tblEstados);
     }//GEN-LAST:event_btnNewEstadoActionPerformed
 
+    /**
+     * Abre una ventana para editar un Estado.
+     * @param evt evento que dispara la funcion.
+     */
     private void btnEditEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditEstadoActionPerformed
-        if (tableListEstados.getSelectedRow() < 0){
-            // Suena un beep
+        if(tblEstados.getSelectedRow() < 0) {
+           
+            // Suena un beep y muestra un mensaje.
             Toolkit.getDefaultToolkit().beep();
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila", "Información", 1);
-        }
-        else{
-            estado_id = (int) UtilsTable.obtenerValor(tableListEstados, tableListEstados.getSelectedRow(), 0);
-            AddNewEstado add_new_estado = new AddNewEstado(parent, true);        
-            add_new_estado.SetPaisId(pais_id);
-            add_new_estado.SetEditId(estado_id);
-            // Localizacvión de la ventana        
-            add_new_estado.setLocationRelativeTo(this);
-            // hace visible la ventana
-            add_new_estado.setVisible(true);               
+        } else {
+            estadoId = (int) UtilsTable.obtenerValor(tblEstados.getSelectedRow(), 0, tblEstados);
+            AddNewEstado addNewEstado = new AddNewEstado(parent, true);        
+            addNewEstado.SetPaisId(paisId);
+            addNewEstado.setEditId(estadoId);          
+            addNewEstado.setLocationRelativeTo(this);
+            addNewEstado.setVisible(true);               
 
-            // cuando cierra la ventana agrega el estado a la tabla y lo selecciona
-            LlenaEstados();
-            UtilsTable.mueveTabla(tableListEstados, UtilsTable.getRow(lista_estados, add_new_estado.estado_id));
+            // Cuando cierra la ventana agrega el Estado a la tabla y lo selecciona.
+            llenaEstados();
+            UtilsTable.mueveTabla(UtilsTable.getRow(addNewEstado.estadoId, estadosLista), tblEstados);
         }
     }//GEN-LAST:event_btnEditEstadoActionPerformed
 
-    private void tableListEstadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableListEstadosMouseClicked
-        if (evt.getClickCount() == 2) {
-            estado_id = (int) UtilsTable.obtenerValor(tableListEstados, tableListEstados.getSelectedRow(), 0);
+    /**
+     * Abre una ventana para editar un Estado al seleccionarlo en la tabla.
+     * @param evt evento que dispara la funcion.
+     */
+    private void tblEstadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblEstadosMouseClicked
+        if(evt.getClickCount() == 2) {
+            estadoId = (int) UtilsTable.obtenerValor(tblEstados.getSelectedRow(), 0, tblEstados);
             btnEditEstadoActionPerformed(null);
         }                    
-    }//GEN-LAST:event_tableListEstadosMouseClicked
+    }//GEN-LAST:event_tblEstadosMouseClicked
 
-    private void btnDelEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelEstadoActionPerformed
-        // Eliminar un registro
-        // si no selecciona fila, le avisa al usuario
-        if (tableListEstados.getSelectedRow() < 0){
-             // suena un beep
+    /**
+     * Elimina de la base de datos el Estado seleccionado.
+     * @param evt evento que dispara la funcion.
+     */
+    private void btnDeleteEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteEstadoActionPerformed
+        if(tblEstados.getSelectedRow() < 0) {
+            
+            // Suena un beep y se muestra un mensaje.
             java.awt.Toolkit.getDefaultToolkit().beep();
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila","Aviso", 2);
-        }
-        else{
-            // suena un beep
+        } else {
+            
+            // Suena un beep y se muestra un mensaje.
             java.awt.Toolkit.getDefaultToolkit().beep();
-            // pregunta si quiere eliminar el registro y camtura la respuesta            
-
-            int res = javax.swing.JOptionPane.showConfirmDialog(this, "¿Eliminar " + UtilsTable.obtenerValor(
-                          tableListEstados, tableListEstados.getSelectedRow(), 1).toString() + "?",
+            int res = javax.swing.JOptionPane.showConfirmDialog(this, "¿Eliminar " + UtilsTable.obtenerValor(tblEstados.getSelectedRow(), 1, tblEstados).toString() + "?",
                  "Seleccione", JOptionPane.YES_NO_OPTION);
-            // evalua la respuesta 
-            if (res == 0){
-                String msj = "";
-                // si la respuesta es afirmativa, elimina el registro
-                EstadoDAO estado_dao = new EstadoDAO();
-                int ret = estado_dao.DeleteEstado((Integer) UtilsTable.obtenerValor(
-                          tableListEstados, tableListEstados.getSelectedRow(), 0));
-                if (ret == 1){
+            
+            // Si la respuesta es afirmativa, elimina el registro.
+            if(res == 0) {
+                String msj = "";                
+                EstadoDAO estadoDAO = new EstadoDAO();
+                int ret = estadoDAO.deleteEstado((int) UtilsTable.obtenerValor(tblEstados.getSelectedRow(), 0, tblEstados));
+                if(ret != 1) {
                     msj = "No se pudo eliminar por que tiene registros asignados.";
                     javax.swing.JOptionPane.showMessageDialog(this, msj, "Información", 1);
                 }                
-                // Reinicia controles y parametros
-                estado_id = 0;
-                LlenaEstados();
+                
+                // Reinicia controles y parametros.
+                estadoId = 0;
+                llenaEstados();
             }
         }
-    }//GEN-LAST:event_btnDelEstadoActionPerformed
+    }//GEN-LAST:event_btnDeleteEstadoActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField TextFieldEstado;
-    private javax.swing.JTextField TextFieldPais;
-    private javax.swing.JButton btnDelEstado;
-    private javax.swing.JButton btnDelPais;
+    private javax.swing.JButton btnDeleteEstado;
+    private javax.swing.JButton btnDeletePais;
     private javax.swing.JButton btnEditEstado;
     private javax.swing.JButton btnEditPais;
     private javax.swing.JButton btnNewEstado;
     private javax.swing.JButton btnNewPais;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JLabel lblFiltro;
-    private javax.swing.JLabel lblFiltro1;
-    private javax.swing.JLabel lblFiltro2;
-    private javax.swing.JLabel lblFiltro3;
+    private javax.swing.JLabel lblEstados;
+    private javax.swing.JLabel lblFiltroEstados;
+    private javax.swing.JLabel lblFiltroPais;
+    private javax.swing.JLabel lblPais;
     private javax.swing.JPanel pnlTableList;
     private javax.swing.JScrollPane scpTableList;
     private javax.swing.JScrollPane scpTableList1;
-    private javax.swing.JTable tableListEstados;
-    private javax.swing.JTable tableListPaises;
+    private javax.swing.JTable tblEstados;
+    private javax.swing.JTable tblPaises;
+    private javax.swing.JTextField txtEstado;
+    private javax.swing.JTextField txtPais;
     // End of variables declaration//GEN-END:variables
 }

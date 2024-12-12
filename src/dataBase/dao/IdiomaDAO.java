@@ -1,231 +1,218 @@
-/*
- * Clase encargada de consultar, insertar, eliminar y modificar la tabla Idioma
- */
 package dataBase.dao;
 
-import dataBase.Conexion;
+import dataBase.CustomConnection;
 import dataBase.ConfigDataBase;
 import java.sql.*;
 
 /**
- *
+ * Clase encargada de consultar, insertar, eliminar y modificar la tabla Idioma,
  * @author alfonso
  */
 
-public class IdiomaDAO extends Conexion {
-    
-    // Crear un idioma
-    public int SaveIdioma(String idioma) 
-    {
-        // Se conecta a la base de datos
-        conectar();
-        try{
-            int id = 0;
-            // genera el nuevo id            
-            sentenciaSQL =  "SELECT MAX(IDIOMA_ID) + 1 FROM IDIOMA";
-            ps = conn.prepareStatement(sentenciaSQL);            
-            rs = ps.executeQuery();
+public class IdiomaDAO extends CustomConnection {
+   
+    /**
+     * Crear un idioma.
+     * @param idioma nombre del idioma.
+     * @return int con el Id del idioma creado.
+     */
+    public int saveIdioma(String idioma) {
+        connect();
+        int idiomaId = 0;
+        try {
             
-            // guarda el nuevo id
-            if (rs.next()){
-                id = rs.getInt(1);
+            // Genera el nuevo Id.
+            sentenciaSQL = "SELECT MAX(IDIOMA_ID) + 1 FROM IDIOMA";
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
+            resultSet = preparedStatement.executeQuery();
+            
+            // Guarda el nuevo Id.
+            if(resultSet.next()) {
+                idiomaId = resultSet.getInt(1);
             }
             
-            // inserta mandando todos los datos, incluido en nuevo id
+            // Inserta mandando todos los datos, incluido en nuevo Id.
             sentenciaSQL = "INSERT INTO IDIOMA VALUES(?, ?, SYSDATE)";
-            ps = conn.prepareStatement(sentenciaSQL);
-            // Asigna los valores del arreglo            
-            ps.setInt(1, id);           // Id (calculado)
-            ps.setString(2, idioma);    // Idioma (provisto)            
-            ps.executeUpdate();
-            return id;
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
+            preparedStatement.setInt(1, idiomaId);  // Id (calculado).
+            preparedStatement.setString(2, idioma); // Idioma (provisto).
+            preparedStatement.executeUpdate();
+        } catch(SQLException ex) {
+            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "saveIdioma");          
+            idiomaId = 0;
+        } finally {
+           disconnect();
         }
-        catch (SQLException ex){
-            System.out.println(ConfigDataBase.DB_T_ERROR +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
-                    "\n\n" + sentenciaSQL + "\n\nUbicación: " + "SaveIdioma");
-            return 0;
-        }
-        finally{
-           desconectar();
-       }
-
+        return idiomaId;
     }
     
-    // Modificar un idioma (id, idioma)
-    public int UpdateIdioma(Object[] idioma)
-    {       
-        // se conecta a la base de datos
-       conectar();
-       try{
-           // actualiza los datos
-           sentenciaSQL = "UPDATE IDIOMA SET " +
-                          "IDIOMA = ?, " +
-                          "LAST_UPDATE = SYSDATE " +
-                          "WHERE IDIOMA_ID = ?";
-            ps = conn.prepareStatement(sentenciaSQL);
-            
-            ps.setString(1, idioma[1].toString());  // Nuevo nombre idioma
-            ps.setInt(2, (Integer) idioma[0]);      // Id del idioma
-            ps.executeUpdate();
-            return (Integer) idioma[0];             // Regresa el id del idioma
+    /**
+     * Modificar un idioma.
+     * @param idioma datos del idioma a modificar (Id, nuevo nombre del idioma).
+     * @return int con el Id del idioma modificado.
+     */
+    public int updateIdioma(Object[] idioma) {
+       connect();
+       int idiomaId = 0;
+       try {
+            sentenciaSQL = "UPDATE IDIOMA SET IDIOMA = ?, LAST_UPDATE = SYSDATE WHERE IDIOMA_ID = ?";
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
+            preparedStatement.setString(1, idioma[1].toString());   // Nuevo nombre idioma.
+            preparedStatement.setInt(2, (Integer) idioma[0]);       // Id del idioma.
+            preparedStatement.executeUpdate();
+            idiomaId = (int) idioma[0];
+        } catch(SQLException ex) {
+            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "updateIdioma");
+            idiomaId = 0;
+        } finally {
+           disconnect();
         }
-        catch (SQLException ex){
-            System.out.println(ConfigDataBase.DB_T_ERROR +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
-                    "\n\n" + sentenciaSQL + "\n\nUbicación: " + "UpdateIdioma");
-            return 0;
-        }
-        finally{
-           desconectar();
-       }
+        return idiomaId;
     }
     
-    // Consultar todos los idiomas (id, idioma)
-    public Object [][] GetAllIdiomas(){
-        conectar();
-        Object [][] idiomas;
-        int i = 0;
-        int count = 0;
-        try{
-            sentenciaSQL = "SELECT COUNT(*) FROM IDIOMA";    // Numero de idiomas           
-            ps = conn.prepareStatement(sentenciaSQL);        // Convierte el str a un sentencia utilizable en SQL           
-            rs = ps.executeQuery();                          // Resultado de la consulta
+    /**
+     * Consultar todos los idiomas.
+     * @return Object[][] con los datos de todos los idiomas consultados (id, idioma).
+     */
+    public Object[][] getAllIdiomas() {
+        connect();
+        Object[][] idiomas = null;
+        try {
+            // Numero de idiomas.
+            sentenciaSQL = "SELECT COUNT(*) FROM IDIOMA";
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
+            resultSet = preparedStatement.executeQuery();
            
-            // Numero de idiomas (COUNT)
-            if (rs.next()){
-                count = rs.getInt(1);
+            // Numero de idiomas (COUNT).
+            int count = 0;
+            if(resultSet.next()) {
+                count = resultSet.getInt(1);
             }
 
-            // Arreglo de todos los idiomas (ID, idioma)
-            idiomas = new Object[count][2];           
-            sentenciaSQL  = "SELECT IDIOMA_ID, IDIOMA FROM IDIOMA ORDER BY 2";           
-            ps = conn.prepareStatement(sentenciaSQL);
-            rs = ps.executeQuery();
+            // Arreglo de todos los idiomas (Id, idioma).
+            sentenciaSQL = "SELECT IDIOMA_ID, IDIOMA FROM IDIOMA ORDER BY 2";
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
+            resultSet = preparedStatement.executeQuery();
            
-            // Agregar a todos los autores al arreglo (migrar de rs a actores)
-            while (rs.next()){
-               idiomas[i][0] = (rs.getInt(1));
-               idiomas[i][1] = (rs.getString(2));  
+            // Agregar a todos los autores al arreglo (migrar de resultSet a actores)
+            int i = 0;
+            idiomas = new Object[count][2];
+            while(resultSet.next()) {
+               idiomas[i][0] = (resultSet.getInt(1));
+               idiomas[i][1] = (resultSet.getString(2));
                i++;
-            }           
-           return idiomas;
+            }
+        } catch(SQLException ex) {
+            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + ConfigDataBase.DB_ERR_QUERY + "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + 
+                    "\n\nUbicación: " + "getAllIdiomas");
+            idiomas = null;
+        } finally {
+           disconnect();
         }
-        catch (SQLException ex){
-            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + ConfigDataBase.DB_ERR_QUERY + 
-                    "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "GetAllIdiomas");
-            return null;
-        }
-        finally{
-           desconectar();           
-       }
+        return idiomas;
     }  
 
-    // Consulta el idioma para un id (id, idioma)
-    public Object[] GetIdiomaById(int idioma_id)
+    /**
+     * Consulta el idioma para un Id.
+     * @param idiomaId Id del idioma a consultar.
+     * @return Object[] con los datos del idioma (Id, idioma).
+     */
+    public Object[] getIdiomaById(int idiomaId)
     {
-        conectar();
-        Object[] idioma = new Object[2];
-       
-        try{
-                    
-            sentenciaSQL  = "SELECT IDIOMA_ID, IDIOMA FROM IDIOMA WHERE IDIOMA_ID = ?";           
-            ps = conn.prepareStatement(sentenciaSQL);
-            ps.setInt(1, idioma_id);    // Reemplaza el parámetro index (simbolo ?) con el str x
-            rs = ps.executeQuery();
+        connect();
+        Object[] idioma = null;
+        try {
+            sentenciaSQL = "SELECT IDIOMA_ID, IDIOMA FROM IDIOMA WHERE IDIOMA_ID = ?";
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
+            preparedStatement.setInt(1, idiomaId);
+            resultSet = preparedStatement.executeQuery();
 
-            // Llena el arreglo actor con el resultado
-            while (rs.next()){
-                idioma[0] = (rs.getInt(1));
-                idioma[1] = (rs.getString(2));  
-            }           
-            return idioma;
+            // Llena el arreglo idioma con el resultado.
+            idioma = new Object[2];
+            while(resultSet.next()) {
+                idioma[0] = (resultSet.getInt(1));
+                idioma[1] = (resultSet.getString(2));
+            }
+        } catch(SQLException ex) {
+            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + ConfigDataBase.DB_ERR_QUERY + "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + 
+                    "\n\nUbicación: " + "getIdiomaById");
+            idioma = null;
+        } finally {
+           disconnect();
         }
-         catch (SQLException ex){
-             System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + ConfigDataBase.DB_ERR_QUERY + 
-                     "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "GetIdiomaById");
-             return null;
-        }
-        finally{
-           desconectar();           
-        }
-
+        return idioma;
     }
             
-    // Consultar idiomas con nombre parecido (id, idioma)
-    public Object[][] GetIdiomasByNombre(String idioma){
-        conectar();
-        Object[][] idiomas;
-        int i = 0;
-        int count = 0;
+    /**
+     * Consultar idiomas con nombre parecido.
+     * @param idioma nombre del idioma.
+     * @return Object[][] con los datos de los idiomas consultados (Id, idioma).
+     */
+    public Object[][] getIdiomasByNombre(String idioma) {
+        connect();
+        Object[][] idiomas = null;
         idioma = "%" + idioma + "%";
-        try{
-            // Cuenta todos los actores que tengan un nombre parecido
-            sentenciaSQL =   "SELECT COUNT(IDIOMA_ID) " +
-                             "FROM IDIOMA " +
-                             "WHERE UPPER (IDIOMA) LIKE UPPER(?)";   // Todos los idiomas que tengan un nombre parecido
+        try {
+            
+            // Cuenta todos los idiomas que tengan un nombre parecido.
+            sentenciaSQL = "SELECT COUNT(IDIOMA_ID) FROM IDIOMA WHERE UPPER (IDIOMA) LIKE UPPER(?)";
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
+            preparedStatement.setString(1, idioma);
+            resultSet = preparedStatement.executeQuery();
 
-
-             ps = conn.prepareStatement(sentenciaSQL);   // prepara la sentencia 
-             ps.setString(1, idioma);
-             rs = ps.executeQuery();                     // Ejecuta la sentencia y la asigna al result set         
-
-            if (rs.next()){
-                count = rs.getInt(1);
+            int count = 0;
+            if(resultSet.next()) {
+                count = resultSet.getInt(1);
             }
 
-            // Misma consulta, pero ahora puede ser guardada en el arreglo
-            idiomas = new Object[count][2];           
-            sentenciaSQL =  "SELECT IDIOMA_ID, IDIOMA " +
-                            "FROM IDIOMA " +
-                            "WHERE UPPER (IDIOMA) LIKE UPPER(?) " +
-                            "ORDER BY IDIOMA";
+            // Misma consulta, pero ahora puede ser guardada en el arreglo.
+            sentenciaSQL = "SELECT IDIOMA_ID, IDIOMA FROM IDIOMA WHERE UPPER (IDIOMA) LIKE UPPER(?) ORDER BY IDIOMA";
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
+            preparedStatement.setString(1, idioma);
+            resultSet = preparedStatement.executeQuery();
 
-            ps = conn.prepareStatement(sentenciaSQL);
-            ps.setString(1, idioma);
-            rs = ps.executeQuery();
-
-            while (rs.next()){
-                idiomas[i][0] = (rs.getInt(1));
-                idiomas[i][1] = (rs.getString(2));
+            int i = 0;
+            idiomas = new Object[count][2];
+            while(resultSet.next()) {
+                idiomas[i][0] = (resultSet.getInt(1));
+                idiomas[i][1] = (resultSet.getString(2));
                 i++;
-            }           
-           return idiomas;
+            }
+        } catch(SQLException ex) {
+            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + ConfigDataBase.DB_ERR_QUERY + "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + 
+                    "\n\nUbicación: " + "getIdiomasByNombre");
+            idiomas = null;
+        } finally {
+           disconnect();
         }
-        catch (SQLException ex){
-            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + ConfigDataBase.DB_ERR_QUERY + 
-                    "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "GetIdiomasByNombre");
-            return null;
-        }
-        finally{
-           desconectar();           
-       }
+        return idiomas;
     }
 
-    // Eliminar un idioma
-    public int DeleteIdioma(int idioma_id){
-        // Conecta a la base de datos
-        conectar();
-        try{            
-            // Borrar el idioma
-            sentenciaSQL = "DELETE FROM IDIOMA " +
-                            "WHERE IDIOMA_ID = ?";
-            ps = conn.prepareStatement(sentenciaSQL);
-            ps.setInt(1, idioma_id);
-            int res = ps.executeUpdate();
-            if (res == 1){
-                return 0;
-            }
+    /**
+     * Eliminar un idioma.
+     * @param idiomaId
+     * @return int representando el resultado de la transaccion.
+     */
+    public int deleteIdioma(int idiomaId) {
+        connect();
+        int status = 0;
+        try {
             
-            return 1;
-        }
-        catch (SQLException ex){
-            System.out.println(ConfigDataBase.DB_T_ERROR +  ex.getSQLState() + "\n\n" + ex.getMessage() + 
-                    "\n\n" + sentenciaSQL + "\n\nUbicación: " + "DeleteIdioma");
-            if (ex.getErrorCode() ==  2292)
-                return 1;
-            return 2;
-        }
-        finally{
-           desconectar();
+            // Borrar el idioma.
+            sentenciaSQL = "DELETE FROM IDIOMA WHERE IDIOMA_ID = ?";
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
+            preparedStatement.setInt(1, idiomaId);
+            status = preparedStatement.executeUpdate();
+        } catch(SQLException ex) {
+            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "deleteIdioma");
+            if(ex.getErrorCode() == 2292) {
+                status = 0;
+            } else {
+                status = 2;
+            }
+        } finally {
+           disconnect();
        }
+        return status;
     }
 }

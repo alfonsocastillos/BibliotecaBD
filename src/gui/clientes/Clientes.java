@@ -7,165 +7,178 @@ import dataBase.dao.PaisDAO;
 import tools.UtilsTable;
 
 /**
- *
- * @author Jordi
  * Ventana que registra clientes
+ * @author Jordi
  */
-public class Clientes extends javax.swing.JInternalFrame {
-    int cliente_id;
-    Object clientes_lista[][];
-    // Dao´s que traen los datos de la DB
-    ClienteDAO cliente_dao;
-    EscolaridadDAO escolaridad_dao;
-    EstadoDAO estado_dao;
-    PaisDAO pais_dao;    
+public class Clientes extends javax.swing.JInternalFrame {    
+    int clienteId;
+    Object[][] clientesLista;
+    
+    // Daos que traen los datos de la DB.
+    ClienteDAO clienteDAO;
+    EscolaridadDAO escolaridadDAO;
+    EstadoDAO estadoDAO;
+    PaisDAO paisDAO;    
     
     // Ventanas para agregar clientes, credenciales, etc.
-    AddEscolaridad add_escolaridad;
-    AddPais add_pais;
+    AddEscolaridad addEscolaridad;
+    AddPais addPais;
     
+    /**
+     * Constructor
+     */
     public Clientes() {
-        // Constructor
         initComponents();
+        clienteId = 0;
         
-        // Un 0 significa error en el id
-        cliente_id = 0;
-        
-        // se instancian todos los DAO
-        cliente_dao = new ClienteDAO();
-        escolaridad_dao = new EscolaridadDAO();
-        estado_dao = new EstadoDAO();
-        pais_dao = new PaisDAO();
+        // Se instancian todos los DAO.
+        clienteDAO = new ClienteDAO();
+        escolaridadDAO = new EscolaridadDAO();
+        estadoDAO = new EstadoDAO();
+        paisDAO = new PaisDAO();
                 
-        // Instanciando ventanas para agregar Credenciales, clientes, etc.
-        add_escolaridad = new AddEscolaridad((java.awt.Frame)this.getParent(), true);
-        add_pais = new AddPais((java.awt.Frame)this.getParent(), true);
+        // Instanciando ventanas para agregar Escolaridades, Paises y Estados.
+        addEscolaridad = new AddEscolaridad((java.awt.Frame)this.getParent(), true);
+        addPais = new AddPais((java.awt.Frame)this.getParent(), true);
         
-        // localización de la ventana
-        setLocale(null);
-        
-        LlenaDatos();
-        // Vacia las selecciones de campos
-        CancelaEdit();
+        setLocale(null);        
+        llenaDatos();
+        cancelaEdit();
     }
     
-    // Llena de datos las tablas a desplegar y los combo box
-    private void LlenaDatos() {
-        // Llena combos y tabla de clientes
-        LlenaTablaClientes();
-        LlenadoEscolaridades();
+    /**
+     * Llena de datos las tablas a desplegar y los combobox.
+     */
+    private void llenaDatos() {
+        llenaTablaClientes();
+        llenadoEscolaridades();
         LlenadoPaises();
-        LlenadoEstados();
+        llenadoEstados();
     }
     
-    // Cancela la edición y reinicia los controles a su valor predeterminado
-    private void CancelaEdit (){        
-        TextFieldNombre.setText("");
-        TextFieldApellidoPat.setText("");
-        TextFieldApellidoMat.setText("");
-        TextFieldCorreo.setText("");
-        TextFieldAlcaldia.setText("");
-        TextFieldCP.setText("");
-        TextFieldCalle.setText("");
-        TextFieldNoExterior.setText("");
-        TextFieldNoInterior.setText("");
-        TextFieldFiltro.setText("");
+    /**
+     * Cancela la edicion y reinicia los controles a su valor predeterminado.
+     */
+    private void cancelaEdit () {
+        clienteId = 0;
+        txtNombre.setText("");
+        txtApellidoPat.setText("");
+        txtApellidoMat.setText("");
+        txtCorreo.setText("");
+        txtAlcaldia.setText("");
+        txtCP.setText("");
+        txtCalle.setText("");
+        txtNoExterior.setText("");
+        txtNoInterior.setText("");
+        txtFiltro.setText("");
         cmbEscolaridad.setSelectedIndex(-1);         
         cmbEstado.setSelectedIndex(-1);
         cmbPais.setSelectedIndex(-1);
     }
-    
-    // Popula el ComboBox de escolaridades disponibles
-    private void LlenadoEscolaridades() {
+       
+    /**
+     * Popula el ComboBox de Escolaridades disponibles.
+     */
+    private void llenadoEscolaridades() {
         cmbEscolaridad.removeAllItems();
-        Object[][] escolaridades = escolaridad_dao.GetAllEscolaridad();
-        for (Object[] escolaridad : escolaridades) {
-            // llena los datos de escolaridades en el combo 
+        Object[][] escolaridades = escolaridadDAO.getAllEscolaridad();
+        for(Object[] escolaridad : escolaridades) {
+            
+            // Llena los datos de Escolaridades en el combo.
             cmbEscolaridad.addItem(escolaridad[1].toString());
         }
         cmbEscolaridad.setSelectedIndex(-1);
     }
-    
-    // Popula el ComboBox de paises disponibles
+        
+    /**
+     * Popula el combobox de Paises disponibles.
+     */
     private void LlenadoPaises() {
         cmbPais.removeAllItems();                
-        Object[][] paises = pais_dao.GetAllPaises();
-        for (Object[] pais : paises) {
-            // llena los datos de paises en el combo 
+        Object[][] paises = paisDAO.getAllPaises();
+        for(Object[] pais : paises) {
+           
+            // Llena los datos de Paises en el combo.
             cmbPais.addItem(pais[1].toString());
         }        
     }
     
-    // Popula el ComboBox de estados disponibles
-    private void LlenadoEstados() {
+    /**
+     * Popula el combobox de Estados disponibles.
+     */
+    private void llenadoEstados() {
         cmbEstado.removeAllItems();
         if(cmbPais.getSelectedIndex() >= 0) {
-            String pais_elegido = cmbPais.getSelectedItem().toString();
-            int pais_id = (int) pais_dao.GetPaisesByNombre(pais_elegido)[0][0];        
-            if(pais_id > 0) {
-                Object[][] estados = estado_dao.GetAllEstadosByPais(pais_id);
-                for (Object[] estado : estados) {
-                    // llena los datos de estados en el combo 
+            String paisElegido = cmbPais.getSelectedItem().toString();
+            int paisId = (int) paisDAO.getPaisesByNombre(paisElegido)[0][0];        
+            if(paisId > 0) {
+                Object[][] estados = estadoDAO.getAllEstadosByPais(paisId);
+                for(Object[] estado : estados) {
+                   
+                    // Llena los datos de Estados en el combo.
                     cmbEstado.addItem(estado[1].toString());
                 }
             } 
         }               
     }
-    
-    // Llena de datos la tabla que despliega todos los libros
-    private void LlenaTablaClientes(){       
-        // consulta los datos de las peliculas
-        clientes_lista = cliente_dao.GetClientesByFilter(TextFieldFiltro.getText().trim()); 
-        // configuración de la tabla
-        String[] T_CLIENTES = {"", "Nombre", "Apellido Paterno", "Apellido Materno", "Correo", "Credencial"};
+        
+    /**
+     * Llena de datos la tabla que despliega todos los Libros.
+     */
+    private void llenaTablaClientes() {       
+        clientesLista = clienteDAO.getClientesByFilter(txtFiltro.getText().trim()); 
+        
+        // Configuración de la tabla.
+        String[] columnasNombre = {"", "Nombre", "Apellido Paterno", "Apellido Materno", "Correo", "Credencial"};
         int[][] cellAlignment = {{0,javax.swing.SwingConstants.LEFT}};
-        int[][] cellSize = {{0, 0},     // Id
-                            {1, 150},   // Nombre
-                            {2, 150},   // Apellido Paterno
-                            {3, 150},   // Apellido Materno
-                            {4, 240},   // Correo
-                            {5, 95}};   // Credencial
+        int[][] cellSize = {{0, 0}, // Id
+                {1, 150},           // Nombre
+                {2, 150},           // Apellido Paterno
+                {3, 150},           // Apellido Materno
+                {4, 240},           // Correo
+                {5, 95}};           // Credencial
                             
-        // pone los datos en la tabla
-        UtilsTable.llenaTabla(tableListClientes, clientes_lista, T_CLIENTES, cellAlignment, cellSize);
-        UtilsTable.quitarColumna(tableListClientes, 0);
-        lblCantidad.setText(clientes_lista.length + "");
+        // Pone los datos en la tabla.
+        
+        UtilsTable.llenaTabla(cellAlignment, cellSize, columnasNombre, tblClientes, clientesLista);
+        UtilsTable.quitarColumna(0,tblClientes);
+        lblCantidad.setText(clientesLista.length + "");
     }
     
-    private boolean EstanLlenos(){        
-        if (TextFieldNombre.getText().trim().length() == 0) {
+    private boolean estanLlenos() {        
+        if(txtNombre.getText().trim().length() == 0) {
             javax.swing.JOptionPane.showMessageDialog(this, "Introduzca un nombre.", "Aviso", 2);
-            TextFieldNombre.requestFocus();
+            txtNombre.requestFocus();
             return false;
-        } else if (TextFieldApellidoPat.getText().trim().length() == 0) {
+        } else if(txtApellidoPat.getText().trim().length() == 0) {
             javax.swing.JOptionPane.showMessageDialog(this, "Introduzca un apellido paterno.", "Aviso", 2);
-            TextFieldApellidoPat.requestFocus();
+            txtApellidoPat.requestFocus();
             return false;
-        } else if (cmbPais.getSelectedIndex() < 0) {
+        } else if(cmbPais.getSelectedIndex() < 0) {
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione un pais.", "Aviso", 2);
             cmbPais.requestFocus();
             return false;
-        } else if (cmbEstado.getSelectedIndex() < 0) {
+        } else if(cmbEstado.getSelectedIndex() < 0) {
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione un estado.", "Aviso", 2);
             cmbEstado.requestFocus();
             return false;
-        } else if (TextFieldAlcaldia.getText().trim().length() == 0) {
+        } else if(txtAlcaldia.getText().trim().length() == 0) {
             javax.swing.JOptionPane.showMessageDialog(this, "Introduzca una alcaldia.", "Aviso", 2);
-            TextFieldAlcaldia.requestFocus();
+            txtAlcaldia.requestFocus();
             return false;
-        } else if (TextFieldCP.getText().trim().length() == 0) {
+        } else if(txtCP.getText().trim().length() == 0) {
             javax.swing.JOptionPane.showMessageDialog(this, "Introduzca un codigo postal.", "Aviso", 2);
-            TextFieldCP.requestFocus();
+            txtCP.requestFocus();
             return false;
-        } else if (TextFieldCalle.getText().trim().length() == 0) {
+        } else if(txtCalle.getText().trim().length() == 0) {
             javax.swing.JOptionPane.showMessageDialog(this, "Introduzca una calle.", "Aviso", 2);
-            TextFieldCalle.requestFocus();
+            txtCalle.requestFocus();
             return false;
-        } else if (TextFieldNoExterior.getText().trim().length() == 0) {
+        } else if(txtNoExterior.getText().trim().length() == 0) {
             javax.swing.JOptionPane.showMessageDialog(this, "Introduzca un numero exterior.", "Aviso", 2);
-            TextFieldNoExterior.requestFocus();
+            txtNoExterior.requestFocus();
             return false;
-        } else if (cmbEscolaridad.getSelectedIndex() < 0) {
+        } else if(cmbEscolaridad.getSelectedIndex() < 0) {
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una escolaridad.", "Aviso", 2);
             cmbEscolaridad.requestFocus();
             return false;
@@ -186,7 +199,7 @@ public class Clientes extends javax.swing.JInternalFrame {
         pnlTableList9 = new javax.swing.JPanel();
         pnlTableList10 = new javax.swing.JPanel();
         pnlTableList11 = new javax.swing.JPanel();
-        pnlTableList12 = new javax.swing.JPanel();        
+        pnlTableList12 = new javax.swing.JPanel();
         pnlClientes = new javax.swing.JPanel();
         btnGuarda = new javax.swing.JButton();
         lblCliente = new javax.swing.JLabel();
@@ -198,16 +211,16 @@ public class Clientes extends javax.swing.JInternalFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        TextFieldNombre = new javax.swing.JTextField();
-        TextFieldApellidoPat = new javax.swing.JTextField();
-        TextFieldApellidoMat = new javax.swing.JTextField();
-        TextFieldCorreo = new javax.swing.JTextField();
-        TextFieldAlcaldia = new javax.swing.JTextField();
-        TextFieldCP = new javax.swing.JTextField();
-        TextFieldCalle = new javax.swing.JTextField();
-        TextFieldNoExterior = new javax.swing.JTextField();
+        txtNombre = new javax.swing.JTextField();
+        txtApellidoPat = new javax.swing.JTextField();
+        txtApellidoMat = new javax.swing.JTextField();
+        txtCorreo = new javax.swing.JTextField();
+        txtAlcaldia = new javax.swing.JTextField();
+        txtCP = new javax.swing.JTextField();
+        txtCalle = new javax.swing.JTextField();
+        txtNoExterior = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        TextFieldNoInterior = new javax.swing.JTextField();
+        txtNoInterior = new javax.swing.JTextField();
         cmbEscolaridad = new javax.swing.JComboBox<>();
         pnlTableList4 = new javax.swing.JPanel();
         btnEditEscolaridades = new javax.swing.JButton();
@@ -224,29 +237,27 @@ public class Clientes extends javax.swing.JInternalFrame {
         btnCancelar = new javax.swing.JButton();
         pnlTableList = new javax.swing.JPanel();
         scpTableList = new javax.swing.JScrollPane();
-        tableListClientes = new javax.swing.JTable();
+        tblClientes = new javax.swing.JTable();
         lblTitulo1 = new javax.swing.JLabel();
-        TextFieldFiltro = new javax.swing.JTextField();
-        btnBorrar = new javax.swing.JButton();
+        txtFiltro = new javax.swing.JTextField();
+        btnDelete = new javax.swing.JButton();
         btnBorrarFiltro = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         lblCantidad = new javax.swing.JLabel();
         btnEdit = new javax.swing.JButton();
 
         pnlTableList9.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Escolaridad", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N
-        pnlTableList9.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());        
+        pnlTableList9.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         pnlTableList10.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Escolaridad", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N
         pnlTableList10.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
         pnlTableList9.add(pnlTableList10, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 90, 190, 60));
 
         pnlTableList11.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Escolaridad", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N
         pnlTableList11.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         pnlTableList12.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Escolaridad", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N
-        pnlTableList12.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());        
-
+        pnlTableList12.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
         pnlTableList11.add(pnlTableList12, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 90, 190, 60));
 
         pnlTableList9.add(pnlTableList11, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 170, 190, 60));
@@ -305,35 +316,35 @@ public class Clientes extends javax.swing.JInternalFrame {
         jLabel4.setText("Escolaridad:");
         pnlClientes.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 380, -1, -1));
 
-        TextFieldNombre.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        pnlClientes.add(TextFieldNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 50, 250, 20));
+        txtNombre.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        pnlClientes.add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 50, 250, 20));
 
-        TextFieldApellidoPat.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        pnlClientes.add(TextFieldApellidoPat, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 80, 250, 20));
+        txtApellidoPat.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        pnlClientes.add(txtApellidoPat, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 80, 250, 20));
 
-        TextFieldApellidoMat.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        pnlClientes.add(TextFieldApellidoMat, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 110, 250, 20));
+        txtApellidoMat.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        pnlClientes.add(txtApellidoMat, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 110, 250, 20));
 
-        TextFieldCorreo.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        pnlClientes.add(TextFieldCorreo, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 140, 250, 20));
+        txtCorreo.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        pnlClientes.add(txtCorreo, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 140, 250, 20));
 
-        TextFieldAlcaldia.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        pnlClientes.add(TextFieldAlcaldia, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 230, 250, 20));
+        txtAlcaldia.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        pnlClientes.add(txtAlcaldia, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 230, 250, 20));
 
-        TextFieldCP.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        pnlClientes.add(TextFieldCP, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 260, 250, 20));
+        txtCP.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        pnlClientes.add(txtCP, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 260, 250, 20));
 
-        TextFieldCalle.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        pnlClientes.add(TextFieldCalle, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 290, 250, 20));
+        txtCalle.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        pnlClientes.add(txtCalle, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 290, 250, 20));
 
-        TextFieldNoExterior.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        pnlClientes.add(TextFieldNoExterior, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 320, 250, 20));
+        txtNoExterior.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        pnlClientes.add(txtNoExterior, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 320, 250, 20));
 
         jLabel5.setText("No. Interior:");
         pnlClientes.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 350, -1, -1));
 
-        TextFieldNoInterior.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        pnlClientes.add(TextFieldNoInterior, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 350, 250, 20));
+        txtNoInterior.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        pnlClientes.add(txtNoInterior, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 350, 250, 20));
 
         pnlClientes.add(cmbEscolaridad, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 380, 250, -1));
 
@@ -380,7 +391,6 @@ public class Clientes extends javax.swing.JInternalFrame {
 
         pnlTableList14.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Escolaridad", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N
         pnlTableList14.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
         pnlTableList13.add(pnlTableList14, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 90, 190, 60));
 
         pnlTableList15.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Escolaridad", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N
@@ -388,7 +398,6 @@ public class Clientes extends javax.swing.JInternalFrame {
 
         pnlTableList16.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Escolaridad", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N
         pnlTableList16.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
         pnlTableList15.add(pnlTableList16, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 90, 190, 60));
 
         pnlTableList13.add(pnlTableList15, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 170, 190, 60));
@@ -423,8 +432,8 @@ public class Clientes extends javax.swing.JInternalFrame {
         scpTableList.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scpTableList.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-        tableListClientes.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        tableListClientes.setModel(new javax.swing.table.DefaultTableModel(
+        tblClientes.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        tblClientes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -432,12 +441,12 @@ public class Clientes extends javax.swing.JInternalFrame {
 
             }
         ));
-        tableListClientes.addMouseListener(new java.awt.event.MouseAdapter() {
+        tblClientes.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tableListClientesMouseClicked(evt);
+                tblClientesMouseClicked(evt);
             }
         });
-        scpTableList.setViewportView(tableListClientes);
+        scpTableList.setViewportView(tblClientes);
 
         pnlTableList.add(scpTableList, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 810, 240));
 
@@ -445,28 +454,23 @@ public class Clientes extends javax.swing.JInternalFrame {
         lblTitulo1.setText("Filtrar:");
         pnlTableList.add(lblTitulo1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, -1, 25));
 
-        TextFieldFiltro.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        TextFieldFiltro.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                TextFieldFiltroActionPerformed(evt);
-            }
-        });
-        TextFieldFiltro.addKeyListener(new java.awt.event.KeyAdapter() {
+        txtFiltro.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        txtFiltro.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                TextFieldFiltroKeyReleased(evt);
+                txtFiltroKeyReleased(evt);
             }
         });
-        pnlTableList.add(TextFieldFiltro, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 30, 230, 25));
+        pnlTableList.add(txtFiltro, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 30, 230, 25));
 
-        btnBorrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/borrar.png"))); // NOI18N
-        btnBorrar.setToolTipText("Borrar libro");
-        btnBorrar.setFocusable(false);
-        btnBorrar.addActionListener(new java.awt.event.ActionListener() {
+        btnDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/borrar.png"))); // NOI18N
+        btnDelete.setToolTipText("Borrar libro");
+        btnDelete.setFocusable(false);
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBorrarActionPerformed(evt);
+                btnDeleteActionPerformed(evt);
             }
         });
-        pnlTableList.add(btnBorrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 20, 40, 40));
+        pnlTableList.add(btnDelete, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 20, 40, 40));
 
         btnBorrarFiltro.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/cancelarm.png"))); // NOI18N
         btnBorrarFiltro.setToolTipText("Borrar filtro");
@@ -520,175 +524,216 @@ public class Clientes extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Guarda el registro del Cliente.
+     * @param evt evento que dispara la funcion.
+     */
     private void btnGuardaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardaActionPerformed
-    if(EstanLlenos()) {
-        // Obtener datos de los campos de texto
-        String nombre = TextFieldNombre.getText();
-        String apellidoPat = TextFieldApellidoPat.getText();
-        String apellidoMat = TextFieldApellidoMat.getText();
-        String correo = TextFieldCorreo.getText();
-        String estado = cmbEstado.getSelectedItem().toString();        
-        String estado_id = estado_dao.GetEstadosByNombre(0, estado)[0][0].toString();
-        String alcaldia = TextFieldAlcaldia.getText();
-        String cp = TextFieldCP.getText();
-        String calle = TextFieldCalle.getText();
-        String noExterior = TextFieldNoExterior.getText();
-        String noInterior = TextFieldNoInterior.getText();
+        if(estanLlenos()) {
 
-        // Obtener la escolaridad seleccionada en el ComboBox
-        String escolaridadSeleccionada = cmbEscolaridad.getSelectedItem().toString();
-        String escolaridad_id = escolaridad_dao.GetEscolaridadByNombre(escolaridadSeleccionada)[0][0].toString();
+            // Obtener datos de los campos de texto.
+            String nombre = txtNombre.getText();
+            String apellidoPat = txtApellidoPat.getText();
+            String apellidoMat = txtApellidoMat.getText();
+            String correo = txtCorreo.getText();
+            String estado = cmbEstado.getSelectedItem().toString();        
+            int estadoId = (int) estadoDAO.getEstadosByNombre(estado)[0][0];
+            String alcaldia = txtAlcaldia.getText();
+            String cp = txtCP.getText();
+            String calle = txtCalle.getText();
+            String noExterior = txtNoExterior.getText();
+            String noInterior = txtNoInterior.getText();
 
-        // Crear un objeto para representar la información del nuevo cliente
-        Object[] nuevoCliente = {nombre, apellidoPat, apellidoMat, correo, alcaldia, cp, calle, noExterior, noInterior, estado_id, escolaridad_id};
+            // Obtener la escolaridad seleccionada en el ComboBox
+            String escolaridadSeleccionada = cmbEscolaridad.getSelectedItem().toString();
+            String escolaridadId = escolaridadDAO.getEscolaridadByNombre(escolaridadSeleccionada)[0][0].toString();
 
-        // Insertar en la base de datos y obtener el nuevo ID del cliente
-        String new_cliente_id = cliente_dao.saveCliente(nuevoCliente);
-        // Si el id no es 0, procede a llenar los demas datos
-        if (!new_cliente_id.isEmpty()){                
-            javax.swing.JOptionPane.showMessageDialog(this, "Datos guardados con éxito.", "Información", 1);
-            LlenaTablaClientes();
-            UtilsTable.mueveTabla(tableListClientes, UtilsTable.getRow(clientes_lista, cliente_id));
-            TextFieldNombre.requestFocus();
-            CancelaEdit();
-        }
-        else {
-            javax.swing.JOptionPane.showMessageDialog(this, "Error al guardar.","Error", 1);
-        }            
-    }
-    
+            // Crear un objeto para representar la información del Cliente.
+            Object[] cliente = {nombre, apellidoPat, apellidoMat, correo, alcaldia, cp, calle, noExterior, noInterior, estadoId, escolaridadId};
+            
+            // Guardar o editar Cliente
+            if(clienteId == 0) {
+                // Insertar en la base de datos y obtener el nuevo ID del cliente.
+                int newClienteId = clienteDAO.saveCliente(cliente);
+
+                // Si el Id no es 0, procede a llenar los demas datos.
+                if(newClienteId != 0) {
+                    javax.swing.JOptionPane.showMessageDialog(this, "Datos guardados con éxito.", "Información", 1);
+                    llenaTablaClientes();
+                    UtilsTable.mueveTabla(UtilsTable.getRow(newClienteId, clientesLista), tblClientes);
+                    txtNombre.requestFocus();
+                    cancelaEdit();
+                } else {
+                    javax.swing.JOptionPane.showMessageDialog(this, "Error al guardar.", "Error", 1);
+                } 
+            } else {
+                clienteId = clienteDAO.updateCliente(clienteId, cliente);
+                if(clienteId != 0) {
+                    javax.swing.JOptionPane.showMessageDialog(this, "Datos actualizados con éxito.", "Información", 1);
+                    llenaTablaClientes();
+                    UtilsTable.mueveTabla(UtilsTable.getRow(clienteId, clientesLista), tblClientes);
+                    txtNombre.requestFocus();
+                    cancelaEdit();
+                } else {
+                    javax.swing.JOptionPane.showMessageDialog(this, "Error al actualizar.", "Error", 1);
+                } 
+            }                       
+        }    
     }//GEN-LAST:event_btnGuardaActionPerformed
 
+    /**
+     * Abre una ventana para editar Escolaridades.
+     * @param evt evento que dispara la funcion.
+     */
     private void btnEditEscolaridadesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditEscolaridadesActionPerformed
-        // Hace visible la ventana para agregar paises
-        add_escolaridad.setLocationRelativeTo(this);
-        add_escolaridad.setVisible(true);
-        LlenadoEscolaridades();
+        
+        // Hace visible la ventana para agregar Escolaridades.
+        addEscolaridad.setLocationRelativeTo(this);
+        addEscolaridad.setVisible(true);
+        llenadoEscolaridades();
     }//GEN-LAST:event_btnEditEscolaridadesActionPerformed
 
-    private void tableListClientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableListClientesMouseClicked
-        // Muestra un ballon si es necesarios
-        if (evt.getClickCount() == 2) {
+    /**
+     * Llena los datos del Cliente seleccionado de la tabla de Clientes.
+     * @param evt evento que dispara la funcion.
+     */
+    private void tblClientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblClientesMouseClicked
+        if(evt.getClickCount() == 2) {
             btnEditActionPerformed(null);
         }        
-    }//GEN-LAST:event_tableListClientesMouseClicked
+    }//GEN-LAST:event_tblClientesMouseClicked
 
-    private void TextFieldFiltroKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TextFieldFiltroKeyReleased
-        LlenaTablaClientes();
-    }//GEN-LAST:event_TextFieldFiltroKeyReleased
+    /**
+     * Filtra la tabla de Clientes al introducir una tecla en el filtro.
+     * @param evt evento que dispara la funcion.
+     */
+    private void txtFiltroKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFiltroKeyReleased
+        llenaTablaClientes();
+    }//GEN-LAST:event_txtFiltroKeyReleased
 
+    /**
+     * Borra el texto introducido en el filtro de Clientes.
+     * @param evt evento que dispara la funcion.
+     */
     private void btnBorrarFiltroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarFiltroActionPerformed
-        TextFieldFiltro.setText("");
-        LlenaTablaClientes();
+        txtFiltro.setText("");
+        llenaTablaClientes();
     }//GEN-LAST:event_btnBorrarFiltroActionPerformed
 
-    private void TextFieldFiltroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TextFieldFiltroActionPerformed
-
-    }//GEN-LAST:event_TextFieldFiltroActionPerformed
-
+    /**
+     * Llena el combobox de Estados al seleccionar un Pais.
+     * @param evt evento que dispara la funcion.
+     */
     private void cmbPaisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbPaisActionPerformed
-        LlenadoEstados();
+        llenadoEstados();
     }//GEN-LAST:event_cmbPaisActionPerformed
-
-    private void EditEscolaridad8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditEscolaridad8ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_EditEscolaridad8ActionPerformed
-
+    
+    /**
+     * Abre una ventana para editar los Paises disponibles.
+     * @param evt evento que dispara la funcion.
+     */
     private void btnEditarPaisesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarPaisesActionPerformed
-        // Hace visible la ventana para agregar paises
-        add_pais.setLocationRelativeTo(this);
-        add_pais.setVisible(true);
+        
+        // Hace visible la ventana para agregar Paises.
+        addPais.setLocationRelativeTo(this);
+        addPais.setVisible(true);
 
-        // Al cerrar, actualizar los idiomas disponibles
+        // Al cerrar, actualizar los Paises disponibles.
         LlenadoPaises();
-        CancelaEdit();
+        cancelaEdit();
     }//GEN-LAST:event_btnEditarPaisesActionPerformed
 
+    /**
+     * Llena los datos del Cliente seleccionado de la tabla de Clientes.
+     * @param evt evento que dispara la funcion.
+     */
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
-        // Botón que consulta el registro selecionado de la tabla para editar
-        if (tableListClientes.getSelectedRow() < 0)
+        if(tblClientes.getSelectedRow() < 0) {
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila.", "Información", 1);
-        else{
-            // Consulta los datos
-            Object[] cliente_edit = cliente_dao.getClienteById((Integer) 
-                    UtilsTable.obtenerValor(
-                          tableListClientes, tableListClientes.getSelectedRow(), 0)); 
-            if (cliente_edit != null){    
-                cliente_id = (Integer) cliente_edit[0];                         // Id
-                TextFieldNombre.setText(cliente_edit[1].toString());            // Nombre
-                TextFieldApellidoPat.setText(cliente_edit[2].toString());       // Apellido Paterno
-                TextFieldApellidoMat.setText(cliente_edit[3].toString());       // Apellido Materno
-                TextFieldCorreo.setText(cliente_edit[4].toString());            // Correo
-                cmbPais.setSelectedItem(cliente_edit[5].toString());            // Pais
-                cmbEstado.setSelectedItem(cliente_edit[6].toString());          // Estado
-                TextFieldAlcaldia.setText(cliente_edit[7].toString());          // Alcaldia
-                TextFieldCP.setText(cliente_edit[8].toString());                // CP
-                TextFieldCalle.setText(cliente_edit[9].toString());             // Calle
-                TextFieldNoExterior.setText(cliente_edit[10].toString());       // Numero Exterior
-                if(cliente_edit[11] != null) {
-                    TextFieldNoInterior.setText(cliente_edit[11].toString());   // Numero Interior
+        } else {
+          
+            // Consulta los datos.            
+            Object[] clienteEdit = clienteDAO.getClienteById((int) UtilsTable.obtenerValor(tblClientes.getSelectedRow(), 0, tblClientes)); 
+            if(clienteEdit != null) {    
+                clienteId = (int) clienteEdit[0];                           // Id.
+                txtNombre.setText(clienteEdit[1].toString());               // Nombre.
+                txtApellidoPat.setText(clienteEdit[2].toString());          // Apellido Paterno.
+                txtApellidoMat.setText(clienteEdit[3].toString());          // Apellido Materno.
+                txtCorreo.setText(clienteEdit[4].toString());               // Correo.
+                cmbPais.setSelectedItem(clienteEdit[5].toString());         // Pais.
+                cmbEstado.setSelectedItem(clienteEdit[6].toString());       // Estado.
+                txtAlcaldia.setText(clienteEdit[7].toString());             // Alcaldia.
+                txtCP.setText(clienteEdit[8].toString());                   // CP.
+                txtCalle.setText(clienteEdit[9].toString());                // Calle.
+                txtNoExterior.setText(clienteEdit[10].toString());          // Numero Exterior.
+                if(clienteEdit[11] != null) {
+                    txtNoInterior.setText(clienteEdit[11].toString());      // Numero Interior.
                 }                
-                cmbEscolaridad.setSelectedItem(cliente_edit[12].toString());    // Estado                                
+                cmbEscolaridad.setSelectedItem(clienteEdit[12].toString()); // Estado.                             
             }
         }
     }//GEN-LAST:event_btnEditActionPerformed
 
-    private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
-        if (tableListClientes.getSelectedRow() < 0)
+    /**
+     * Elimina a un Cliente de la base de datos.
+     * @param evt evento que dispara la funcion.
+     */
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        if(tblClientes.getSelectedRow() < 0) {
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila.", "Aviso", 2);
-        else{
-            // suena un beep
+        } else {
+            
+            // Suena un beep y se muestra un mensaje de confirmacion.
             java.awt.Toolkit.getDefaultToolkit().beep();
-            // pregunta si quiere eliminar el registro y camtura la respuesta
-            int res = javax.swing.JOptionPane.showConfirmDialog(this, "¿Eliminar " + clientes_lista[tableListClientes.getSelectedRow()][1].toString() + "?",
-                 "Seleccione", JOptionPane.YES_NO_OPTION);
-            // evalua la respuesta 
-            if (res == 0){
+            int res = javax.swing.JOptionPane.showConfirmDialog(this, "¿Eliminar " + clientesLista[tblClientes.getSelectedRow()][1].toString() + "?",
+                    "Seleccione", JOptionPane.YES_NO_OPTION);
+            
+            // Si la respuesta es afirmativa, elimina el registro.
+            if(res == 0) {
                 String msj = "";
-                // si la respuesta es afirmativa, elimina el registro
-                int ret = cliente_dao.DeleteCliente(cliente_id);
-                if (ret == 0){
+                clienteId = (int) UtilsTable.obtenerValor(tblClientes.getSelectedRow(), 0, tblClientes);
+                int ret = clienteDAO.deleteCliente(clienteId);
+                if(ret == 1) {
                     msj = "Se dio de baja el cliente.";
-                }
-                else if (ret == 1){
+                } else {
                     msj = "No se pudo dar de baja por que tiene registros asignados o\nno fue seleccionado apropiadamente.";
                 }
-                // suena un beep
+                
+                // Suena un beep y se muestra un mensaje.
                 java.awt.Toolkit.getDefaultToolkit().beep();
                 javax.swing.JOptionPane.showMessageDialog(this, msj, "Información", 1);
-                // Reinicia controles y parametros                               
-                CancelaEdit();
-                LlenaTablaClientes(); 
-                TextFieldNombre.requestFocus();
+                
+                // Reinicia controles y parametros.
+                cancelaEdit();
+                llenaTablaClientes(); 
+                txtNombre.requestFocus();
             }        
         }
-    }//GEN-LAST:event_btnBorrarActionPerformed
+    }//GEN-LAST:event_btnDeleteActionPerformed
 
+    /**
+     * Actualiza manualmente los datos disponibles en los controladores.
+     * @param evt evento que dispara la funcion.
+     */
     private void btnRefrescarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefrescarActionPerformed
-        LlenaDatos();
-        CancelaEdit();
+        llenaDatos();
+        cancelaEdit();
     }//GEN-LAST:event_btnRefrescarActionPerformed
 
+    /**
+     * Vacia los campos de los controladores.
+     * @param evt evento que dispara la funcion.
+     */
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        CancelaEdit();
-        tableListClientes.clearSelection();
-        LlenaTablaClientes();
+        cancelaEdit();
+        tblClientes.clearSelection();
+        llenaTablaClientes();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField TextFieldAlcaldia;
-    private javax.swing.JTextField TextFieldApellidoMat;
-    private javax.swing.JTextField TextFieldApellidoPat;
-    private javax.swing.JTextField TextFieldCP;
-    private javax.swing.JTextField TextFieldCalle;
-    private javax.swing.JTextField TextFieldCorreo;
-    private javax.swing.JTextField TextFieldFiltro;
-    private javax.swing.JTextField TextFieldNoExterior;
-    private javax.swing.JTextField TextFieldNoInterior;
-    private javax.swing.JTextField TextFieldNombre;
-    private javax.swing.JButton btnBorrar;
     private javax.swing.JButton btnBorrarFiltro;
     private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnEdit;
     private javax.swing.JButton btnEditEscolaridades;
     private javax.swing.JButton btnEditarPaises;
@@ -724,10 +769,16 @@ public class Clientes extends javax.swing.JInternalFrame {
     private javax.swing.JPanel pnlTableList4;
     private javax.swing.JPanel pnlTableList9;
     private javax.swing.JScrollPane scpTableList;
-    private javax.swing.JTable tableListClientes;
+    private javax.swing.JTable tblClientes;
+    private javax.swing.JTextField txtAlcaldia;
+    private javax.swing.JTextField txtApellidoMat;
+    private javax.swing.JTextField txtApellidoPat;
+    private javax.swing.JTextField txtCP;
+    private javax.swing.JTextField txtCalle;
+    private javax.swing.JTextField txtCorreo;
+    private javax.swing.JTextField txtFiltro;
+    private javax.swing.JTextField txtNoExterior;
+    private javax.swing.JTextField txtNoInterior;
+    private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables
-
-    private void btnEditActionPerformed(Object object) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
 }
