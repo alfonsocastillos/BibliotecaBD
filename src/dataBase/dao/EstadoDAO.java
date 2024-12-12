@@ -141,9 +141,9 @@ public class EstadoDAO extends CustomConnection {
             // Llena el arreglo estado con el resultado.
             estado = new Object[3];
             while(resultSet.next()) {
-                estado[0] = (resultSet.getString(1));
-                estado[1] = (resultSet.getString(2));
-                estado[2] = (resultSet.getString(2));
+                estado[0] = resultSet.getInt(1);
+                estado[1] = resultSet.getString(2);
+                estado[2] = resultSet.getString(2);
             }
         } catch(SQLException ex) {
             System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + ConfigDataBase.DB_ERR_QUERY + "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + 

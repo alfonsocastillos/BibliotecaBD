@@ -311,6 +311,11 @@ public class MDIPrincipal extends javax.swing.JFrame {
         menuClientes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/user_icon.png"))); // NOI18N
         menuClientes.setMnemonic('p');
         menuClientes.setText("Clientes");
+        menuClientes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuClientesActionPerformed(evt);
+            }
+        });
         menuEdit.add(menuClientes);
 
         menuEmpleados.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
@@ -407,6 +412,14 @@ public class MDIPrincipal extends javax.swing.JFrame {
     private void btnClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClientesActionPerformed
        abreClientes();
     }//GEN-LAST:event_btnClientesActionPerformed
+
+    /**
+     * Abrir la ventana de clientes cuando se le da clic.
+     * @param evt evento que dispara la funcion.
+     */
+    private void menuClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuClientesActionPerformed
+        abreClientes();
+    }//GEN-LAST:event_menuClientesActionPerformed
   
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToolBar barVent;

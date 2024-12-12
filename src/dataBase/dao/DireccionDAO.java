@@ -11,8 +11,8 @@ import java.sql.*;
 public class DireccionDAO extends CustomConnection {
     
     /**
-     * Crear una direccion con los datos (Alcaldia, CP, Calle, Num Exterior, Num Interior, Id del estado).
-     * @param dir lista de datos de la direccion a crear.
+     * Crear una direccion con los datos.
+     * @param dir lista de datos de la direccion a crear (Alcaldia, CP, Calle, Num Exterior, Num Interior, Id del estado).
      * @return Id de la direccion creada.
      */
     public String saveDireccion(Object[] dir) {
@@ -43,7 +43,7 @@ public class DireccionDAO extends CustomConnection {
             preparedStatement.setString(4, dir[2].toString());          // Calle (provisto).
             preparedStatement.setString(5, dir[3].toString());          // Numero exterior (provisto).
             preparedStatement.setString(6, dir[4].toString());          // Numero interior (provisto).
-            preparedStatement.setString(7, dir[5].toString());          // Id del estado (provisto).
+            preparedStatement.setInt(7, (int) dir[5]);                  // Id del estado (provisto).
             preparedStatement.executeUpdate();
         } catch(SQLException ex) {
             System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "saveDireccion");         
@@ -52,5 +52,40 @@ public class DireccionDAO extends CustomConnection {
            disconnect();
         }
         return dirId;
+    }
+    
+    /**
+     * Actualiza una direccion con los datos.
+     * @param clienteId Id del cliente al que pertenece esta direccion.
+     * @param dir lista de datos de la direccion a crear (Id, Alcaldia, CP, Calle, Num Exterior, Num Interior, Id del estado).
+     * @return boolean denotando el exito de la operacion.
+     */
+    public boolean updateDireccion(int clienteId, Object[] dir) {
+        connect();
+        boolean exito;
+        try {
+    
+            // Inserta mandando todos los datos, incluido en nuevo id.
+            sentenciaSQL = "UPDATE DIRECCION SET ALCALDIA = ?, CP = ?, CALLE = ?, EXTERIOR = ?, INTERIOR = ?, ESTADO_ID = ? WHERE DIRECCION_ID = " + 
+                    "(SELECT DIRECCION_ID FROM CLIENTE WHERE CLIENTE_ID = ?)";
+            preparedStatement = connection.prepareStatement(sentenciaSQL);
+            
+            // Asigna los valores del arreglo.
+            preparedStatement.setString(1, dir[0].toString());          // Alcaldia (provisto).
+            preparedStatement.setString(2, dir[1].toString());          // CP (provisto).
+            preparedStatement.setString(3, dir[2].toString());          // Calle (provisto).
+            preparedStatement.setString(4, dir[3].toString());          // Numero exterior (provisto).
+            preparedStatement.setString(5, dir[4].toString());          // Numero interior (provisto).
+            preparedStatement.setInt(6, (int) dir[5]);                  // Id del estado (provisto).
+            preparedStatement.setInt(7, clienteId);                     // Id del cliente (provisto).
+            preparedStatement.executeUpdate();
+            exito = true;
+        } catch(SQLException ex) {
+            System.out.println(ConfigDataBase.DB_T_ERROR + ex.getSQLState() + "\n\n" + ex.getMessage() + "\n\n" + sentenciaSQL + "\n\nUbicación: " + "saveDireccion");         
+            exito = false;
+        } finally {
+           disconnect();
+        }
+        return exito;
     }
 }

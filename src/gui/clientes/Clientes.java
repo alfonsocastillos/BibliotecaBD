@@ -539,7 +539,7 @@ public class Clientes extends javax.swing.JInternalFrame {
             String apellidoMat = txtApellidoMat.getText();
             String correo = txtCorreo.getText();
             String estado = cmbEstado.getSelectedItem().toString();        
-            String estado_id = estadoDAO.getEstadosByNombre(estado)[0][0].toString();
+            int estadoId = (int) estadoDAO.getEstadosByNombre(estado)[0][0];
             String alcaldia = txtAlcaldia.getText();
             String cp = txtCP.getText();
             String calle = txtCalle.getText();
@@ -550,22 +550,36 @@ public class Clientes extends javax.swing.JInternalFrame {
             String escolaridadSeleccionada = cmbEscolaridad.getSelectedItem().toString();
             String escolaridadId = escolaridadDAO.getEscolaridadByNombre(escolaridadSeleccionada)[0][0].toString();
 
-            // Crear un objeto para representar la información del nuevo cliente.
-            Object[] nuevoCliente = {nombre, apellidoPat, apellidoMat, correo, alcaldia, cp, calle, noExterior, noInterior, estado_id, escolaridadId};
+            // Crear un objeto para representar la información del Cliente.
+            Object[] cliente = {nombre, apellidoPat, apellidoMat, correo, alcaldia, cp, calle, noExterior, noInterior, estadoId, escolaridadId};
+            
+            // Guardar o editar Cliente
+            if(clienteId == 0) {
+                // Insertar en la base de datos y obtener el nuevo ID del cliente.
+                int newClienteId = clienteDAO.saveCliente(cliente);
 
-            // Insertar en la base de datos y obtener el nuevo ID del cliente.
-            String newClienteId = clienteDAO.saveCliente(nuevoCliente);
-
-            // Si el id no es 0, procede a llenar los demas datos.
-            if(!newClienteId.isEmpty()) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Datos guardados con éxito.", "Información", 1);
-                llenaTablaClientes();
-                UtilsTable.mueveTabla(UtilsTable.getRow(newClienteId, clientesLista), tblClientes);
-                txtNombre.requestFocus();
-                cancelaEdit();
+                // Si el Id no es 0, procede a llenar los demas datos.
+                if(newClienteId != 0) {
+                    javax.swing.JOptionPane.showMessageDialog(this, "Datos guardados con éxito.", "Información", 1);
+                    llenaTablaClientes();
+                    UtilsTable.mueveTabla(UtilsTable.getRow(newClienteId, clientesLista), tblClientes);
+                    txtNombre.requestFocus();
+                    cancelaEdit();
+                } else {
+                    javax.swing.JOptionPane.showMessageDialog(this, "Error al guardar.", "Error", 1);
+                } 
             } else {
-                javax.swing.JOptionPane.showMessageDialog(this, "Error al guardar.", "Error", 1);
-            }            
+                clienteId = clienteDAO.updateCliente(clienteId, cliente);
+                if(clienteId != 0) {
+                    javax.swing.JOptionPane.showMessageDialog(this, "Datos actualizados con éxito.", "Información", 1);
+                    llenaTablaClientes();
+                    UtilsTable.mueveTabla(UtilsTable.getRow(clienteId, clientesLista), tblClientes);
+                    txtNombre.requestFocus();
+                    cancelaEdit();
+                } else {
+                    javax.swing.JOptionPane.showMessageDialog(this, "Error al actualizar.", "Error", 1);
+                } 
+            }                       
         }    
     }//GEN-LAST:event_btnGuardaActionPerformed
 
@@ -640,7 +654,7 @@ public class Clientes extends javax.swing.JInternalFrame {
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila.", "Información", 1);
         } else {
           
-            // Consulta los datos.
+            // Consulta los datos.            
             Object[] clienteEdit = clienteDAO.getClienteById((int) UtilsTable.obtenerValor(tblClientes.getSelectedRow(), 0, tblClientes)); 
             if(clienteEdit != null) {    
                 clienteId = (int) clienteEdit[0];                           // Id.
@@ -678,7 +692,8 @@ public class Clientes extends javax.swing.JInternalFrame {
             
             // Si la respuesta es afirmativa, elimina el registro.
             if(res == 0) {
-                String msj = "";                
+                String msj = "";
+                clienteId = (int) UtilsTable.obtenerValor(tblClientes.getSelectedRow(), 0, tblClientes);
                 int ret = clienteDAO.deleteCliente(clienteId);
                 if(ret == 1) {
                     msj = "Se dio de baja el cliente.";
