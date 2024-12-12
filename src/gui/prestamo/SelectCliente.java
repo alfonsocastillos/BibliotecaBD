@@ -6,42 +6,45 @@ import tools.UtilsTable;
 import dataBase.dao.ClienteDAO;
 
 /**
- *
+ * Ventana que permite seleccionar un Cliente para el Prestamo.
  * @author alfonso
  */
 public class SelectCliente extends javax.swing.JDialog {
-
-    public int cliente_id = 0;
-    Object[][] lista_clientes;
-    dataBase.dao.ClienteDAO cliente_dao;
+    public int clienteId = 0;
+    Object[][] clientesLista;
+    dataBase.dao.ClienteDAO clienteDAO;
     
+    /**
+     * Creates new form SelectCliente.
+     * @param parent ventana padre.
+     * @param modal determina si la ventana no cede el foco a otra.
+     */
     public SelectCliente(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        cliente_dao = new ClienteDAO();
-        LlenaClientes();
-    }
-    
-    public Object[] GetCliente() {
-        return null;
-    }
+        clienteDAO = new ClienteDAO();
+        llenaClientes();
+    }   
 
-    private void LlenaClientes() {
-        String filtro = TextFieldFiltro.getText().trim();
-        lista_clientes = cliente_dao.getClientesByFilter(filtro);
+    /**
+     * Llena la tabla de Clientes disponibles.
+     */
+    private void llenaClientes() {
+        String filtro = txtFiltro.getText().trim();
+        clientesLista = clienteDAO.getClientesByFilter(filtro);
         
-        int[][] cellAlignment = {{0,javax.swing.SwingConstants.LEFT, javax.swing.SwingConstants.RIGHT}};
+        // Detalles de la tabla
+        int[][] cellAlignment = {{0, javax.swing.SwingConstants.LEFT, javax.swing.SwingConstants.RIGHT}};
         int[][] cellSize = {{0, 0},
-                            {1, 120},
-                            {2, 120},
-                            {3, 120},
-                            {4, 0},
-                            {5, 90}};
-        String[] T_CLIENTES = {"", "Nombre", "Apellido Paterno", "Apellido Materno", "", "Credencial"};
-        // llena la tabla 
-        UtilsTable.llenaTabla(tableListClientes, lista_clientes, T_CLIENTES, cellAlignment, cellSize);
-        UtilsTable.quitarColumna(tableListClientes, 4);    
-        UtilsTable.quitarColumna(tableListClientes, 0);                    
+                {1, 120},               // Nombre del cliente.
+                {2, 120},               // Apellido Paterno.
+                {3, 120},               // Apellido Materno.
+                {4, 0},                 // Correo.
+                {5, 90}};               // Credencial.
+        String[] nombresColumna = {"", "Nombre", "Apellido Paterno", "Apellido Materno", "", "Credencial"};
+        UtilsTable.llenaTabla(cellAlignment, cellSize, nombresColumna, tblClientes, clientesLista);
+        UtilsTable.quitarColumna(4, tblClientes);    
+        UtilsTable.quitarColumna(0, tblClientes);                    
     }
     
     /**
@@ -57,14 +60,14 @@ public class SelectCliente extends javax.swing.JDialog {
         jTable1 = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        TextFieldFiltro = new javax.swing.JTextField();
+        txtFiltro = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
-        tableListClientes = new javax.swing.JTable();
+        tblClientes = new javax.swing.JTable();
         btnSelect = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        btnBorrar = new javax.swing.JButton();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object[][] {
+            new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
                 {null, null, null, null},
@@ -86,15 +89,15 @@ public class SelectCliente extends javax.swing.JDialog {
         jLabel1.setFont(new java.awt.Font("Arial", 0, 12));
         jLabel1.setText("Buscar:");
 
-        TextFieldFiltro.addKeyListener(new java.awt.event.KeyAdapter() {
+        txtFiltro.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                TextFieldFiltroKeyReleased(evt);
+                txtFiltroKeyReleased(evt);
             }
         });
 
-        tableListClientes.setFont(new java.awt.Font("Arial", 0, 12));
-        tableListClientes.setModel(new javax.swing.table.DefaultTableModel(
-            new Object[][] {
+        tblClientes.setFont(new java.awt.Font("Arial", 0, 12));
+        tblClientes.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
                 {},
                 {},
                 {},
@@ -104,12 +107,12 @@ public class SelectCliente extends javax.swing.JDialog {
 
             }
         ));
-        tableListClientes.addMouseListener(new java.awt.event.MouseAdapter() {
+        tblClientes.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tableListClientesMouseClicked(evt);
+                tblClientesMouseClicked(evt);
             }
         });
-        jScrollPane2.setViewportView(tableListClientes);
+        jScrollPane2.setViewportView(tblClientes);
 
         btnSelect.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/ok.png"))); // NOI18N
         btnSelect.addActionListener(new java.awt.event.ActionListener() {
@@ -118,10 +121,10 @@ public class SelectCliente extends javax.swing.JDialog {
             }
         });
 
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/cancelarm.png"))); // NOI18N
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnBorrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/cancelarm.png"))); // NOI18N
+        btnBorrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnBorrarActionPerformed(evt);
             }
         });
 
@@ -138,9 +141,9 @@ public class SelectCliente extends javax.swing.JDialog {
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel1)
                                 .addGap(18, 18, 18)
-                                .addComponent(TextFieldFiltro)
+                                .addComponent(txtFiltro)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButton1))))
+                                .addComponent(btnBorrar))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(216, 216, 216)
                         .addComponent(btnSelect)))
@@ -154,8 +157,8 @@ public class SelectCliente extends javax.swing.JDialog {
                         .addContainerGap()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
-                            .addComponent(TextFieldFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jButton1))
+                            .addComponent(txtFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(btnBorrar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -182,40 +185,56 @@ public class SelectCliente extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Agrega al Cliente seleccionado al Prestamo.
+     * @param evt evento que dispara la funcion.
+     */ 
     private void btnSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelectActionPerformed
-        if(tableListClientes.getSelectedRow() < 0) { 
+        if(tblClientes.getSelectedRow() < 0) { 
             Toolkit.getDefaultToolkit().beep();
             JOptionPane.showMessageDialog(this, "Seleccione un cliente.", "Aviso", 2);            
         } else {
-            cliente_id = (int) UtilsTable.obtenerValor(tableListClientes, tableListClientes.getSelectedRow(), 0);
+            clienteId = (int) UtilsTable.obtenerValor(tblClientes.getSelectedRow(), 0, tblClientes);
             dispose();
         }        
     }//GEN-LAST:event_btnSelectActionPerformed
 
-    private void TextFieldFiltroKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TextFieldFiltroKeyReleased
-        LlenaClientes();
-    }//GEN-LAST:event_TextFieldFiltroKeyReleased
+    /**
+     * Filtra la tabla de Clientes cuando se presiona una tecla en el filtro.
+     * @param evt evento que dispara la funcion.
+     */ 
+    private void txtFiltroKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFiltroKeyReleased
+        llenaClientes();
+    }//GEN-LAST:event_txtFiltroKeyReleased
 
-    private void tableListClientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableListClientesMouseClicked
+    /**
+     * Agrega al Cliente seleccionado al Prestamo.
+     * @param evt evento que dispara la funcion.
+     */ 
+    private void tblClientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblClientesMouseClicked
         if(evt.getClickCount() == 2) {
             btnSelectActionPerformed(null);
         }
-    }//GEN-LAST:event_tableListClientesMouseClicked
+    }//GEN-LAST:event_tblClientesMouseClicked
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        TextFieldFiltro.setText("");
-        LlenaClientes();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    /**
+     * Borra el texto del filtro.
+     * @param evt evento que dispara la funcion.
+     */ 
+    private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
+        txtFiltro.setText("");
+        llenaClientes();
+    }//GEN-LAST:event_btnBorrarActionPerformed
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField TextFieldFiltro;
+    private javax.swing.JButton btnBorrar;
     private javax.swing.JButton btnSelect;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTable tableListClientes;
+    private javax.swing.JTable tblClientes;
+    private javax.swing.JTextField txtFiltro;
     // End of variables declaration//GEN-END:variables
 }

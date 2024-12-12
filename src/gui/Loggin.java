@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package gui;
 
 import dataBase.dao.EmpleadoDAO;
@@ -10,38 +6,47 @@ import javax.swing.JOptionPane;
 import tools.UtilsGUI;
 
 /**
- *
+ * Pantalla encargada del inicio de sesion.
  * @author cirfl
  */
 public class Loggin extends javax.swing.JFrame {
-    // Variables para guardar los ids y nombres de tienda y empleado
-    // para mostrarlos en la interface y ids para guardar los registros
-    int intent = 0;
-    String id_empleado;
-    String id_sucursal;
+    
+    // Variables para guardar los ids y nombres de tienda y empleado para mostrarlos en la interface y ids para guardar los registros.
+    int intento = 0;
+    String empleadoId;
+    String sucursalId;
     String sucursal;
-    String empleado_nombre;
-    // Dao para la tabla de empleados
-    EmpleadoDAO empleado_dao;
+    String empleadoNombre;
+    
+    // Dao para la tabla de empleados.
+    EmpleadoDAO empleadoDAO;
 
     /**
-     * Creates new form Loggin
+     * Constructor de la clase.
      */
     public Loggin() {
-        initComponents();   // Generado automáticamente
-        // instancia el Dao
-        empleado_dao = new EmpleadoDAO();
+        initComponents();   
+        
+        // Instancia el Dao.
+        empleadoDAO = new EmpleadoDAO();
         configComponents();
     }       
     
+    /**
+     * Configura aspectos graficos de la pantalla.
+     */
     private void configComponents() {
-        // Aspecto gráfico
+        
+        // Aspecto grafico.
         UtilsGUI.setLookAndFeel(this);
-        // Titulo de la ventana
+        
+        // Titulo de la ventana.
         setTitle("Inicio de sesión");
-        // posición de la ventana
+        
+        // Posición de la ventana.
         setLocationRelativeTo(null);		    
-        // botón por default
+        
+        // Boton por default.
         getRootPane().setDefaultButton(btnAceptar);
     }
 
@@ -142,43 +147,58 @@ public class Loggin extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Comprueba las credenciales introducidas por el usuario.
+     * @param evt evento que dispara la funcion.
+     */
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
-        // Busca el usuario y contrasenia
-        // Crea un bean para guardar los datos
-        Object employee[] = empleado_dao.getEmpleadoByUsr(txtUser.getText().trim(), txtPsw.getPassword());
-        //System.out.println(employee[0]);
-        // si regresa un id mayor a 0, es válido
+        
+        // Busca el usuario y contrasenia.
+        Object employee[] = empleadoDAO.getEmpleadoByUsr(txtUser.getText().trim(), txtPsw.getPassword());
+                
+        // Si regresa un id mayor a 0, es válido.
         if(Integer.parseInt(employee[0].toString()) > 0) {
-            // Guarda los datos encontrados
-            id_empleado = employee[0].toString();
-            id_sucursal = employee[1].toString();
+            
+            // Guarda los datos encontrados.
+            empleadoId = employee[0].toString();
+            sucursalId = employee[1].toString();
             sucursal = employee[2].toString();
-            empleado_nombre = employee[3] + " " + employee[4];
-            // Cierra la ventana y abre la ventana principal
-            MDIPrincipal principal = new MDIPrincipal(id_sucursal, id_empleado, sucursal, empleado_nombre);
+            empleadoNombre = employee[3] + " " + employee[4];
+            
+            // Cierra la ventana y abre la ventana principal.
+            MDIPrincipal principal = new MDIPrincipal(sucursalId, empleadoId, sucursal, empleadoNombre);
             principal.setVisible(true);
             dispose();
-        }
-        else{
-            // Si no encuentra el usr manda mensaje de error hasta tres veces
-            intent++;
-            // Suena un beep
+        } else {
+            
+            // Si no encuentra el usr manda mensaje de error hasta tres veces.
+            intento++;
+            
+            // Suena un beep.
             Toolkit.getDefaultToolkit().beep();
-            // Muestra mensaje de error
+            
+            // Muestra mensaje de error.
             JOptionPane.showMessageDialog(this, "Usuario o contraseña invalidos", "Error", 0);
             txtUser.requestFocus();
-            if(intent > 2)
+            if(intento > 2) {
                 System.exit(0);
+            }                
         }
     }//GEN-LAST:event_btnAceptarActionPerformed
 
+    /**
+     * Cierra la aplicacion.
+     * @param evt evento que dispara la funcion. 
+     */
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        
         // Cuando presione el botón cancelar cierra todo el sistema
         System.exit(0);
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     /**
-     * @param args the command line arguments
+     * Punto de entrada de la aplicacion.
+     * @param args the command line arguments.
      */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -187,7 +207,7 @@ public class Loggin extends javax.swing.JFrame {
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+            for(javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;

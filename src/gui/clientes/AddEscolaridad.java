@@ -5,47 +5,57 @@ import java.awt.Toolkit;
 import javax.swing.JOptionPane;
 import tools.UtilsTable;
 
-
+/**
+ * Ventana encargada de mostar las opciones sobre Escolaridad.
+ * @author alfonso
+ */
 public class AddEscolaridad extends javax.swing.JDialog {
-    // Para agregar el paises
-    int escolaridad_id;
-    EscolaridadDAO escolaridad_dao;
-    // Para listar todos los paises 
-    Object lista_escolaridad [][];  // Id, pais
-   // public Object film[];
+    
+    // Id de la escolaridad seleccionada
+    int escolaridadId;
+    EscolaridadDAO escolaridadDAO;
+    
+    // Para listar todos las escolaridades 
+    Object[][] escolaridadLista;
     java.awt.Frame parent;    
 
     /**
-     * Creates new form ???
-     * @param parent
-     * @param modal
+     * Creates new form AddEscolaridad.
+     * @param parent ventana padre.
+     * @param modal determina si la ventana no cede el foco a otra.
      */
     public AddEscolaridad(java.awt.Frame parent, boolean modal) {
-        // ventana modal
-        super(parent, modal);   // Llama al constructor del padre
+        super(parent, modal);
         this.parent= parent;
         setTitle("Escolaridad");
-        // inicia los componentes
+        
+        // Inicia los componentes.
         initComponents();
-        // Crea el dao
-        escolaridad_dao = new EscolaridadDAO();
-        // llena la tabla
-        LlenaTabla();
+        
+        // Crea el dao.
+        escolaridadDAO = new EscolaridadDAO();
+        
+        // Llena la tabla.
+        llenaTabla();
     }
-    
-    // Llena y despliega la tabla de autores 
-    private void LlenaTabla() {     
-        // Consulta todos los autores (id, nombre apellido)
-        lista_escolaridad = escolaridad_dao.getEscolaridadByNombre(txtFiltro.getText().trim());
-        // Titulos de la tabla
-        String[] T_ESCOLARIDAD = {"","Escolaridad"};
-        // alineación de las celdas
+        
+    /**
+     * Llena y despliega la tabla de autores.
+     */
+    private void llenaTabla() {     
+        
+        // Consulta todos los autores (id, nombre apellido).
+        escolaridadLista = escolaridadDAO.getEscolaridadByNombre(txtFiltro.getText().trim());
+        
+        // Titulos de la tabla.
+        String[] nombreColumnas = {"","Escolaridad"};
+        
+        // Alineación de las celdas.
         int[][] cellAlignment = {{0,javax.swing.SwingConstants.LEFT}};
-        // Tamaño de las celdas
-        int[][] cellSize = {{0,0},
-                            {1,170}};
-       
-        UtilsTable.llenaTabla(tableList,lista_escolaridad, T_ESCOLARIDAD, cellAlignment, cellSize);
+        
+        // Tamaño de las celdas.
+        int[][] cellSize = {{0, 0}, {1, 170}};       
+        UtilsTable.llenaTabla(cellAlignment, cellSize, nombreColumnas, tblEscolaridades, escolaridadLista);
     }
     
     /**
@@ -59,12 +69,12 @@ public class AddEscolaridad extends javax.swing.JDialog {
 
         pnlTableList = new javax.swing.JPanel();
         scpTableList = new javax.swing.JScrollPane();
-        tableList = new javax.swing.JTable();
+        tblEscolaridades = new javax.swing.JTable();
         txtFiltro = new javax.swing.JTextField();
         lblFiltro = new javax.swing.JLabel();
-        btnNewEscolaridad = new javax.swing.JButton();
-        btnDelEscolaridad = new javax.swing.JButton();
-        btnEditEscolaridad = new javax.swing.JButton();
+        btnNew = new javax.swing.JButton();
+        btnDelete = new javax.swing.JButton();
+        btnEdit = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setIconImage(java.awt.Toolkit.getDefaultToolkit().getImage( getClass().getResource("/img/user_icon.png")));
@@ -75,16 +85,16 @@ public class AddEscolaridad extends javax.swing.JDialog {
         scpTableList.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scpTableList.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-        tableList.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        tableList.setModel(new javax.swing.table.DefaultTableModel(
-            new Object[][] {
+        tblEscolaridades.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        tblEscolaridades.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
 
             },
             new String [] {
 
             }
         ));
-        scpTableList.setViewportView(tableList);
+        scpTableList.setViewportView(tblEscolaridades);
 
         pnlTableList.add(scpTableList, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 180, 170));
 
@@ -100,30 +110,30 @@ public class AddEscolaridad extends javax.swing.JDialog {
         lblFiltro.setText("Filtrar:");
         pnlTableList.add(lblFiltro, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, 25));
 
-        btnNewEscolaridad.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/add.png"))); // NOI18N
-        btnNewEscolaridad.setToolTipText("Registrar nuevo idioma");
-        btnNewEscolaridad.setFocusable(false);
-        btnNewEscolaridad.addActionListener(new java.awt.event.ActionListener() {
+        btnNew.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/add.png"))); // NOI18N
+        btnNew.setToolTipText("Registrar nuevo idioma");
+        btnNew.setFocusable(false);
+        btnNew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnNewEscolaridadActionPerformed(evt);
+                btnNewActionPerformed(evt);
             }
         });
 
-        btnDelEscolaridad.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/borrar.png"))); // NOI18N
-        btnDelEscolaridad.setToolTipText("Borrar idioma");
-        btnDelEscolaridad.setFocusable(false);
-        btnDelEscolaridad.addActionListener(new java.awt.event.ActionListener() {
+        btnDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/borrar.png"))); // NOI18N
+        btnDelete.setToolTipText("Borrar idioma");
+        btnDelete.setFocusable(false);
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDelEscolaridadActionPerformed(evt);
+                btnDeleteActionPerformed(evt);
             }
         });
 
-        btnEditEscolaridad.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/editar.png"))); // NOI18N
-        btnEditEscolaridad.setToolTipText("Editar idioma");
-        btnEditEscolaridad.setFocusable(false);
-        btnEditEscolaridad.addActionListener(new java.awt.event.ActionListener() {
+        btnEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/editar.png"))); // NOI18N
+        btnEdit.setToolTipText("Editar idioma");
+        btnEdit.setFocusable(false);
+        btnEdit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEditEscolaridadActionPerformed(evt);
+                btnEditActionPerformed(evt);
             }
         });
 
@@ -136,11 +146,11 @@ public class AddEscolaridad extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(pnlTableList, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnNewEscolaridad, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnNew, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(39, 39, 39)
-                        .addComponent(btnEditEscolaridad, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(44, 44, 44)
-                        .addComponent(btnDelEscolaridad, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -150,96 +160,114 @@ public class AddEscolaridad extends javax.swing.JDialog {
                 .addComponent(pnlTableList, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnNewEscolaridad, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnDelEscolaridad, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnEditEscolaridad, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnNew, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    // Abre una ventana que posibilida crear un PAIS
-    private void btnNewEscolaridadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewEscolaridadActionPerformed
-        AddNewEscolaridad add_new_escolaridad = new AddNewEscolaridad(parent, true);        
-        // Localizacvión de la ventana        
-        add_new_escolaridad.setLocationRelativeTo(this);
-        // hace visible la ventana
-        add_new_escolaridad.setVisible(true);        
-        LlenaTabla();
-        // cuando cierra la ventana agrega el pais a la tabla y lo selecciona
-        UtilsTable.mueveTabla(tableList, UtilsTable.getRow(lista_escolaridad, add_new_escolaridad.escolaridad_id));
-    }//GEN-LAST:event_btnNewEscolaridadActionPerformed
+    /**
+     * Abre una ventana para agregar Escolaridades.
+     * @param evt evento que dispara la funcion.
+     */
+    private void btnNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewActionPerformed
+        AddNewEscolaridad addNewEscolaridad = new AddNewEscolaridad(parent, true);        
+        
+        // Aspectos graficos de la ventana.
+        addNewEscolaridad.setLocationRelativeTo(this);
+        addNewEscolaridad.setVisible(true);        
+        
+        llenaTabla();
+        
+        // Cuando cierra la ventana agrega la Escolaridad a la tabla y la selecciona.
+        UtilsTable.mueveTabla(UtilsTable.getRow(addNewEscolaridad.escolaridadId, escolaridadLista), tblEscolaridades);
+    }//GEN-LAST:event_btnNewActionPerformed
 
-    // Llena la tabla de paises cada que se escribe una letra
+    /**
+     * Llena la tabla de Escolaridades cada que se escribe una letra.
+     * @param evt evento que dispara la funcion.
+     */
     private void txtFiltroKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFiltroKeyReleased
-        // Filtra paises  
-        LlenaTabla();
+        llenaTabla();
     }//GEN-LAST:event_txtFiltroKeyReleased
 
-    // Elimina al pais seleccionado de la tabla de ESCOLARIDAD
-    private void btnDelEscolaridadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelEscolaridadActionPerformed
-        // Eliminar un registro
-        // si no selecciona fila, le avisa al usuario
-        if(tableList.getSelectedRow() < 0) {
-             // suena un beep
+    /**
+     * Elimina la Escolaridad seleccionado de la tabla de Escolaridad.
+     * @param evt evento que dispara la funcion.
+     */
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        
+        // Si no selecciona fila, le avisa al usuario.
+        if(tblEscolaridades.getSelectedRow() < 0) {
+            
+            // Suena un beep.
             java.awt.Toolkit.getDefaultToolkit().beep();
-            javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila","Aviso", 2);
-        }
-        else{
-            // suena un beep
+            javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila", "Aviso", 2);
+        } else {
+          
+            // Suena un beep
             java.awt.Toolkit.getDefaultToolkit().beep();
-            // pregunta si quiere eliminar el registro y camtura la respuesta
-            int res = javax.swing.JOptionPane.showConfirmDialog(this, "¿Eliminar " + lista_escolaridad[tableList.getSelectedRow()][1].toString() + "?",
-                 "Seleccione", JOptionPane.YES_NO_OPTION);
-            // evalua la respuesta 
+            
+            // Mensaje de confirmacion de eliminacion.
+            int res = javax.swing.JOptionPane.showConfirmDialog(this, "¿Eliminar " + escolaridadLista[tblEscolaridades.getSelectedRow()][1].toString() + "?",
+                "Seleccione", JOptionPane.YES_NO_OPTION);
+            
+            // Si la respuesta es afirmativa, elimina el registro.
             if(res == 0) {
-                String msj = "";
-                // si la respuesta es afirmativa, elimina el registro
-                int ret = escolaridad_dao.deleteEscolaridad((Integer) tableList.getValueAt(tableList.getSelectedRow(), 0));
+                String msj = "";                                
+                int ret = escolaridadDAO.deleteEscolaridad((Integer) tblEscolaridades.getValueAt(tblEscolaridades.getSelectedRow(), 0));
                 if(ret != 1) {
                     msj = "No se pudo eliminar por que tiene registros asignados.";
                     javax.swing.JOptionPane.showMessageDialog(this, msj, "Información", 1);
                 }                
-                // Reinicia controles y parametros
-                LlenaTabla();
+                
+                // Reinicia controles y parametros.
+                llenaTabla();
             }
         }
-    }//GEN-LAST:event_btnDelEscolaridadActionPerformed
+    }//GEN-LAST:event_btnDeleteActionPerformed
 
-    // Abre una ventana para poder editar al pais seleccionado
-    private void btnEditEscolaridadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditEscolaridadActionPerformed
-        // Botón que edita el registro selecionado de la tabla
-        if(tableList.getSelectedRow() < 0) {
-            // Suena un beep
+    /**
+     * Abre una ventana para poder editar la Escolaridad seleccionada.
+     * @param evt evento que dispara la funcion.
+     */
+    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
+
+        // Botón que edita el registro selecionado de la tabla.
+        if(tblEscolaridades.getSelectedRow() < 0) {
+            
+            // Suena un beep.
             Toolkit.getDefaultToolkit().beep();
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila", "Información", 1);
+        } else {
+            escolaridadId = (int) tblEscolaridades.getValueAt(tblEscolaridades.getSelectedRow(), 0);
+            
+            // Abre la ventana para editar Escolaridad
+            AddNewEscolaridad editEscolaridad = new AddNewEscolaridad(parent, true);        
+            
+            // Aspectos graficos de la ventana
+            editEscolaridad.setLocationRelativeTo(this);            
+            editEscolaridad.setEditId(escolaridadId);
+            editEscolaridad.setVisible(true);
+            
+            llenaTabla();
+            
+            // Cuando cierra la ventana agrega la Escolaridad a la tabla y la selecciona.
+            UtilsTable.mueveTabla(UtilsTable.getRow(editEscolaridad.escolaridadId, escolaridadLista), tblEscolaridades);
         }
-        else{
-            // Obtiene el id del pais seleccionado
-            escolaridad_id = (Integer) tableList.getValueAt(tableList.getSelectedRow(), 0);
-            // Abre la ventana para editar pais
-            // Ventana para editar pais
-            AddNewEscolaridad edit_escolaridad = new AddNewEscolaridad(parent, true);        
-            // Localización de la ventana
-            edit_escolaridad.setLocationRelativeTo(this);            
-            edit_escolaridad.SetEditId(escolaridad_id);
-            // hace visible la ventana
-            edit_escolaridad.setVisible(true);
-            LlenaTabla();
-            // cuando cierra la ventana agrega el pais a la tabla y lo selecciona
-            UtilsTable.mueveTabla(tableList, UtilsTable.getRow(lista_escolaridad, edit_escolaridad.escolaridad_id));
-        }
-    }//GEN-LAST:event_btnEditEscolaridadActionPerformed
+    }//GEN-LAST:event_btnEditActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnDelEscolaridad;
-    private javax.swing.JButton btnEditEscolaridad;
-    private javax.swing.JButton btnNewEscolaridad;
+    private javax.swing.JButton btnDelete;
+    private javax.swing.JButton btnEdit;
+    private javax.swing.JButton btnNew;
     private javax.swing.JLabel lblFiltro;
     private javax.swing.JPanel pnlTableList;
     private javax.swing.JScrollPane scpTableList;
-    private javax.swing.JTable tableList;
+    private javax.swing.JTable tblEscolaridades;
     private javax.swing.JTextField txtFiltro;
     // End of variables declaration//GEN-END:variables
 }

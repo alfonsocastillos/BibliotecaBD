@@ -187,7 +187,7 @@ public class ClienteDAO extends CustomConnection {
         int state = 0;
         try {
             
-            // Buscar la direccion asociada con este cliente.
+            // Consultar los registros asociados a este cliente.
             sentenciaSQL = "SELECT DIRECCION_ID, CREDENCIAL_ID FROM CLIENTE WHERE CLIENTE_ID = ?";
             preparedStatement = connection.prepareStatement(sentenciaSQL);
             preparedStatement.setInt(1, clienteId);

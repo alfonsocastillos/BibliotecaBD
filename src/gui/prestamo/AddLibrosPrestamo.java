@@ -6,46 +6,44 @@ import javax.swing.JOptionPane;
 import tools.UtilsTable;
 
 /**
- *
- * @author Carlos
- * Ventana que permite agregar paliculas a la renta
+ * Ventana que permite agregar libros al prestamo.
+ * @author alfonso
  */
 public class AddLibrosPrestamo extends javax.swing.JDialog {
-    int id = 0;
-    LibroDAO daoLibros;
-    Object librosLista [][];
-    public Object libro[];
+    LibroDAO libroDAO;
+    Object[][] librosLista;
+    public Object[] libro;
 
     /**
-     * Creates new form AddPeliculasRentaD
-     * @param parent
-     * @param modal
+     * Creates new form AddLibrosPrestamo.
+     * @param parent ventana padre.
+     * @param modal determina si la ventana no cede el foco a otra.
      */
-    public AddLibrosPrestamo(java.awt.Frame parent, boolean modal) {
-        // ventana modal
+    public AddLibrosPrestamo(java.awt.Frame parent, boolean modal) {       
         super(parent, modal);
-        // Yiyulo de la ventana
         setTitle("Agregar libros al prestamo");
-        // inicia los componentes
+        
+        // Inicia los componentes.
         initComponents();
-        // Crea el daopara consltar las ventanas
-        daoLibros = new LibroDAO();
-        // llena la tabla
+        libroDAO = new LibroDAO();
         llenaTabla();
     }
     
+    /**
+     * Llena la tabla de libros.
+     */
     private void llenaTabla() {        
-        // Consulta las peliculas y lo guardaen un arreglo
-        // consulta los datos de las peliculas
-       librosLista = daoLibros.getLibrosByDescripcion(txtFiltro.getText().trim());
-        // Titulos de la tabla
-        String[] T_LIBROS = {"", "Título"};
-        // alineación de las celdas
-        int[][] cellAlignment = {{0,javax.swing.SwingConstants.LEFT}};
-        // Tamaño de las celdas
-        int[][] cellSize = {{0,0},
-                            {1,305}};
-        UtilsTable.llenaTabla(tableList, librosLista, T_LIBROS, cellAlignment, cellSize);
+       librosLista = libroDAO.getLibrosByDescripcion(txtFiltro.getText().trim());
+       
+       // Titulos de la tabla.
+        String[] columnasNombre = {"", "Título"};
+        
+        // Alineación de las celdas.
+        int[][] cellAlignment = {{0, javax.swing.SwingConstants.LEFT}};
+        
+        // Tamaño de las celdas.
+        int[][] cellSize = {{0, 0}, {1, 305}};
+        UtilsTable.llenaTabla(cellAlignment, cellSize, columnasNombre, tblLibros, librosLista);
     }
            
     /**
@@ -60,7 +58,7 @@ public class AddLibrosPrestamo extends javax.swing.JDialog {
         btnAceptar = new javax.swing.JButton();
         pnlTableList = new javax.swing.JPanel();
         scpTableList = new javax.swing.JScrollPane();
-        tableList = new javax.swing.JTable();
+        tblLibros = new javax.swing.JTable();
         lblTitulo1 = new javax.swing.JLabel();
         txtFiltro = new javax.swing.JTextField();
         btnBorrarFiltro = new javax.swing.JButton();
@@ -89,21 +87,21 @@ public class AddLibrosPrestamo extends javax.swing.JDialog {
         scpTableList.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scpTableList.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-        tableList.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        tableList.setModel(new javax.swing.table.DefaultTableModel(
-            new Object[][] {
+        tblLibros.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        tblLibros.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
 
             },
             new String [] {
 
             }
         ));
-        tableList.addMouseListener(new java.awt.event.MouseAdapter() {
+        tblLibros.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tableListMouseClicked(evt);
+                tblLibrosMouseClicked(evt);
             }
         });
-        scpTableList.setViewportView(tableList);
+        scpTableList.setViewportView(tblLibros);
 
         lblTitulo1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblTitulo1.setText("Filtrar:");
@@ -183,56 +181,67 @@ public class AddLibrosPrestamo extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Agrega el Libro seleccionado al Prestamo.
+     * @param evt evento que dispara la funcion.
+     */ 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
-        // Accion del boton aceptar
-        // Verifica si se selecciono un elemento de la tabla
-        //System.out.print("ffff");
-        if(tableList.getSelectedRow() < 0) {
-            // Suena un beep
+        if(tblLibros.getSelectedRow() < 0) {
+
+            // Suena un beep y muestra un mensaje.
             Toolkit.getDefaultToolkit().beep();
-            // Muestra un mensage de aviso
             JOptionPane.showMessageDialog(this, "Seleccione un libro.", "Aviso", 2);            
         } else {      
-            libro = new Object[2];    
-            // Guarda id, nombre y costo de la pelicula
-            libro [0] = librosLista[tableList.getSelectedRow()][0];
-            libro [1] = librosLista[tableList.getSelectedRow()][1];
+            libro = new Object[2];               
+            libro [0] = librosLista[tblLibros.getSelectedRow()][0];
+            libro [1] = librosLista[tblLibros.getSelectedRow()][1];
             
-            // Cierra la ventana
+            // Cierra la ventana.
             dispose();   
         }
     }//GEN-LAST:event_btnAceptarActionPerformed
 
+    /**
+     * Establece los controladores cuando la ventana es abierta.
+     * @param evt evento que dispara la funcion.
+     */ 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
-        // Cuando se activa llena la tabla
-        // reinicia el filtro
         txtFiltro.setText("");
         llenaTabla();
     }//GEN-LAST:event_formWindowActivated
 
-    private void tableListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableListMouseClicked
-        /*
-        Cuando el usuario da doble click en una fila de la tabla hace la
-        misma acción del boton aceptar
-        */
+    /**
+     * Cuando el usuario da doble click en una fila de la tabla hace la misma acción del boton aceptar.
+     * @param evt evento que dispara la funcion.
+     */ 
+    private void tblLibrosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblLibrosMouseClicked
         if(evt.getClickCount() == 2) {  
             btnAceptarActionPerformed (null);
         }
-    }//GEN-LAST:event_tableListMouseClicked
+    }//GEN-LAST:event_tblLibrosMouseClicked
 
+    /**
+     * Filtra la tabla de Libros cuando una tecla es presionada en el filtro.
+     * @param evt evento que dispara la funcion.
+     */ 
     private void txtFiltroKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFiltroKeyReleased
-        // Filtra
         llenaTabla();
     }//GEN-LAST:event_txtFiltroKeyReleased
 
+    /**
+     * Borra el filtro de busqueda.
+     * @param evt evento que dispara la funcion.
+     */ 
     private void btnBorrarFiltroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarFiltroActionPerformed
-        // Borra el filtro de busqyeda
         txtFiltro.setText("");
         llenaTabla();
     }//GEN-LAST:event_btnBorrarFiltroActionPerformed
 
+    /**
+     * Reinicia el filtro cuando la ventana es cerrada.
+     * @param evt evento que dispara la funcion.
+     */ 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        // reinicia el filtro
         txtFiltro.setText("");
         llenaTabla();
     }//GEN-LAST:event_formWindowClosing
@@ -243,7 +252,7 @@ public class AddLibrosPrestamo extends javax.swing.JDialog {
     private javax.swing.JLabel lblTitulo1;
     private javax.swing.JPanel pnlTableList;
     private javax.swing.JScrollPane scpTableList;
-    public javax.swing.JTable tableList;
+    public javax.swing.JTable tblLibros;
     private javax.swing.JTextField txtFiltro;
     // End of variables declaration//GEN-END:variables
 }

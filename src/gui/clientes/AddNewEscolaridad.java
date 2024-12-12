@@ -5,40 +5,48 @@ import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import javax.swing.JOptionPane;
 
-
+/**
+ * Ventana encargada de agregar y editar Escolaridades.
+ * @author alfonso
+ */
 public class AddNewEscolaridad extends javax.swing.JDialog {
-    // Para guardar el idioma
-    int escolaridad_id;
-    EscolaridadDAO escolaridad_dao;
+    int escolaridadId;
+    EscolaridadDAO escolaridadDAO;
 
     /**
-     * Creates new form 
-     * @param parent
-     * @param modal
+     * Creates new form AddNewEscolaridad.
+     * @param parent ventana padre.
+     * @param modal determina si la ventana no cede el foco a otra.
      */
     public AddNewEscolaridad(java.awt.Frame parent, boolean modal) {
-        // ventana modal
         super(parent, modal);
-        // inicia los componentes
+        
+        // Inicia los componentes.
         initComponents();
         processWindowEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-        // Crea el dao para acceder a la tabla PAIS
-        escolaridad_dao = new EscolaridadDAO();
+        
+        // Crea el dao para acceder a la tabla Escolaridad.
+        escolaridadDAO = new EscolaridadDAO();
         getRootPane().setDefaultButton(btnGuardar);                      
     }
     
-    private void BorrarTextos() {
-        // Borra el texto
+    /**
+     * Borra el texto.
+     */
+    private void borrarTextos() {
         txtEscolaridad.setText("");
     }
     
-    public void SetEditId(int escolaridad_id) {
-        // Asigna el id del pais a modificar
-        this.escolaridad_id = escolaridad_id;
-        // Busca el pais
-        Object[] escolaridad_edit = escolaridad_dao.getEscolaridadById(escolaridad_id);
-        // Muestra los datos en los controles
-        txtEscolaridad.setText(escolaridad_edit[1].toString());        
+    /**
+     * Asignar el Id de la Escolaridad siendo editada.
+     * @param escolaridadId Id de la escolaridad siendo editada.
+     */
+    public void setEditId(int escolaridadId) {
+        this.escolaridadId = escolaridadId;
+        Object[] escolaridadEdit = escolaridadDAO.getEscolaridadById(escolaridadId);
+        
+        // Muestra los datos en los controles.
+        txtEscolaridad.setText(escolaridadEdit[1].toString());        
     }
     
     /**
@@ -98,33 +106,34 @@ public class AddNewEscolaridad extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     
+    /**
+     * Guarda la informacion introducida en la base de datos.
+     * @param evt evento que dispara la funcion.
+     */
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        // Accion del boton Guardar
         if(txtEscolaridad.getText().trim().length() == 0) {
-            // Suena un beep
+          
+            // Suena un beep.
             Toolkit.getDefaultToolkit().beep();
-            // Muestra un mensage de aviso
             JOptionPane.showMessageDialog(this, "Escriba la Escolaridad", "Aviso", 2);
-        }
-        else{                      
-            String escolaridad = txtEscolaridad.getText().trim();
-            if(escolaridad_id == 0) { // Guarda un nuevo idioma                
-                escolaridad_id = escolaridad_dao.saveEscolaridad(escolaridad);                
-            }
-            else{ // Actualiza idioma                
-                Object[] escolaridad_obj = new Object[2];
-                escolaridad_obj[0] = escolaridad_id;              // Id del pais
-                escolaridad_obj[1] = escolaridad;                 // pais
-                escolaridad_id = escolaridad_dao.updateEscolaridad(escolaridad_obj);                
+        } else {                      
+            String escolaridadNombre = txtEscolaridad.getText().trim();
+            if(escolaridadId == 0) {
+                escolaridadId = escolaridadDAO.saveEscolaridad(escolaridadNombre);                
+            } else {
+                Object[] escolaridad = new Object[2];
+                escolaridad[0] = escolaridadId;
+                escolaridad[1] = escolaridadNombre;
+                escolaridadId = escolaridadDAO.updateEscolaridad(escolaridad);                
             }
             
-            if(escolaridad_id == 0) {
-                // Suena un beep
+            if(escolaridadId == 0) {
+               
+                // Suena un beep.
                 Toolkit.getDefaultToolkit().beep();
                 JOptionPane.showMessageDialog(this, "Error al guardar la escolaridad", "Error", 0);                
-            }
-            else{
-                BorrarTextos();
+            } else {
+                borrarTextos();
                 dispose();
             }            
         }  

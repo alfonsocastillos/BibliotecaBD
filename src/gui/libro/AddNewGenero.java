@@ -6,43 +6,45 @@ import java.awt.event.WindowEvent;
 import javax.swing.JOptionPane;
 
 /**
- *
- * @author Carlos
- * Ventana que permite crear, editar y eliminar generos del catálogo
+ * Ventana que permite crear y editar Generos del catalogo.
+ * @author alfonso
  */
 public class AddNewGenero extends javax.swing.JDialog {
-    // Para guardar el genero
-    int genero_id;
-    GeneroDAO genero_dao;
+    int generoId;
+    GeneroDAO generoDAO;
 
     /**
-     * Creates new form 
-     * @param parent
-     * @param modal
+     * Creates new form AddNewGenero.
+     * @param parent ventana padre.
+     * @param modal determina si la ventana no cede el foco a otra.
      */
     public AddNewGenero(java.awt.Frame parent, boolean modal) {
-        // ventana modal
         super(parent, modal);
-        // inicia los componentes
+        
+        // Inicia los componentes.
         initComponents();
         processWindowEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-        // Crea el dao para acceder a la tabla GENERO
-        genero_dao = new GeneroDAO();
+        generoDAO = new GeneroDAO();
         getRootPane().setDefaultButton(btnGuardar);                      
     }
     
-    private void BorrarTextos() {
-        // Borra el texto
+    /**
+     * borra el texto
+     */
+    private void borrarTextos() {        
         txtGenero.setText("");
     }
     
-    public void SetEditId(int genero_id) {
-        // Asigna el id del genero a modificar
-        this.genero_id = genero_id;
-        // Busca el genero
-        Object[] genero_edit = genero_dao.getGeneroById(genero_id);
-        // Muestra los datos en los controles
-        txtGenero.setText(genero_edit[1].toString());        
+    /**
+     * Establece el Id del Genero a editar.
+     * @param generoId Id del Genero siendo editado. 
+     */
+    public void SetEditId(int generoId) {
+        this.generoId = generoId;
+        Object[] generoEdit = generoDAO.getGeneroById(generoId);
+        
+        // Muestra los datos en los controles.
+        txtGenero.setText(generoEdit[1].toString());        
     }
     
     /**
@@ -102,33 +104,36 @@ public class AddNewGenero extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     
+    /**
+     * Crea un registro en la tabla Genero con los datos proporcionados.
+     * @param evt evento que dispara la funcion.
+     */
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        // Accion del boton Guardar
         if(txtGenero.getText().trim().length() == 0) {
-            // Suena un beep
+            
+            // Suena un beep y muestra un mensaje.
             Toolkit.getDefaultToolkit().beep();
-            // Muestra un mensage de aviso
             JOptionPane.showMessageDialog(this, "Escriba el genero", "Aviso", 2);
-        }
-        else{                      
-            String genero = txtGenero.getText().trim();
-            if(genero_id == 0) { // Guarda un nuevo genero                
-                genero_id = genero_dao.saveGenero(genero);
-            }
-            else{ // Actualiza genero                
-                Object[] genero_obj = new Object[2];
-                genero_obj[0] = genero_id;              // Id del genero
-                genero_obj[1] = genero;                 // genero
-                genero_id = genero_dao.updateGenero(genero_obj);                
+        } else {                      
+            String generoNombre = txtGenero.getText().trim();
+            
+            // Crea o actualiza un Genero. 
+            if(generoId == 0) {
+                generoId = generoDAO.saveGenero(generoNombre);
+            } else {
+                Object[] genero = new Object[2];
+                genero[0] = generoId;
+                genero[1] = generoNombre;
+                generoId = generoDAO.updateGenero(genero);                
             }
             
-            if(genero_id == 0) {
-                // Suena un beep
+            if(generoId == 0) {
+                
+                // Suena un beep y muestra un mensaje de error.
                 Toolkit.getDefaultToolkit().beep();
                 JOptionPane.showMessageDialog(this, "Error al guardar el genero", "Error", 0);                
-            }
-            else{
-                BorrarTextos();
+            } else {
+                borrarTextos();
                 dispose();
             }            
         }  

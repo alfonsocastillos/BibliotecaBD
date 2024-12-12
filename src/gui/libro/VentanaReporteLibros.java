@@ -5,28 +5,27 @@ import java.awt.BorderLayout;
 import java.awt.Toolkit;
 
 /**
- *
+ *  Ventana que muestra reportes.
  * @author Carlos
- * Ventana que muestra el reporte de peliculas
  */
 public class VentanaReporteLibros extends javax.swing.JFrame {
 
+    /**
+     * Constructor
+     */
     public VentanaReporteLibros() {
         initComponents();
-        conf();
-        // configuración para cargar el reporte
+        setLocationRelativeTo(null);	
+        setTitle("Libros");
+        
+        // Configuración para cargar el reporte.
         pnlReporte.setLayout(new BorderLayout());
-        // ejecuta el reporte y lo muestra en la ventana
+        
+        // Ejecuta el reporte y lo muestra en la ventana.
         LibrosReportView reporte_libros = new LibrosReportView();    
         pnlReporte.add(reporte_libros.getReport()); 
     }
     
-    private void conf() {      
-        // localización de la ventana
-        setLocationRelativeTo(null);	
-        // titulo de la ventana
-        setTitle("Libros");
-    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

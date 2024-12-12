@@ -12,197 +12,205 @@ import javax.swing.JOptionPane;
 import tools.*;
 
 /**
- *
- * @author Alfonso
- * Ventana que administra los libros
+ * Ventana que administra los libros.
+ * @author alfonso
  */
 public class Libros extends javax.swing.JInternalFrame {
     boolean editando = false;
-    int libro_id;
-    // Dao´s que traen los datos de la DB
-    GeneroDAO genero_dao;
-    IdiomaDAO idioma_dao;
-    LibroDAO libro_dao;
-    AutorDAO autor_dao;
-    PaisDAO pais_dao;
-    EditorialDAO editorial_dao;
-    // Objtos que guardaran los datos    
-    Object libros_lista[][];
-    Object autores_lista[][];
+    int libroId;
     
-    // Ventanas para agregar autores, editoriales y autorias
-    AddAutores add_autor;           // Para agregar (o crear) autores a la autoria 
-    AddIdioma add_idioma;           // Para crear, editar y eliminar idiomas
-    AddPais add_pais;               // Para crear, editar y eliminar paises
-    AddEditorial add_editorial;     // Para crear, editar y eliminar editoriales
-    AddGenero add_genero;           // Para crear, editar y eliminar generos
+    // Daos que traen los datos de la DB.
+    GeneroDAO generoDAO;
+    IdiomaDAO idiomaDAO;
+    LibroDAO libroDAO;
+    AutorDAO autorDAO;
+    PaisDAO paisDAO;
+    EditorialDAO editorialDAO;
     
+    // Objtos que guardaran los datos.
+    Object[][] listaLibros;
+    Object[][] autoresLista;
+    
+    // Ventanas para agregar Autores, Editoriales, Idiomas, Generos y Autorias
+    AddAutores addAutor;        // Para agregar (o crear) Autores a la Autoria 
+    AddIdioma addIdioma;        // Para crear, editar y eliminar Idiomas
+    AddPais addPais;            // Para crear, editar y eliminar Paises
+    AddEditorial addEditorial;  // Para crear, editar y eliminar Editoriales
+    AddGenero addGenero;        // Para crear, editar y eliminar Generos
+    
+    /**
+     * Constructor.
+     */
     public Libros() {
-        // Constructor
         initComponents();
+        libroId = 0;
         
-        // Un 0 significa error en el id
-        libro_id = 0;
+        // Se instancian todos los DAO.
+        generoDAO = new GeneroDAO();
+        idiomaDAO = new IdiomaDAO();
+        libroDAO = new LibroDAO();
+        autorDAO = new AutorDAO();
+        paisDAO = new PaisDAO();
+        editorialDAO = new EditorialDAO();
         
-        // se instancian todos los DAO
-        genero_dao = new GeneroDAO();
-        idioma_dao = new IdiomaDAO();
-        libro_dao = new LibroDAO();
-        autor_dao = new AutorDAO();
-        pais_dao = new PaisDAO();
-        editorial_dao = new EditorialDAO();
+        // Instanciando ventanas para agregar autores, idiomas, paises, editoriales y generos.
+        addAutor = new AddAutores((java.awt.Frame)this.getParent(), true);
+        addEditorial = new AddEditorial((java.awt.Frame)this.getParent(), true);
+        addIdioma = new AddIdioma((java.awt.Frame)this.getParent(), true);
+        addPais = new AddPais((java.awt.Frame)this.getParent(), true);
+        addGenero = new AddGenero((java.awt.Frame)this.getParent(), true);
         
-        // Instanciando ventanas para agregar autores, idiomas, paises, editoriales y generos
-        add_autor = new AddAutores((java.awt.Frame)this.getParent(), true);
-        add_editorial = new AddEditorial((java.awt.Frame)this.getParent(), true);
-        add_idioma = new AddIdioma((java.awt.Frame)this.getParent(), true);
-        add_pais = new AddPais((java.awt.Frame)this.getParent(), true);
-        add_genero = new AddGenero((java.awt.Frame)this.getParent(), true);
-        
-        // localización de la ventana
         setLocale(null);
-        // llena los datos      
-        LlenaDatos();
-        // Vacia las selecciones de campos
-        CancelaEdit();
+        llenaDatos();
+        cancelaEdit();
     }
     
-    // Llena de datos las tablas a desplegar y los combo box
-    private void LlenaDatos() {
-        // Llena combos y tabla de libros
-        LlenadoIdiomas();
-        LlenadoPaises();
-        LlenadoEditoriales();
+    /**
+     * Llena de datos las tablas a desplegar y los combobox.
+     */
+    private void llenaDatos() {
+        llenadoIdiomas();
+        llenadoPaises();
+        llenadoEditoriales();
         LlenadoGeneros();
-        LlenaTablaLibros();
+        llenaTablaLibros();
     }    
     
-    // Popula el ComboBox de idiomas disponibles
-    private void LlenadoIdiomas() {        
+    /**
+     * Popula el ComboBox de Idiomas disponibles.
+     */
+    private void llenadoIdiomas() {        
         cmbIdioma.removeAllItems();
-        Object[][] idiomas = idioma_dao.getAllIdiomas();
-        for (Object[] idioma : idiomas) {
-            // llena los datos de idioma en el combo 
+        Object[][] idiomas = idiomaDAO.getAllIdiomas();
+        for(Object[] idioma : idiomas) {
+            
+            // Llena los datos de Idioma en el combo.
             cmbIdioma.addItem(idioma[1].toString());
         }                             
     }   
     
-    // Popula el ComboBox de paises disponibles
-    private void LlenadoPaises() {        
+    /**
+     * Popula el ComboBox de paises disponibles.
+     */
+    private void llenadoPaises() {        
         cmbPais.removeAllItems();
-        Object[][] paises = pais_dao.getAllPaises();
-        for (Object[] pais : paises) {
-            // llena los datos de idioma en el combo 
+        Object[][] paises = paisDAO.getAllPaises();
+        for(Object[] pais : paises) {
+            
+            // Llena los datos de Paises en el combo.
             cmbPais.addItem(pais[1].toString());
         }
     }
     
-    // Popula el ComboBox de editoriales disponibles
-    private void LlenadoEditoriales() {        
+    /**
+     * Popula el ComboBox de Editoriales disponibles.
+     */
+    private void llenadoEditoriales() {
         cmbEditorial.removeAllItems();
-        Object[][] editoriales = editorial_dao.getAllEditoriales();
-        for (Object[] editorial : editoriales) {
-            // llena los datos de idioma en el combo 
+        Object[][] editoriales = editorialDAO.getAllEditoriales();
+        for(Object[] editorial : editoriales) {
+            
+            // Llena los datos de Editoriales en el combo.
             cmbEditorial.addItem(editorial[1].toString());
         }
     }
     
-    // Popula el ComboBox de generos disponibles
+    /**
+     * Popula el ComboBox de Generos disponibles.
+     */
     private void LlenadoGeneros() {        
         cmbGenero.removeAllItems();
-        Object[][] generos = genero_dao.getAllGeneros();
-        for (Object[] genero : generos) {
-            // llena los datos de idioma en el combo 
+        Object[][] generos = generoDAO.getAllGeneros();
+        for(Object[] genero : generos) {
+            
+            // llena los datos de Generos en el combo.
             cmbGenero.addItem(genero[1].toString());
         }
     }
     
-    // Llena de datos la tabla que despliega todos los libros
-    private void LlenaTablaLibros() {       
-        // consulta los datos de las peliculas
-        libros_lista = libro_dao.getLibrosByDescripcion(txtFiltro.getText().trim()); // LIBRO_ID, TITULO, EDICION, EDITORIAL, GENERO, ANIO, NUM_PAGINAS, IDIOMA
-        // configuración de la tabla
-        String[] T_LIBROS = {"", "Libro", "Edicion", "Editorial", "Genero", "Año", "Páginas", "Idioma"};
-        int[][] cellAlignment = {{0,javax.swing.SwingConstants.LEFT}};
-        int[][] cellSize = {{0, 0},     // 
-                            {1, 270},   // Libro
-                            {2, 40},    // Edicion
-                            {3, 180},   // Editorial
-                            {4, 95},    // Genero
-                            {5, 55},    // Año
-                            {6, 55},    // Paginas
-                            {7, 75}};   // Idioma    
-        // pone los datos en la tabla
-        UtilsTable.llenaTabla(tableList, libros_lista, T_LIBROS, cellAlignment, cellSize);
-        UtilsTable.quitarColumna(tableList, 0);
-        lblCantidad.setText(libros_lista.length + "");
+    /**
+     * Llena de datos la tabla que despliega todos los Libros.
+     */
+    private void llenaTablaLibros() {       
+        listaLibros = libroDAO.getLibrosByDescripcion(txtFiltro.getText().trim());
+        
+        // Configuración de la tabla
+        String[] columnasNombre = {"", "Libro", "Edicion", "Editorial", "Genero", "Año", "Páginas", "Idioma"};
+        int[][] cellAlignment = {{0, javax.swing.SwingConstants.LEFT}};
+        int[][] cellSize = {{0, 0},
+                {1, 270},           // Libro
+                {2, 40},            // Edicion
+                {3, 180},           // Editorial
+                {4, 95},            // Genero
+                {5, 55},            // Año
+                {6, 55},            // Paginas
+                {7, 75}};           // Idioma  
+        
+        // Pone los datos en la tabla y quita la columna vacia del Id.
+        UtilsTable.llenaTabla(cellAlignment, cellSize, columnasNombre, tblLibros, listaLibros);
+        UtilsTable.quitarColumna(0, tblLibros);
+        lblCantidad.setText(listaLibros.length + "");
     }
     
-    // Llena la tabla de autores en la autoria de un libro
-    private void LlenaTablaAutores() {       
-        // consulta los datos de los autores de autoria
-        autores_lista = autor_dao.getAutoresByLibroId(libro_id);
-        // configuración de la tabla
-        String[] T_AUTORES = {"","Nombre"};
-        int[][] cellAlignment = {{0,javax.swing.SwingConstants.LEFT}};
-        int[][] cellSize = {{0,0},
-                            {1,170}};
-        // pone los datos en la tabla
-        UtilsTable.llenaTabla(tableListAutor, autores_lista, T_AUTORES, cellAlignment, cellSize);        
+    /**
+     * Llena la tabla de Autores en la Autoria de un Libro.
+     */
+    private void llenaTablaAutores() {
+        autoresLista = autorDAO.getAutoresByLibroId(libroId);
+        
+        // Configuración de la tabla.
+        String[] columnasNombre = {"", "Nombre"};
+        int[][] cellAlignment = {{0, javax.swing.SwingConstants.LEFT}};
+        int[][] cellSize = {{0, 0}, {1, 170}};
+        UtilsTable.llenaTabla(cellAlignment, cellSize, columnasNombre, tblAutores, autoresLista);  
     }
       
-    // Valida si se llenaron los datos del libro antes de guardar
-    private boolean EstanLlenos() {        
+    /**
+     * Valida si se llenaron los datos del Libro antes de guardar.
+     * @return boolean indicando si todos los datos estan llenos.
+     */
+    private boolean estanLlenos() {
+        boolean llenos = true;
         if(txtTitulo.getText().trim().length() == 0) {
             javax.swing.JOptionPane.showMessageDialog(this, "Introduzca el titulo.", "Aviso", 2);
             txtTitulo.requestFocus();
-            return false;
-        }
-        else if(cmbIdioma.getSelectedIndex() < 0)
-        {
+            llenos = false;
+        } else if(cmbIdioma.getSelectedIndex() < 0) {
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione un idioma.", "Aviso", 2);
             cmbIdioma.requestFocus();
-            return false;
-        }
-        else if(cmbPais.getSelectedIndex() < 0)
-        {
+            llenos = false;
+        } else if(cmbPais.getSelectedIndex() < 0) {
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione un pais.", "Aviso", 2);
             cmbPais.requestFocus();
-            return false;
-        }
-        else if(cmbEditorial.getSelectedIndex() < 0)
-        {
+            llenos = false;
+        } else if(cmbEditorial.getSelectedIndex() < 0) {
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una editorial.", "Aviso", 2);
             cmbEditorial.requestFocus();
-            return false;
-        }
-        else if(txtAnio.getText().trim().length() == 0) {            
+            llenos = false;
+        } else if(txtAnio.getText().trim().length() == 0) {            
             javax.swing.JOptionPane.showMessageDialog(this, "Introduzca el año.", "Aviso", 2);            
             txtAnio.requestFocus();
-            return false;
-        }
-        else if(cmbGenero.getSelectedIndex() < 0)
-        {
+            llenos = false;
+        } else if(cmbGenero.getSelectedIndex() < 0) {
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione un genero.", "Aviso", 2);
             cmbGenero.requestFocus();
-            return false;
-        }
-        else if(txtEdicion.getText().trim().length() == 0) {
+            llenos = false;
+        } else if(txtEdicion.getText().trim().length() == 0) {
             javax.swing.JOptionPane.showMessageDialog(this, "Introduzca el número de páginas.", "Aviso", 2);
             txtEdicion.requestFocus();
-            return false;
-        }
-        else if(txtPags.getText().trim().length() == 0) {
+            llenos = false;
+        } else if(txtPags.getText().trim().length() == 0) {
             javax.swing.JOptionPane.showMessageDialog(this, "Introduzca el número de páginas.", "Aviso", 2);
             txtPags.requestFocus();
-            return false;
-        }
-        else
-            return true;
+            llenos = false;
+        }        
+        return llenos;
     }
     
-    // Cancela la edición y reinicia los controles a su valor predeterminado
-    private void CancelaEdit () {        
+    /**
+     * Cancela la edición y reinicia los controles a su valor predeterminado.
+     */
+    private void cancelaEdit() {
         txtTitulo.setText("");
         cmbIdioma.setSelectedIndex(-1);
         cmbPais.setSelectedIndex(-1);
@@ -213,7 +221,7 @@ public class Libros extends javax.swing.JInternalFrame {
         cmbGenero.setSelectedIndex(-1);
         txtPags.setText("");
         editando = false;
-        libro_id = 0;
+        libroId = 0;
         txtTitulo.requestFocus();
         btnCancela.setEnabled(false);        
     }
@@ -246,7 +254,7 @@ public class Libros extends javax.swing.JInternalFrame {
         txtAnio = new javax.swing.JTextField();
         pnlTableList = new javax.swing.JPanel();
         scpTableList = new javax.swing.JScrollPane();
-        tableList = new javax.swing.JTable();
+        tblLibros = new javax.swing.JTable();
         lblTitulo1 = new javax.swing.JLabel();
         txtFiltro = new javax.swing.JTextField();
         btnBorrar = new javax.swing.JButton();
@@ -257,7 +265,7 @@ public class Libros extends javax.swing.JInternalFrame {
         lblCantidad = new javax.swing.JLabel();
         pnlTableList1 = new javax.swing.JPanel();
         scpTableList1 = new javax.swing.JScrollPane();
-        tableListAutor = new javax.swing.JTable();
+        tblAutores = new javax.swing.JTable();
         btnAddAutoria = new javax.swing.JButton();
         btnRmveAutoria = new javax.swing.JButton();
         btnAddLibro = new javax.swing.JButton();
@@ -265,13 +273,13 @@ public class Libros extends javax.swing.JInternalFrame {
         btnEdit = new javax.swing.JButton();
         btnCancela = new javax.swing.JButton();
         pnlTableList3 = new javax.swing.JPanel();
-        EditIdioma = new javax.swing.JButton();
+        btnEditIdioma = new javax.swing.JButton();
         pnlTableList4 = new javax.swing.JPanel();
-        EditPais = new javax.swing.JButton();
+        btnEditPais = new javax.swing.JButton();
         pnlTableList5 = new javax.swing.JPanel();
-        EditEditorial = new javax.swing.JButton();
+        btnEditEditorial = new javax.swing.JButton();
         pnlTableList6 = new javax.swing.JPanel();
-        EditGenero = new javax.swing.JButton();
+        btnEditGenero = new javax.swing.JButton();
         btnRefresh = new javax.swing.JButton();
 
         setClosable(true);
@@ -371,21 +379,21 @@ public class Libros extends javax.swing.JInternalFrame {
         scpTableList.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scpTableList.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-        tableList.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        tableList.setModel(new javax.swing.table.DefaultTableModel(
-            new Object[][] {
+        tblLibros.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        tblLibros.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
 
             },
             new String [] {
 
             }
         ));
-        tableList.addMouseListener(new java.awt.event.MouseAdapter() {
+        tblLibros.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tableListMouseClicked(evt);
+                tblLibrosMouseClicked(evt);
             }
         });
-        scpTableList.setViewportView(tableList);
+        scpTableList.setViewportView(tblLibros);
 
         pnlTableList.add(scpTableList, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 790, 160));
 
@@ -453,16 +461,16 @@ public class Libros extends javax.swing.JInternalFrame {
 
         scpTableList1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-        tableListAutor.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        tableListAutor.setModel(new javax.swing.table.DefaultTableModel(
-            new Object[][] {
+        tblAutores.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        tblAutores.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
 
             },
             new String [] {
 
             }
         ));
-        scpTableList1.setViewportView(tableListAutor);
+        scpTableList1.setViewportView(tblAutores);
 
         pnlTableList1.add(scpTableList1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, 170, 100));
 
@@ -534,46 +542,46 @@ public class Libros extends javax.swing.JInternalFrame {
         pnlTableList3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Idiomas", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N
         pnlTableList3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        EditIdioma.setText("Editar idiomas");
-        EditIdioma.addActionListener(new java.awt.event.ActionListener() {
+        btnEditIdioma.setText("Editar idiomas");
+        btnEditIdioma.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                EditIdiomaActionPerformed(evt);
+                btnEditIdiomaActionPerformed(evt);
             }
         });
-        pnlTableList3.add(EditIdioma, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, 140, -1));
+        pnlTableList3.add(btnEditIdioma, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, 140, -1));
 
         pnlTableList4.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Países", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N
         pnlTableList4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        EditPais.setText("Editar países");
-        EditPais.addActionListener(new java.awt.event.ActionListener() {
+        btnEditPais.setText("Editar países");
+        btnEditPais.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                EditPaisActionPerformed(evt);
+                btnEditPaisActionPerformed(evt);
             }
         });
-        pnlTableList4.add(EditPais, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, 140, -1));
+        pnlTableList4.add(btnEditPais, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, 140, -1));
 
         pnlTableList5.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Editoriales", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N
         pnlTableList5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        EditEditorial.setText("Editar editoriales");
-        EditEditorial.addActionListener(new java.awt.event.ActionListener() {
+        btnEditEditorial.setText("Editar editoriales");
+        btnEditEditorial.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                EditEditorialActionPerformed(evt);
+                btnEditEditorialActionPerformed(evt);
             }
         });
-        pnlTableList5.add(EditEditorial, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, -1, -1));
+        pnlTableList5.add(btnEditEditorial, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, -1, -1));
 
         pnlTableList6.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Generos", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N
         pnlTableList6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        EditGenero.setText("Editar editoriales");
-        EditGenero.addActionListener(new java.awt.event.ActionListener() {
+        btnEditGenero.setText("Editar editoriales");
+        btnEditGenero.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                EditGeneroActionPerformed(evt);
+                btnEditGeneroActionPerformed(evt);
             }
         });
-        pnlTableList6.add(EditGenero, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, -1, -1));
+        pnlTableList6.add(btnEditGenero, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, -1, -1));
 
         btnRefresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/refresh.png"))); // NOI18N
         btnRefresh.setToolTipText("Actualizar");
@@ -651,298 +659,352 @@ public class Libros extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Abre una ventana para poder guardar o actualizar un Libro.
+     * @param evt evento que dispara la funcion.
+     */
     private void btnGuardaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardaActionPerformed
-        //  Guarda y actualiza los datos        
-        if(EstanLlenos()) {
-            Object idioma_id = idioma_dao.getIdiomasByNombre(cmbIdioma.getSelectedItem().toString())[0][0];
-            Object genero_id = genero_dao.getGenerosByNombre(cmbGenero.getSelectedItem().toString())[0][0];
-            Object pais_id = pais_dao.getPaisesByNombre(cmbPais.getSelectedItem().toString())[0][0];
-            Object editorial_id = editorial_dao.getEditorialByNombre(cmbEditorial.getSelectedItem().toString())[0][0];
+        
+        //  Guarda o actualiza los datos.        
+        if(estanLlenos()) {
+            int idiomaId = (int) idiomaDAO.getIdiomasByNombre(cmbIdioma.getSelectedItem().toString())[0][0];
+            int generoId = (int) generoDAO.getGenerosByNombre(cmbGenero.getSelectedItem().toString())[0][0];
+            int paisId = (int) paisDAO.getPaisesByNombre(cmbPais.getSelectedItem().toString())[0][0];
+            String editorialId = editorialDAO.getEditorialByNombre(cmbEditorial.getSelectedItem().toString())[0][0].toString();
             
             // guarda los valores de los controles en un arreglo de objetos 
-           Object[] libro = new Object[9];                            // (TITULO, EDICION, ANIO, NUM_PAGS, IDIOMA_ID, GENERO_ID, PAIS_ID, EDITORIAL_ID)
-            libro[0] = libro_id;
-            libro[1] = txtTitulo.getText().trim();                      // Titulo
-            libro[2] = Integer.valueOf(txtEdicion.getText().trim());    // Edicion 
-            libro[3] = Integer.valueOf(txtAnio.getText().trim());       // Año
-            libro[4] = Integer.valueOf(txtPags.getText().trim());       // No. paginas
-            libro[5] = (Integer) idioma_id;                             // Id idioma
-            libro[6] = (Integer) genero_id;                             // Id genero
-            libro[7] = (Integer) pais_id;                               // Id pais
-            libro[8] = editorial_id.toString();                         // Id editorial
+            Object[] libro = new Object[9];                             // (TITULO, EDICION, ANIO, NUM_PAGS, IDIOMA_ID, GENERO_ID, PAIS_ID, EDITORIAL_ID)
+            libro[0] = libroId;                                         // Id del libro.
+            libro[1] = txtTitulo.getText().trim();                      // Titulo.
+            libro[2] = Integer.valueOf(txtEdicion.getText().trim());    // Edicion. 
+            libro[3] = Integer.valueOf(txtAnio.getText().trim());       // Anio.
+            libro[4] = Integer.valueOf(txtPags.getText().trim());       // No. paginas.
+            libro[5] = idiomaId;                                        // Id idioma.
+            libro[6] = generoId;                                        // Id genero.
+            libro[7] = paisId;                                          // Id pais.
+            libro[8] = editorialId;                                     // Id editorial.
                         
-            if(editando) {  // Si está actualizando
-                libro[0] = libro_id;
-                // Actualiza los datos y regresa el id
-                libro_id = libro_dao.updateLibro(libro);
-                if(libro_id != 0) {
+            // Actualizando o creando.
+            if(editando) {
+                
+                // Actualiza los datos y regresa el Id.
+                libroId = libroDAO.updateLibro(libro);
+                if(libroId != 0) {
                     javax.swing.JOptionPane.showMessageDialog(this, "Datos actualizados.", "Información", 1);
                 }                
-            }            
-            else{   // si está guardando un registro nuevo
-                // Guarda los datos  y regresa el id
-                libro_id = libro_dao.saveLibro(libro);
+            } else {
+                
+                // Guarda los datos  y regresa el Id.
+                libroId = libroDAO.saveLibro(libro);
             }
             
-            // Si el id no es 0, procede a llenar los demas datos
-            if(libro_id != 0) {                
+            // Si el Id no es 0, procede a llenar los demas datos.
+            if(libroId != 0) {
                 javax.swing.JOptionPane.showMessageDialog(this, "Datos guardados con éxito.", "Información", 1);
-                LlenaTablaLibros();
-                UtilsTable.mueveTabla(tableList, UtilsTable.getRow(libros_lista, libro_id));
+                llenaTablaLibros();
+                UtilsTable.mueveTabla(UtilsTable.getRow(libroId, listaLibros), tblLibros);
                 editando = true;
                 btnCancela.setEnabled(true);
                 txtTitulo.requestFocus();
-                CancelaEdit();
-            }
-            else
-                javax.swing.JOptionPane.showMessageDialog(this, "Error al guardar.","Error",1);
+                cancelaEdit();
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(this, "Error al guardar.", "Error", 1);
+            }                
         }
     }//GEN-LAST:event_btnGuardaActionPerformed
 
+    /**
+     * Botón que consulta el registro selecionado de la tabla para editar.
+     * @param evt evento que dispara la funcion.
+     */
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
-        // Botón que consulta el registro selecionado de la tabla para editar
-        if(tableList.getSelectedRow() < 0)
+        if(tblLibros.getSelectedRow() < 0) {
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila.", "Información", 1);
-        else{
-            // Consulta los datos
-            Object[] libro_edit = libro_dao.getLibroById((Integer) 
-                    UtilsTable.obtenerValor(
-                          tableList, tableList.getSelectedRow(), 0)); 
-            if(libro_edit != null) {
-                // LIBRO_ID, TITULO, EDICION, EDITORIAL, GENERO, ANIO, NUM_PAGINAS, IDIOMA, PAIS
-                txtTitulo.setText(libro_edit[1].toString());            // Titulo
-                txtEdicion.setText(libro_edit[2].toString());           // Edicion
-                cmbEditorial.setSelectedItem(libro_edit[3].toString()); // Editorial
-                cmbGenero.setSelectedItem(libro_edit[4].toString());    // Genero
-                txtAnio.setText(libro_edit[5].toString());              // Año
-                txtPags.setText(libro_edit[6].toString());              // No. pags
-                cmbIdioma.setSelectedItem(libro_edit[7].toString());    // Idioma
-                cmbPais.setSelectedItem(libro_edit[8].toString());      // Pais
-                libro_id = (Integer) libro_edit[0];                     // Id
+        } else {
+            
+            // Consulta los datos.
+            Object[] libroEdit = libroDAO.getLibroById((int) UtilsTable.obtenerValor(tblLibros.getSelectedRow(), 0, tblLibros)); 
+            if(libroEdit != null) {
+                txtTitulo.setText(libroEdit[1].toString());            // Titulo.
+                txtEdicion.setText(libroEdit[2].toString());           // Edicion.
+                cmbEditorial.setSelectedItem(libroEdit[3].toString()); // Editorial.
+                cmbGenero.setSelectedItem(libroEdit[4].toString());    // Genero.
+                txtAnio.setText(libroEdit[5].toString());              // Anio.
+                txtPags.setText(libroEdit[6].toString());              // No. pags.
+                cmbIdioma.setSelectedItem(libroEdit[7].toString());    // Idioma.
+                cmbPais.setSelectedItem(libroEdit[8].toString());      // Pais.
+                libroId = (int) libroEdit[0];                     // Id.
                 
-                // llena las tablas de autoria 
-                LlenaTablaAutores();
+                // Llena las tablas de autoria.
+                llenaTablaAutores();
                 
-                // indica que está editando
+                // Indica que está editando.
                 editando = true;
                 btnCancela.setEnabled(true);
             }
         }
     }//GEN-LAST:event_btnEditActionPerformed
 
-    // Cancela la edición y reinicia controles y parametros
+    /**
+     * Cancela la edición y reinicia controles y parametros.
+     * @param evt evento que dispara la funcion.
+     */
     private void btnCancelaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelaActionPerformed
-        CancelaEdit();
-        tableList.clearSelection();
-        LlenaTablaAutores();
+        cancelaEdit();
+        tblLibros.clearSelection();
+        llenaTablaAutores();
     }//GEN-LAST:event_btnCancelaActionPerformed
 
-    // Borra el libro seleccionado
+    /**
+     * Borra el libro seleccionado.
+     * @param evt evento que dispara la funcion.
+     */
     private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
-        if(tableList.getSelectedRow() < 0)
+        if(tblLibros.getSelectedRow() < 0) {
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila.", "Aviso", 2);
-        else{
-            // suena un beep
+        } else {
+          
+            // Suena un beep y muestra un mensaje de confirmacion.
             java.awt.Toolkit.getDefaultToolkit().beep();
-            // pregunta si quiere eliminar el registro y camtura la respuesta
-            int res = javax.swing.JOptionPane.showConfirmDialog(this, "¿Eliminar " + libros_lista[tableList.getSelectedRow()][1].toString() + "?",
-                 "Seleccione", JOptionPane.YES_NO_OPTION);
-            // evalua la respuesta 
+            int res = javax.swing.JOptionPane.showConfirmDialog(this, "¿Eliminar " + listaLibros[tblLibros.getSelectedRow()][1].toString() + "?",
+                "Seleccione", JOptionPane.YES_NO_OPTION);
+            
+            // Si la respuesta es afirmativa, elimina el registro
             if(res == 0) {
-                String msj = "";
-                // si la respuesta es afirmativa, elimina el registro
-                int ret = libro_dao.deleteLibro(libro_id);
+                String msj = "";                
+                int ret = libroDAO.deleteLibro(libroId);
                 if(ret == 1) {
                     msj = "Se eliminó el libro.";
-                }
-                else if(ret == 0) {
+                } else if(ret == 0) {
                     msj = "No se pudo eliminar por que tiene registros asignados o\nno fue seleccionado apropiadamente.";
                 }
-                // suena un beep
+                
+                // Suena un beep y muestra un mensaje.
                 java.awt.Toolkit.getDefaultToolkit().beep();
                 javax.swing.JOptionPane.showMessageDialog(this, msj, "Información", 1);
-                // Reinicia controles y parametros
-                LlenaTablaLibros();
-                LlenaTablaAutores();                
-                CancelaEdit();
+                
+                // Reinicia controles y parametros.
+                llenaTablaLibros();
+                llenaTablaAutores();                
+                cancelaEdit();
                 txtTitulo.requestFocus();
             }        
         }
     }//GEN-LAST:event_btnBorrarActionPerformed
 
-    // Limpia los campos del libro para poder escribir
+    /**
+     * Limpia los campos del libro para poder escribir.
+     * @param evt evento que dispara la funcion.
+     */
     private void btnAddLibroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddLibroActionPerformed
-        CancelaEdit();
-        tableList.clearSelection();
-        LlenaTablaAutores();        
+        cancelaEdit();
+        tblLibros.clearSelection();
+        llenaTablaAutores();        
     }//GEN-LAST:event_btnAddLibroActionPerformed
 
-    // Llena los campos con el libro seleccionado
-    private void tableListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableListMouseClicked
+    /**
+     * Llena los campos con el Libro seleccionado.
+     * @param evt evento que dispara la funcion.
+     */
+    private void tblLibrosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblLibrosMouseClicked
         // Muestra un ballon si es necesarios
-        if(evt.getClickCount() == 2)
+        if(evt.getClickCount() == 2) {
             btnEditActionPerformed(null);
-    }//GEN-LAST:event_tableListMouseClicked
+        }
+    }//GEN-LAST:event_tblLibrosMouseClicked
 
-    // Abre una ventana con el reporte de los libros dentro de la app
+    /**
+     * Abre una ventana con el reporte de los Libros dentro de la app.
+     * @param evt evento que dispara la funcion.
+     */
     private void btnReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteActionPerformed
-        // genera reporte de peliculas
-        VentanaReporteLibros reporte_libros = new VentanaReporteLibros();
-        reporte_libros.setVisible(true);
+        VentanaReporteLibros reporteLibros = new VentanaReporteLibros();
+        reporteLibros.setVisible(true);
     }//GEN-LAST:event_btnReporteActionPerformed
 
-    // Crea un docuemento PDF con el reporte de los libros en el lector PDF
+    /**
+     * Crea un docuemento PDF con el reporte de los Libros en el lector PDF.
+     * @param evt evento que dispara la funcion.
+     */
     private void btnReportePDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportePDFActionPerformed
-        // genera y ejecuta el reporte en PDF
         LibrosReportPDF reporte = new LibrosReportPDF();
         reporte.generateReport();
     }//GEN-LAST:event_btnReportePDFActionPerformed
     
-    // Llena la tabla de libros cada que se presiona una tecla en el filtro
+    /**
+     * Llena la tabla de Libros cada que se presiona una tecla en el filtro.
+     * @param evt evento que dispara la funcion.
+     */
     private void txtFiltroKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFiltroKeyReleased
-        LlenaTablaLibros();
+        llenaTablaLibros();
     }//GEN-LAST:event_txtFiltroKeyReleased
 
-    // Borra el texto del filtro y llena la tabla
+    /**
+     * Borra el texto del filtro y llena la tabla.
+     * @param evt evento que dispara la funcion.
+     */
     private void btnBorrarFiltroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarFiltroActionPerformed
         txtFiltro.setText("");
-        LlenaTablaLibros();
+        llenaTablaLibros();
     }//GEN-LAST:event_btnBorrarFiltroActionPerformed
 
-    // Despliega un texto cuando se pone el mouse encima del botón
+    /**
+     * Despliega un texto cuando se pone el mouse encima del botón.
+     * @param evt evento que dispara la funcion.
+     */
     private void btnAddLibroMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAddLibroMouseEntered
-        // Tool tip text de la librería ballontip
         UtilsGUI.showBallonAviso(btnAddLibro, "Agregar nuevo libro.", false);
     }//GEN-LAST:event_btnAddLibroMouseEntered
 
-    // Oculta el texto cuando el mouse deja de estar encima
+    /**
+     * Oculta el texto cuando el mouse deja de estar encima.
+     * @param evt evento que dispara la funcion.
+     */
     private void btnAddLibroMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAddLibroMouseExited
-        // Quitar ballontip
         UtilsGUI.hideBallonTxt();
     }//GEN-LAST:event_btnAddLibroMouseExited
 
-    // Cancela edición, reinicia los parámetros y limpia al cerrar la ventana
+    /**
+     * Cancela edición, reinicia los parámetros y limpia al cerrar la ventana.
+     * @param evt evento que dispara la funcion.
+     */
     private void formInternalFrameClosing(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameClosing
-        CancelaEdit();
-        tableList.clearSelection();
+        cancelaEdit();
+        tblLibros.clearSelection();
         txtFiltro.setText("");
-        LlenaTablaLibros();
-        LlenaTablaAutores();               
+        llenaTablaLibros();
+        llenaTablaAutores();               
     }//GEN-LAST:event_formInternalFrameClosing
     
-    // Borra a un autor de un libro
+    /**
+     * Borra a un Autor de un Libro.
+     * @param evt evento que dispara la funcion.
+     */
     private void btnRmveAutoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRmveAutoriaActionPerformed
-        // Verifica si se selecciono un elemento de la tabla
-        if(tableListAutor.getSelectedRow() < 0) {
-            // Suena un beep
+        
+        // Verifica si se selecciono un elemento de la tabla.
+        if(tblAutores.getSelectedRow() < 0) {
+            // Suena un beep y se muestra un mensaje.
             Toolkit.getDefaultToolkit().beep();
-            // Muestra un mensage de aviso
             JOptionPane.showMessageDialog(this, "Seleccione un autor.", "Aviso", 2);
-        }
-        else{
-            // suena un beep
+        } else {
+            
+            // Suena un beep y se muestra un mensaje de confirmacion.
             java.awt.Toolkit.getDefaultToolkit().beep();
-            // pregunta si quiere eliminar el registro y camtura la respuesta
-            int res = javax.swing.JOptionPane.showConfirmDialog(this, "¿Eliminar " + autores_lista[tableListAutor.getSelectedRow()][1].toString() + "?",
+            int res = javax.swing.JOptionPane.showConfirmDialog(this, "¿Eliminar " + autoresLista[tblAutores.getSelectedRow()][1].toString() + "?",
                 "Seleccione", JOptionPane.YES_NO_OPTION);
-            // evalua la respuesta
+            
+            // Si la respuesta es afirmativa, elimina el registro.
             if(res == 0) {
-                String msj = "";
-                // si la respuesta es afirmativa, elimina el registro
-                String autor_id = tableListAutor.getValueAt(tableListAutor.getSelectedRow(), 0).toString();
-                int ret = autor_dao.deleteAutoria(autor_id, libro_id);
+                String msj = "";                
+                String autor_id = tblAutores.getValueAt(tblAutores.getSelectedRow(), 0).toString();
+                int ret = autorDAO.deleteAutoria(autor_id, libroId);
                 if(ret != 1) {
-                    msj = "No se pudo eliminar por que tiene egistros asignados.";
-                    // suena un beep
+                    
+                    // Suena un beep y se muestra un mensaje de error.
+                    msj = "No se pudo eliminar por que tiene egistros asignados.";                   
                     java.awt.Toolkit.getDefaultToolkit().beep();
                     javax.swing.JOptionPane.showMessageDialog(this, msj, "Información", 1);
                 }
 
-                // Reinicia controles y parametros
-                LlenaTablaAutores();
+                // Reinicia controles y parametros.
+                llenaTablaAutores();
             }
         }
     }//GEN-LAST:event_btnRmveAutoriaActionPerformed
 
-    // Abre una ventana para agregar a un autor a la autoria de un libro
+    /**
+     * Abre una ventana para agregar a un autor a la autoria de un Libro.
+     * @param evt evento que dispara la funcion.
+     */
     private void btnAddAutoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddAutoriaActionPerformed
-        // Agregar casting
-        // Verifica si esta editando una pelicula
         if(!editando) {
-            // Suena un beep
-            Toolkit.getDefaultToolkit().beep();
-            // Muestra un mensage de aviso
+            
+            // Suena un beep y se muestra un mensaje.
+            Toolkit.getDefaultToolkit().beep();            
             JOptionPane.showMessageDialog(this, "Para agregar autores primero guarde\nNo edite un libro.", "Aviso", 2);
-        }
-        else{   // Abre la ventana para agregar autores            
-            // Asigna el id de la pelicula            
-            add_autor.SetLibroId(libro_id);                                   
-            // Localización de la ventana
-            add_autor.setLocationRelativeTo(this);
-            // hace visible la ventana
-            add_autor.setVisible(true);
-            // cuando cierra la ventana agrega el autor seleccionada a la tabla de autores
-            LlenaTablaAutores();
+        } else {
+            addAutor.setLibroId(libroId);                                   
+            addAutor.setLocationRelativeTo(this);
+            addAutor.setVisible(true);
+            
+            // Cuando cierra la ventana agrega el autor seleccionada a la tabla de autores.
+            llenaTablaAutores();
         }
     }//GEN-LAST:event_btnAddAutoriaActionPerformed
 
-    // Recarga todos los combo box para mostrar informacion actualizada
+    /**
+     * Recarga todos los combobox para mostrar informacion actualizada.
+     * @param evt evento que dispara la funcion.
+     */
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
-        LlenaDatos();
-        CancelaEdit();
+        llenaDatos();
+        cancelaEdit();
     }//GEN-LAST:event_btnRefreshActionPerformed
 
-    private void EditPaisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditPaisActionPerformed
-        // Hace visible la ventana para agregar paises
-        add_pais.setLocationRelativeTo(this);
-        add_pais.setVisible(true);
+    /**
+     * Abre una ventana para poder crear, editar y eliminar Paises.
+     * @param evt evento que dispara la funcion.
+     */
+    private void btnEditPaisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditPaisActionPerformed
+        addPais.setLocationRelativeTo(this);
+        addPais.setVisible(true);
         
-        // Al cerrar, actualizar los paises disponibles
-        LlenadoPaises();
-        CancelaEdit();
-    }//GEN-LAST:event_EditPaisActionPerformed
+        // Al cerrar, actualizar los paises disponibles.
+        llenadoPaises();
+        cancelaEdit();
+    }//GEN-LAST:event_btnEditPaisActionPerformed
 
-    private void EditEditorialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditEditorialActionPerformed
-        // Hace visible la ventana para agregar editoriales
-        add_editorial.setLocationRelativeTo(this);
-        add_editorial.setVisible(true);
+    /**
+     * Abre una ventana para poder crear, editar y eliminar Editoriales.
+     * @param evt evento que dispara la funcion.
+     */
+    private void btnEditEditorialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditEditorialActionPerformed
+        addEditorial.setLocationRelativeTo(this);
+        addEditorial.setVisible(true);
         
-        // Al cerrar, actualizar las editoriales disponibles
-        LlenadoEditoriales();
-        CancelaEdit();
-    }//GEN-LAST:event_EditEditorialActionPerformed
+        // Al cerrar, actualizar las Editoriales disponibles.
+        llenadoEditoriales();
+        cancelaEdit();
+    }//GEN-LAST:event_btnEditEditorialActionPerformed
 
-    private void EditGeneroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditGeneroActionPerformed
-        // Hace visible la ventana para agregar generos
-        add_genero.setLocationRelativeTo(this);
-        add_genero.setVisible(true);
+    /**
+     * Abre una ventana para poder crear, editar y eliminar Generos.
+     * @param evt evento que dispara la funcion.
+     */
+    private void btnEditGeneroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditGeneroActionPerformed
+        addGenero.setLocationRelativeTo(this);
+        addGenero.setVisible(true);
         
-        // Al cerrar, actualizar los generos disponibles
+        // Al cerrar, actualizar los Generos disponibles.
         LlenadoGeneros();
-        CancelaEdit();
-    }//GEN-LAST:event_EditGeneroActionPerformed
+        cancelaEdit();
+    }//GEN-LAST:event_btnEditGeneroActionPerformed
 
-    private void EditIdiomaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditIdiomaActionPerformed
-        // Hace visible la ventana para agregar idiomas
-        add_idioma.setLocationRelativeTo(this);
-        add_idioma.setVisible(true);
+    /**
+     * Abre una ventana para poder crear, editar y eliminar Idiomas.
+     * @param evt evento que dispara la funcion.
+     */
+    private void btnEditIdiomaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditIdiomaActionPerformed
+        addIdioma.setLocationRelativeTo(this);
+        addIdioma.setVisible(true);
 
-        // Al cerrar, actualizar los idiomas disponibles
-        LlenadoIdiomas();
-        CancelaEdit();
-    }//GEN-LAST:event_EditIdiomaActionPerformed
+        // Al cerrar, actualizar los Idiomas disponibles.
+        llenadoIdiomas();
+        cancelaEdit();
+    }//GEN-LAST:event_btnEditIdiomaActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton EditEditorial;
-    private javax.swing.JButton EditGenero;
-    private javax.swing.JButton EditIdioma;
-    private javax.swing.JButton EditPais;
     private javax.swing.JButton btnAddAutoria;
     private javax.swing.JButton btnAddLibro;
     private javax.swing.JButton btnBorrar;
     private javax.swing.JButton btnBorrarFiltro;
     private javax.swing.JButton btnCancela;
     private javax.swing.JButton btnEdit;
+    private javax.swing.JButton btnEditEditorial;
+    private javax.swing.JButton btnEditGenero;
+    private javax.swing.JButton btnEditIdioma;
+    private javax.swing.JButton btnEditPais;
     private javax.swing.JButton btnGuarda;
     private javax.swing.JButton btnRefresh;
     private javax.swing.JButton btnReporte;
@@ -972,8 +1034,8 @@ public class Libros extends javax.swing.JInternalFrame {
     private javax.swing.JPanel pnlTableList6;
     private javax.swing.JScrollPane scpTableList;
     private javax.swing.JScrollPane scpTableList1;
-    private javax.swing.JTable tableList;
-    private javax.swing.JTable tableListAutor;
+    private javax.swing.JTable tblAutores;
+    private javax.swing.JTable tblLibros;
     private javax.swing.JTextField txtAnio;
     private javax.swing.JTextField txtEdicion;
     private javax.swing.JTextField txtFiltro;

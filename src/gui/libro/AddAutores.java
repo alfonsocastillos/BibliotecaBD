@@ -6,59 +6,62 @@ import javax.swing.JOptionPane;
 import tools.UtilsTable;
 
 /**
- *
- * @author Alfonso
  * Ventana que permite agregar autores a un libro
+ * @author alfonso
  */
 public class AddAutores extends javax.swing.JDialog {
-    // Para agregar el autores a un libro
-    String autor_id;
-    int libro_id;
-    AutorDAO autor_dao;
+    String autorId;
+    int libroId;
+    AutorDAO autorDAO;
+    
     // Para listar todos los autores 
-    Object lista_autores [][];  // Id, nombre
-   // public Object film[];
+    Object[][] autoresLista;
     java.awt.Frame parent;    
 
     /**
-     * Creates new form ???
-     * @param parent
-     * @param modal
+     * Creates new form AddAutores.
+     * @param parent ventana padre.
+     * @param modal determina si la ventana no cede el foco a otra.
      */
     public AddAutores(java.awt.Frame parent, boolean modal) {
-        // ventana modal
-        super(parent, modal);   // Llama al constructor del padre
+        super(parent, modal);
         this.parent= parent;
         setTitle("Autores");
-        // inicia los componentes
+        
+        // Inicia los componentes.
         initComponents();
-        // Crea el dao
-        autor_dao = new AutorDAO();
-        // llena la tabla
-        LlenaTabla();
+        autorDAO = new AutorDAO();
+        llenaTabla();
     }
     
-    // Establece el Id del libro siendo editado
-    public void SetLibroId(int id_libro) {   
-        // Asigna el id del libro
-        this.libro_id = id_libro;
+    /**
+     * Establece el Id del Libro siendo editado.
+     * @param libroId Id del Libro siendo editado. 
+     */
+    public void setLibroId(int libroId) {   
+        this.libroId = libroId;
         txtFiltro.setText("");
-        LlenaTabla();
+        llenaTabla();
     }
-    
-    // Llena y despliega la tabla de autores 
-    private void LlenaTabla() {     
-        // Consulta todos los autores (id, nombre apellido)
-        lista_autores = autor_dao.getAutoresByNombreApellido(txtFiltro.getText().trim());
+        
+    /**
+     * Llena y despliega la tabla de Autores.
+     */
+    private void llenaTabla() {     
+        
+        // Consulta todos los autores (id, nombre apellido).
+        autoresLista = autorDAO.getAutoresByNombreApellido(txtFiltro.getText().trim());
+        
         // Titulos de la tabla
-        String[] T_AUTOR = {"","Nombre"};
-        // alineación de las celdas
-        int[][] cellAlignment = {{0,javax.swing.SwingConstants.LEFT}};
-        // Tamaño de las celdas
-        int[][] cellSize = {{0,0},
-                            {1,170}};
+        String[] columnasNombre = {"","Nombre"};
+        
+        // Alineación de las celdas.
+        int[][] cellAlignment = {{0, javax.swing.SwingConstants.LEFT}};
+        
+        // Tamaño de las celdas.
+        int[][] cellSize = {{0, 0}, {1, 170}};
        
-        UtilsTable.llenaTabla(tableList,lista_autores, T_AUTOR, cellAlignment, cellSize);
+        UtilsTable.llenaTabla(cellAlignment, cellSize, columnasNombre, tblAutores, autoresLista);
     }
     
     /**
@@ -73,12 +76,12 @@ public class AddAutores extends javax.swing.JDialog {
         btnGuardar = new javax.swing.JButton();
         pnlTableList = new javax.swing.JPanel();
         scpTableList = new javax.swing.JScrollPane();
-        tableList = new javax.swing.JTable();
+        tblAutores = new javax.swing.JTable();
         txtFiltro = new javax.swing.JTextField();
         lblFiltro = new javax.swing.JLabel();
-        btnNewAutor = new javax.swing.JButton();
-        btnDelAutor = new javax.swing.JButton();
-        btnEditAutor = new javax.swing.JButton();
+        btnNew = new javax.swing.JButton();
+        btnDelete = new javax.swing.JButton();
+        btnEdit = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setIconImage(java.awt.Toolkit.getDefaultToolkit().getImage( getClass().getResource("/img/pen.png")));
@@ -98,21 +101,21 @@ public class AddAutores extends javax.swing.JDialog {
         scpTableList.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scpTableList.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-        tableList.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        tableList.setModel(new javax.swing.table.DefaultTableModel(
-            new Object[][] {
+        tblAutores.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        tblAutores.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
 
             },
             new String [] {
 
             }
         ));
-        tableList.addMouseListener(new java.awt.event.MouseAdapter() {
+        tblAutores.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tableListMouseClicked(evt);
+                tblAutoresMouseClicked(evt);
             }
         });
-        scpTableList.setViewportView(tableList);
+        scpTableList.setViewportView(tblAutores);
 
         pnlTableList.add(scpTableList, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 180, 170));
 
@@ -128,30 +131,30 @@ public class AddAutores extends javax.swing.JDialog {
         lblFiltro.setText("Filtrar:");
         pnlTableList.add(lblFiltro, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, 25));
 
-        btnNewAutor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/add.png"))); // NOI18N
-        btnNewAutor.setToolTipText("Registrar nuevo autor");
-        btnNewAutor.setFocusable(false);
-        btnNewAutor.addActionListener(new java.awt.event.ActionListener() {
+        btnNew.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/add.png"))); // NOI18N
+        btnNew.setToolTipText("Registrar nuevo autor");
+        btnNew.setFocusable(false);
+        btnNew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnNewAutorActionPerformed(evt);
+                btnNewActionPerformed(evt);
             }
         });
 
-        btnDelAutor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/borrar.png"))); // NOI18N
-        btnDelAutor.setToolTipText("Borrar autor");
-        btnDelAutor.setFocusable(false);
-        btnDelAutor.addActionListener(new java.awt.event.ActionListener() {
+        btnDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/borrar.png"))); // NOI18N
+        btnDelete.setToolTipText("Borrar autor");
+        btnDelete.setFocusable(false);
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDelAutorActionPerformed(evt);
+                btnDeleteActionPerformed(evt);
             }
         });
 
-        btnEditAutor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/editar.png"))); // NOI18N
-        btnEditAutor.setToolTipText("Editar autor");
-        btnEditAutor.setFocusable(false);
-        btnEditAutor.addActionListener(new java.awt.event.ActionListener() {
+        btnEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/editar.png"))); // NOI18N
+        btnEdit.setToolTipText("Editar autor");
+        btnEdit.setFocusable(false);
+        btnEdit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEditAutorActionPerformed(evt);
+                btnEditActionPerformed(evt);
             }
         });
 
@@ -166,11 +169,11 @@ public class AddAutores extends javax.swing.JDialog {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnNewAutor, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnNew, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(btnEditAutor, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(13, 13, 13)
-                        .addComponent(btnDelAutor, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -180,141 +183,150 @@ public class AddAutores extends javax.swing.JDialog {
                 .addComponent(pnlTableList, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnNewAutor, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnNew, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnDelAutor, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnEditAutor, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    // Agrega a la tabla de AUTORIA al autor seleccionado para el libro actual
+    /**
+     * Agrega a la tabla de Autoria al Autor seleccionado para el Libro actual.
+     * @param evt evento que dispara la funcion.
+     */
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        // Accion del boton aceptar
-        // Verifica si se selecciono un elemento de la tabla
-        if(tableList.getSelectedRow() < 0) {
-            // Suena un beep
+
+        // Verifica si se selecciono un elemento de la tabla.
+        if(tblAutores.getSelectedRow() < 0) {
+            
+            // Suena un beep y muestra un mensaje
             Toolkit.getDefaultToolkit().beep();
-            // Muestra un mensage de aviso
             JOptionPane.showMessageDialog(this, "Seleccione un autor", "Aviso", 2);            
-        }
-        else{      
-            // Toma el id y guarda el autor en a tabla de autoria y guarda la autoria
-            autor_id = lista_autores[tableList.getSelectedRow()][0].toString();
-            Object[] autoria = new Object[2];            
-            autoria[0] = autor_id;
-            autoria[1]= libro_id;
-            int result = autor_dao.saveAutoria(autoria);
+        } else {      
+            
+            // Toma el id y guarda el Autor en a tabla de Autoria y guarda la Autoria.
+            autorId = autoresLista[tblAutores.getSelectedRow()][0].toString();
+            Object[] autoria = new Object[2];
+            autoria[0] = autorId;
+            autoria[1]= libroId;
+            int result = autorDAO.saveAutoria(autoria);
             if(result == 0) {
-                // Suena un beep
+                
+                // Suena un beep y se muestra un mensaje de error.
                 Toolkit.getDefaultToolkit().beep();
                 JOptionPane.showMessageDialog(this, "Error al guardar la autoria", "Error", 0);                                
-            }
-            else{
-                // Cierra la ventana
+            } else {
+                
+                // Cierra la ventana.
                 txtFiltro.setText("");
                 dispose(); 
             }               
         }
     }//GEN-LAST:event_btnGuardarActionPerformed
 
-    // Agrega al autor selecciona a la AUTORIA al dar doble click en este
-    private void tableListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableListMouseClicked
-        /* 
-            Cuando el usuario da doble click en una fila de la tabla hace la 
-            misma acción del boton aceptar
-        */
+    /**
+     * Agrega al Autor selecciona a la Autoria al dar doble click en este.
+     * @param evt evento que dispara la funcion.
+     */
+    private void tblAutoresMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblAutoresMouseClicked
         if(evt.getClickCount() == 2) {  
             btnGuardarActionPerformed(null);   
         }
-    }//GEN-LAST:event_tableListMouseClicked
+    }//GEN-LAST:event_tblAutoresMouseClicked
 
-    // Abre una ventana que posibilida crear un AUTOR
-    private void btnNewAutorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewAutorActionPerformed
+    /**
+     * Abre una ventana que posibilida crear un Autor.
+     * @param evt evento que dispara la funcion.
+     */
+    private void btnNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewActionPerformed
         AddNewAutor add_new_autor = new AddNewAutor(parent, true);        
-        // Localizacvión de la ventana        
         add_new_autor.setLocationRelativeTo(this);
-        // hace visible la ventana
         add_new_autor.setVisible(true);        
-        LlenaTabla();
-        // cuando cierra la ventana agrega el autor a la tabla y lo selecciona
-        UtilsTable.mueveTabla(tableList, UtilsTable.getRow(lista_autores, add_new_autor.autor_id));
-    }//GEN-LAST:event_btnNewAutorActionPerformed
+        
+        // Cuando cierra la ventana agrega el autor a la tabla y lo selecciona.
+        llenaTabla();
+        UtilsTable.mueveTabla(UtilsTable.getRow(add_new_autor.autorId, autoresLista), tblAutores);
+    }//GEN-LAST:event_btnNewActionPerformed
 
-    // Llena la tabla de autores cada que se escribe una letra
+    /**
+     * Llena la tabla de Autores cada que se escribe una letra
+     * @param evt evento que dispara la funcion.
+     */
     private void txtFiltroKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFiltroKeyReleased
-        // Filtra autores  
-        LlenaTabla();
+        llenaTabla();
     }//GEN-LAST:event_txtFiltroKeyReleased
 
-    // Elimina al autor seleccionado de la tabla de AUTOR
-    private void btnDelAutorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelAutorActionPerformed
-        // Eliminar un registro
-        // si no selecciona fila, le avisa al usuario
-        if(tableList.getSelectedRow() < 0) {
-             // suena un beep
+    /**
+     * Elimina al Autor seleccionado de la tabla de Autor.
+     * @param evt evento que dispara la funcion.
+     */
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+
+        // Si no selecciona fila, le avisa al usuario.
+        if(tblAutores.getSelectedRow() < 0) {
+            
+            // Suena un beep y se muestra un mensaje.
             java.awt.Toolkit.getDefaultToolkit().beep();
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila","Aviso", 2);
-        }
-        else{
-            // suena un beep
-            java.awt.Toolkit.getDefaultToolkit().beep();
-            // pregunta si quiere eliminar el registro y camtura la respuesta
-            int res = javax.swing.JOptionPane.showConfirmDialog(this, "¿Eliminar " + lista_autores[tableList.getSelectedRow()][1].toString() + "?",
-                 "Seleccione", JOptionPane.YES_NO_OPTION);
-            // evalua la respuesta 
+        } else {
+            
+            // suena un beep y se muestra un mensaje de confirmacion.
+            java.awt.Toolkit.getDefaultToolkit().beep();            
+            int res = javax.swing.JOptionPane.showConfirmDialog(this, "¿Eliminar " + autoresLista[tblAutores.getSelectedRow()][1].toString() + "?",
+                "Seleccione", JOptionPane.YES_NO_OPTION);
+
+            // Si la respuesta es afirmativa, elimina el registro.
             if(res == 0) {
                 String msj = "";
-                // si la respuesta es afirmativa, elimina el registro
-                int ret = autor_dao.deleteAutor(tableList.getValueAt(tableList.getSelectedRow(), 0).toString());
+                int ret = autorDAO.deleteAutor(tblAutores.getValueAt(tblAutores.getSelectedRow(), 0).toString());
                 if(ret != 1) {
                     msj = "No se pudo eliminar por que tiene registros asignados.";
-                    javax.swing.JOptionPane.showMessageDialog(this, msj,"Información",1);
+                    javax.swing.JOptionPane.showMessageDialog(this, msj, "Información", 1);
                 }                
-                // Reinicia controles y parametros
-                LlenaTabla();
+                
+                // Reinicia controles y parametros.
+                llenaTabla();
             }
         }
-    }//GEN-LAST:event_btnDelAutorActionPerformed
+    }//GEN-LAST:event_btnDeleteActionPerformed
 
-    // Abre una ventana para poder editar al autor seleccionado
-    private void btnEditAutorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditAutorActionPerformed
-        // Botón que edita el registro selecionado de la tabla
-        if(tableList.getSelectedRow() < 0) {
-            // Suena un beep
+    /**
+     * Abre una ventana para poder editar al Autor seleccionado.
+     * @param evt evento que dispara la funcion.
+     */
+    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
+        if(tblAutores.getSelectedRow() < 0) {
+            
+            // Suena un beep y se muestra un mensaje
             Toolkit.getDefaultToolkit().beep();
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila", "Información", 1);
-        }
-        else{
-            // Obtiene el id del autor seleccionado
-            autor_id = tableList.getValueAt(tableList.getSelectedRow(), 0).toString();
-            // Abre la ventana para editar autor
-            // Ventana para editar autor
-            AddNewAutor edit_autor = new AddNewAutor(parent, true);                  
-            edit_autor.SetEditId(autor_id);
-
-            // Localización de la ventana
-            edit_autor.setLocationRelativeTo(this);            
-            // hace visible la ventana
-            edit_autor.setVisible(true);
+        } else {
+            autorId = tblAutores.getValueAt(tblAutores.getSelectedRow(), 0).toString();
             
-            // cuando cierra la ventana agrega el autor a la tabla y lo selecciona
-            LlenaTabla();
-            UtilsTable.mueveTabla(tableList, UtilsTable.getRow(lista_autores, edit_autor.autor_id));
+            // Abre la ventana para editar Autor
+            AddNewAutor editAutor = new AddNewAutor(parent, true);                  
+            editAutor.setEditId(autorId);
+            editAutor.setLocationRelativeTo(this);            
+            editAutor.setVisible(true);
+            
+            // Cuando cierra la ventana agrega el autor a la tabla y lo selecciona.
+            llenaTabla();
+            UtilsTable.mueveTabla(UtilsTable.getRow(editAutor.autorId, autoresLista), tblAutores);
         }
-    }//GEN-LAST:event_btnEditAutorActionPerformed
+    }//GEN-LAST:event_btnEditActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnDelAutor;
-    private javax.swing.JButton btnEditAutor;
+    private javax.swing.JButton btnDelete;
+    private javax.swing.JButton btnEdit;
     private javax.swing.JButton btnGuardar;
-    private javax.swing.JButton btnNewAutor;
+    private javax.swing.JButton btnNew;
     private javax.swing.JLabel lblFiltro;
     private javax.swing.JPanel pnlTableList;
     private javax.swing.JScrollPane scpTableList;
-    private javax.swing.JTable tableList;
+    private javax.swing.JTable tblAutores;
     private javax.swing.JTextField txtFiltro;
     // End of variables declaration//GEN-END:variables
 }

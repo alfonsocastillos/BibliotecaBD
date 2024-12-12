@@ -1,17 +1,3 @@
-/*
- * Clase: UtilsGUI.java
- * Fecha: 15/08/2013
- *
- * Desarrollador: Carlos Cortés Bazán
- * 
- * Descripción: Clase que contiene utilerías para intercaces graficas.
- *
- * Nota: debido a que ésta clase es estática, no es necesario crear un objeto
- *       de ella, solo se usa directamente.
- *
- */
-
-
 package tools;
 
 import java.awt.Color;
@@ -27,76 +13,80 @@ import net.java.balloontip.BalloonTip;
 import net.java.balloontip.styles.BalloonTipStyle;
 import net.java.balloontip.styles.RoundedBalloonStyle;
 
-public class UtilsGUI {
-     
-    //Para el LookAndFeel
-    public static String LOOK = "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
-    
-    // EXCEPCIONES
-    public static String UB_LOOK = "Error al cargar el LookAndFeel.";
-    
-    static BalloonTip myBalloonTipTxt;              // Para mostrar los globos de dialogo en cajas de texto
+/**
+ * Clase que contiene utilerias para intercaces graficas.
+ * @author carlos
+ */
+public class UtilsGUI {    
+    public static String LOOK = "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";    
+    public static String UB_LOOK = "Error al cargar el LookAndFeel.";    
+    static BalloonTip myBalloonTipTxt;
        
-    // Aplica el LookAndFeel a un JFrame
-    public static void setLookAndFeel (JFrame frame) {
+    /**
+     * Aplica el LookAndFeel a un JFrame.
+     * @param frame Frame al cual aplicarle el aspecto grafico.
+     */
+    public static void setLookAndFeel(JFrame frame) {
+        
+        // Evaluar el OS utilizado para aplicar el aspecto grafico correcto.
         String OS = System.getProperty("os.name").toLowerCase();
-        try {
-            // Si el OS es Linux, utilizar otro LookAndFeel
-            if(OS.contains("nix") || OS.contains("nux"))
-            {
+        try {            
+            if(OS.contains("nix") || OS.contains("nux")) {
                 LOOK = "com.sun.java.swing.plaf.motif.MotifLookAndFeel";
             }
             UIManager.setLookAndFeel(LOOK);
             SwingUtilities.updateComponentTreeUI((Component)frame);
             frame.pack();
-        }
-        catch(ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-            System.out.println("Error " + UB_LOOK + "\n\n" +
-                    ex.getMessage()  + "\n\nUbicación: " + "setLookAndFeel");
+        } catch(ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+            System.out.println("Error " + UB_LOOK + "\n\n" + ex.getMessage()  + "\n\nUbicación: " + "setLookAndFeel");
         }
     }
     
-    // Aplica el LookAndFeel a un JDialog
-    public static void setLookAndFeel (JDialog frame) {
+    /**
+     * Aplica el LookAndFeel a un JDialog.
+     * @param dialog Ventana de dialogo a la cual aplicarle el aspecto grafico.
+     */
+    public static void setLookAndFeel (JDialog dialog) {
+        
+        // Evaluar el OS utilizado para aplicar el aspecto grafico correcto.
         String OS = System.getProperty("os.name").toLowerCase();
-        try {
-            // Si el OS es Linux, utilizar otro LookAndFeel
+        try {            
             if(OS.contains("nix") || OS.contains("nux"))
             {
                 LOOK = "com.sun.java.swing.plaf.motif.MotifLookAndFeel";
             }
             UIManager.setLookAndFeel(LOOK);
-            SwingUtilities.updateComponentTreeUI((Component)frame);
-            frame.pack();
-        }
-        catch(ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-            System.out.println("Error " + UB_LOOK + "\n\n" +
-                    ex.getMessage()  + "\n\nUbicación: " + "setLookAndFeel");
+            SwingUtilities.updateComponentTreeUI((Component)dialog);
+            dialog.pack();
+        } catch(ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+            System.out.println("Error " + UB_LOOK + "\n\n" + ex.getMessage()  + "\n\nUbicación: " + "setLookAndFeel");
         }
     }
     
-    public static void showBallonTxt(JTextField txtComponente) {
-        hideBallonTxt();
-        if(txtComponente.getText().trim().length() > 0) {
-            if(txtComponente.getHorizontalVisibility().getMaximum() > txtComponente.getHorizontalVisibility().getExtent() + 1) {
-                BalloonTipStyle style = new RoundedBalloonStyle(5,5,Color.YELLOW, Color.BLACK);
-                myBalloonTipTxt = new BalloonTip(txtComponente, txtComponente.getText(), style, false);
-            }
-        }
-    }
-    
+    /**
+     * Muestra un globo de texto de aviso.
+     * @param componente Componente sobre el cual mostrar el globo.
+     * @param texto Texto a mostrar en el globo.
+     * @param isBeep 
+     */
     public static void showBallonAviso(JComponent componente, String texto, boolean isBeep) {
         hideBallonTxt();
         BalloonTipStyle style = new RoundedBalloonStyle(5,5,Color.YELLOW, Color.BLACK);
         myBalloonTipTxt = new BalloonTip(componente, texto, style, false);
 
-        if(isBeep)
+        if(isBeep) {
             java.awt.Toolkit.getDefaultToolkit().beep();
+        }            
     }
     
+    /**
+     * Esconde un globo de texto.
+     */
     public static void hideBallonTxt() {
-        if(myBalloonTipTxt != null)
-            if(myBalloonTipTxt.isVisible())
+        if(myBalloonTipTxt != null) {
+            if(myBalloonTipTxt.isVisible()) {
                 myBalloonTipTxt.setVisible(false);
+            }                
+        }            
     }    
 }

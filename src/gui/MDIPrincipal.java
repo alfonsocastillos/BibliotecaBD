@@ -1,6 +1,5 @@
 package gui;
 
-// import gui.renta.Renta;
 import gui.libro.Libros;
 import gui.prestamo.Prestamo;
 import gui.clientes.Clientes;
@@ -10,121 +9,135 @@ import javax.swing.JInternalFrame;
 import tools.UtilsGUI;
 
 /**
- *
+ * Menu principal de la aplicacion.
  * @author Carlos Cortés Bazán
- * Ventana principal 
  */
 public class MDIPrincipal extends javax.swing.JFrame {
-    // Para guardar los ids y ponerlos en los registros
-    String id_empleado;
-    String id_sucursal;
-    // Para guardar los nombres de la tienda y empleado para mostralos
-    // en la interfaz
-    String empleado_nombre;
-    // Declara las ventanas
-    Libros vtn_libros;
-    // Ventana Clientes
-    Clientes vtn_clientes;
-    Prestamo vtn_prestamo;
+    
+    // Para guardar los Ids y ponerlos en los registros.
+    String empleadoId;
+    String sucursalId;
+    
+    // Para guardar los nombres de la tienda y empleado para mostralos en la interfaz.
+    String empleadoNombre;
+    
+    // Declara las ventanas.
+    Libros librosVentana;    
+    Clientes clientesVentana;
+    Prestamo prestamoVentana;
 
     /**
-     * Creates new form MDIPrincipal
-     * @param id_sucursal
-     * @param id_empleado
-     * @param sucursal
-     * @param empleado_nombre
+     * Creates new form MDIPrincipal.
+     * @param sucursalId Id de la sucursal a la que pertenece el empleado que inicia sesion.
+     * @param empleadoId Id del empleado que inicia sesion.
+     * @param sucursal Nombre de la sucursal.
+     * @param empleadoNombre Nombre del empleado.
      */
-    public MDIPrincipal(String id_sucursal, String id_empleado, String sucursal, String empleado_nombre) { 
-        // Obtiene los valores que consultó la ventana de inicio de sesión 
-        this.id_sucursal = id_sucursal;
-        this.id_empleado = id_empleado;
-        // Nombre del empleado
-        this.empleado_nombre = empleado_nombre;
+    public MDIPrincipal(String sucursalId, String empleadoId, String sucursal, String empleadoNombre) { 
         
-        // inicia todos los componentes
+        // Obtiene los valores que consultó la ventana de inicio de sesión.
+        this.sucursalId = sucursalId;
+        this.empleadoId = empleadoId;
+        this.empleadoNombre = empleadoNombre;
+        
+        // Inicia todos los componentes.
         initComponents();        
-        // Instancia y agrega las ventanas
+        
+        // Instancia y agrega las ventanas.
         configComponents();      
         
-        // Muestra en nombre de la tienda y de empleado en la parte inferior
+        // Muestra en nombre de la tienda y de empleado en la parte inferior.
         lblSucursal. setText(" Sucursal: " + sucursal);
-        lblEmpleado. setText(" Empleado: " + empleado_nombre);
+        lblEmpleado. setText(" Empleado: " + empleadoNombre);
     }
     
+    /**
+     * Configura aspectos graficos de la pantalla.
+     */
     private void configComponents() {
-        // Carga el aspecto grafico
+        
+        // Carga el aspecto grafico.
         UtilsGUI.setLookAndFeel(this);
-        // Localización de la ventana en la pantalla 
+        
+        // Localización de la ventana en la pantalla.
         setLocationRelativeTo(this.getParent());    
-        // Ventana maximizada
+        
+        // Ventana maximizada.
         setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
-        // Instancia las ventanas
-        vtn_libros = new Libros();
-        vtn_clientes = new Clientes();
-        vtn_prestamo = new Prestamo(id_empleado,id_sucursal, empleado_nombre);
-        //vtn_prestamo = new Prestamo();
-        // Agrega las ventanas al panel
-        desktopPane.add(vtn_libros);
-        desktopPane.add(vtn_clientes);
-        desktopPane.add(vtn_prestamo);
-        pack(); // Ajusta el tamaño de la ventana al preferido por sus componentes internos
+        
+        // Instancia las ventanas.
+        librosVentana = new Libros();
+        clientesVentana = new Clientes();
+        prestamoVentana = new Prestamo(empleadoId,sucursalId, empleadoNombre);
+                
+        // Agrega las ventanas al panel.
+        desktopPane.add(librosVentana);
+        desktopPane.add(clientesVentana);
+        desktopPane.add(prestamoVentana);
+        
+        // Ajusta el tamaño de la ventana al preferido por sus componentes internos.
+        pack(); 
     }
       
+    /**
+     * Posiciona las ventanas flotantes.
+     * @param frame cuadro sobre el que se despliegan las demas ventanas.
+     */
     private void setLocation (JInternalFrame frame) {
-        // Metodo que posiciona las ventanas flotantes
         Dimension desktopSize = desktopPane.getSize();
         Dimension frameSize = frame.getSize();
         frame.setLocation((desktopSize.width - frameSize.width)/2, (desktopSize.height- frameSize.height)/2);
     }
        
-    private void abrePrestamo () {  
-        
-        if(!vtn_prestamo.isVisible()) {
-            // Posiciona la ventana
-            setLocation(vtn_prestamo);
-            //Abre la ventana renta
-            vtn_prestamo.setVisible(true);
-        }// Si ya está abierta, la pone adelante
-        else 
-            vtn_prestamo.moveToFront();
+    /**
+     * Despliega la ventana de prestamos.
+     */
+    private void abrePrestamo () {          
+        if(!prestamoVentana.isVisible()) {
+            
+            //Abre la ventana prestamo.
+            setLocation(prestamoVentana);                        
+            prestamoVentana.setVisible(true);
+        } else {
+            
+            // Si ya está abierta, la pone adelante
+            prestamoVentana.moveToFront();
+        }            
     }
     
-    private void AbreLibros() {
-        if(vtn_libros == null) {
-            vtn_libros = new Libros();
+    /**
+     * Despliega la ventana de libros.
+     */
+    private void abreLibros() {
+        if(librosVentana == null) {
+            librosVentana = new Libros();
         }
         
-        if(!vtn_libros.isVisible()) {
-            // Posiciona la ventana
-            setLocation(vtn_libros);
-            //Abre la ventana pelicula
-            vtn_libros.setVisible(true);
-        }// Si ya está abierta, la pone adelante
-        else
-            vtn_libros.moveToFront();
+        // Abre la ventana libros.
+        if(!librosVentana.isVisible()) {            
+            setLocation(librosVentana);            
+            librosVentana.setVisible(true);
+        } else {
+            
+            // Si ya está abierta, la pone adelante
+            librosVentana.moveToFront();
+        }            
     }
     
-    
-    private void AbreClientes() {
-                if(!vtn_clientes.isVisible()) {
-            // Posiciona la ventana
-            setLocation(vtn_clientes);
-            //Abre la ventana renta
-            vtn_clientes.setVisible(true);
-        }// Si ya está abierta, la pone adelante
-        else 
-            vtn_clientes.moveToFront();
-    }
-    
-    private void AbreReportes() {
-                /*if(!vtn_reportes.isVisible()) {
-            // Posiciona la ventana
-            setLocation(vtn_reportes);
-            //Abre la ventana renta
-            vtn_reportes.setVisible(true);
-        }// Si ya está abierta, la pone adelante
-        else 
-            vtn_reportes.moveToFront();*/
+    /**
+     * Despliega la ventana de clientes.
+     */
+    private void abreClientes() {
+        
+        // Abre la ventana clientes.
+        if(!clientesVentana.isVisible()) {           
+            setLocation(clientesVentana);            
+            clientesVentana.setVisible(true);
+        } else {
+            
+            // Si ya está abierta, la pone adelante.
+            clientesVentana.moveToFront();
+        }            
     }
 
     /**
@@ -139,7 +152,7 @@ public class MDIPrincipal extends javax.swing.JFrame {
         desktopPane = new javax.swing.JDesktopPane();
         jLabel1 = new javax.swing.JLabel();
         barraDeAcceso = new javax.swing.JToolBar();
-        btnRenta = new javax.swing.JButton();
+        btnPrestamo = new javax.swing.JButton();
         btnLibros = new javax.swing.JButton();
         btnClientes = new javax.swing.JButton();
         btnReportes = new javax.swing.JButton();
@@ -148,16 +161,16 @@ public class MDIPrincipal extends javax.swing.JFrame {
         lblSucursal = new javax.swing.JLabel();
         lblEmpleado = new javax.swing.JLabel();
         menuBar = new javax.swing.JMenuBar();
-        fileMenu = new javax.swing.JMenu();
-        menuRenta = new javax.swing.JMenuItem();
-        menuExit = new javax.swing.JMenuItem();
-        editMenu = new javax.swing.JMenu();
-        menuPelicula = new javax.swing.JMenuItem();
-        menuActor = new javax.swing.JMenuItem();
-        menuCliente = new javax.swing.JMenuItem();
-        menuEmpleado = new javax.swing.JMenuItem();
-        helpMenu = new javax.swing.JMenu();
-        menuAyuda = new javax.swing.JMenuItem();
+        menuPrestamos = new javax.swing.JMenu();
+        menuItemPrestamos = new javax.swing.JMenuItem();
+        menuItemExit = new javax.swing.JMenuItem();
+        menuEdit = new javax.swing.JMenu();
+        menuLibros = new javax.swing.JMenuItem();
+        menuAutores = new javax.swing.JMenuItem();
+        menuClientes = new javax.swing.JMenuItem();
+        menuEmpleados = new javax.swing.JMenuItem();
+        menuAyuda = new javax.swing.JMenu();
+        menuItemAyuda = new javax.swing.JMenuItem();
         menuAcercaDe = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -190,16 +203,16 @@ public class MDIPrincipal extends javax.swing.JFrame {
 
         barraDeAcceso.setRollover(true);
 
-        btnRenta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/prestamo_libro.png"))); // NOI18N
-        btnRenta.setFocusable(false);
-        btnRenta.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnRenta.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btnRenta.addActionListener(new java.awt.event.ActionListener() {
+        btnPrestamo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/prestamo_libro.png"))); // NOI18N
+        btnPrestamo.setFocusable(false);
+        btnPrestamo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnPrestamo.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnPrestamo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRentaActionPerformed(evt);
+                btnPrestamoActionPerformed(evt);
             }
         });
-        barraDeAcceso.add(btnRenta);
+        barraDeAcceso.add(btnPrestamo);
 
         btnLibros.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/libros.png"))); // NOI18N
         btnLibros.setFocusable(false);
@@ -228,11 +241,6 @@ public class MDIPrincipal extends javax.swing.JFrame {
         btnReportes.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnReportes.setPreferredSize(new java.awt.Dimension(34, 33));
         btnReportes.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btnReportes.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnReportesActionPerformed(evt);
-            }
-        });
         barraDeAcceso.add(btnReportes);
 
         barVent.setRollover(true);
@@ -250,94 +258,84 @@ public class MDIPrincipal extends javax.swing.JFrame {
 
         barVent.add(sptDown);
 
-        fileMenu.setMnemonic('f');
-        fileMenu.setText("Prestamos");
-        fileMenu.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        menuPrestamos.setMnemonic('f');
+        menuPrestamos.setText("Prestamos");
+        menuPrestamos.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
 
-        menuRenta.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        menuRenta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/renta.png"))); // NOI18N
-        menuRenta.setMnemonic('o');
-        menuRenta.setText("Prestamos");
-        menuRenta.addActionListener(new java.awt.event.ActionListener() {
+        menuItemPrestamos.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        menuItemPrestamos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/renta.png"))); // NOI18N
+        menuItemPrestamos.setMnemonic('o');
+        menuItemPrestamos.setText("Prestamos");
+        menuItemPrestamos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuRentaActionPerformed(evt);
+                menuItemPrestamosActionPerformed(evt);
             }
         });
-        fileMenu.add(menuRenta);
+        menuPrestamos.add(menuItemPrestamos);
 
-        menuExit.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        menuExit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/salir.png"))); // NOI18N
-        menuExit.setMnemonic('x');
-        menuExit.setText("Exit");
-        menuExit.addActionListener(new java.awt.event.ActionListener() {
+        menuItemExit.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        menuItemExit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/salir.png"))); // NOI18N
+        menuItemExit.setMnemonic('x');
+        menuItemExit.setText("Exit");
+        menuItemExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuExitActionPerformed(evt);
+                menuItemExitActionPerformed(evt);
             }
         });
-        fileMenu.add(menuExit);
+        menuPrestamos.add(menuItemExit);
 
-        menuBar.add(fileMenu);
+        menuBar.add(menuPrestamos);
 
-        editMenu.setMnemonic('e');
-        editMenu.setText("Editar");
-        editMenu.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        menuEdit.setMnemonic('e');
+        menuEdit.setText("Editar");
+        menuEdit.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
 
-        menuPelicula.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        menuPelicula.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/libros.png"))); // NOI18N
-        menuPelicula.setMnemonic('t');
-        menuPelicula.setText("Libros");
-        menuPelicula.addActionListener(new java.awt.event.ActionListener() {
+        menuLibros.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        menuLibros.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/libros.png"))); // NOI18N
+        menuLibros.setMnemonic('t');
+        menuLibros.setText("Libros");
+        menuLibros.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuPeliculaActionPerformed(evt);
+                menuLibrosActionPerformed(evt);
             }
         });
-        editMenu.add(menuPelicula);
+        menuEdit.add(menuLibros);
 
-        menuActor.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        menuActor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/pen.png"))); // NOI18N
-        menuActor.setMnemonic('y');
-        menuActor.setText("Autores");
-        menuActor.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuActorActionPerformed(evt);
-            }
-        });
-        editMenu.add(menuActor);
+        menuAutores.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        menuAutores.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/pen.png"))); // NOI18N
+        menuAutores.setMnemonic('y');
+        menuAutores.setText("Autores");
+        menuEdit.add(menuAutores);
 
-        menuCliente.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        menuCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/user_icon.png"))); // NOI18N
-        menuCliente.setMnemonic('p');
-        menuCliente.setText("Clientes");
-        editMenu.add(menuCliente);
+        menuClientes.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        menuClientes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/user_icon.png"))); // NOI18N
+        menuClientes.setMnemonic('p');
+        menuClientes.setText("Clientes");
+        menuEdit.add(menuClientes);
 
-        menuEmpleado.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        menuEmpleado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/employee.png"))); // NOI18N
-        menuEmpleado.setMnemonic('d');
-        menuEmpleado.setText("Empleados");
-        menuEmpleado.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuEmpleadoActionPerformed(evt);
-            }
-        });
-        editMenu.add(menuEmpleado);
+        menuEmpleados.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        menuEmpleados.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/employee.png"))); // NOI18N
+        menuEmpleados.setMnemonic('d');
+        menuEmpleados.setText("Empleados");
+        menuEdit.add(menuEmpleados);
 
-        menuBar.add(editMenu);
+        menuBar.add(menuEdit);
 
-        helpMenu.setMnemonic('h');
-        helpMenu.setText("Ayuda");
-        helpMenu.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-
-        menuAyuda.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        menuAyuda.setMnemonic('c');
+        menuAyuda.setMnemonic('h');
         menuAyuda.setText("Ayuda");
-        helpMenu.add(menuAyuda);
+        menuAyuda.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+
+        menuItemAyuda.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        menuItemAyuda.setMnemonic('c');
+        menuItemAyuda.setText("Ayuda");
+        menuAyuda.add(menuItemAyuda);
 
         menuAcercaDe.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         menuAcercaDe.setMnemonic('a');
         menuAcercaDe.setText("Acerca de...");
-        helpMenu.add(menuAcercaDe);
+        menuAyuda.add(menuAcercaDe);
 
-        menuBar.add(helpMenu);
+        menuBar.add(menuAyuda);
 
         setJMenuBar(menuBar);
 
@@ -362,71 +360,77 @@ public class MDIPrincipal extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void menuExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuExitActionPerformed
-        // Cierra el sistema desde la opción de cerrar del menu 
+    /**
+     * Cierra el sistema desde la opción de cerrar del menu.
+     * @param evt evento que dispara la funcion.
+     */
+    private void menuItemExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemExitActionPerformed
         System.exit(0);
-    }//GEN-LAST:event_menuExitActionPerformed
-
-    // Abrir la ventana de libros
-    private void menuPeliculaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuPeliculaActionPerformed
-        AbreLibros();
-    }//GEN-LAST:event_menuPeliculaActionPerformed
+    }//GEN-LAST:event_menuItemExitActionPerformed
+   
+    /**
+     * Abrir la ventana de libros cuando se le da clic.
+     * @param evt evento que dispara la funcion.
+     */
+    private void menuLibrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuLibrosActionPerformed
+        abreLibros();
+    }//GEN-LAST:event_menuLibrosActionPerformed
     
-    private void menuActorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuActorActionPerformed
-        // Accion del menu actor
-
-    }//GEN-LAST:event_menuActorActionPerformed
-
-    private void menuRentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuRentaActionPerformed
-        // Accion del menu renta
+    /**
+     * Abrir la ventana de prestamos cuando se le da clic.
+     * @param evt evento que dispara la funcion.
+     */
+    private void menuItemPrestamosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemPrestamosActionPerformed
         abrePrestamo();
-    }//GEN-LAST:event_menuRentaActionPerformed
+    }//GEN-LAST:event_menuItemPrestamosActionPerformed
 
-    private void btnRentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRentaActionPerformed
-        // Accion del boton renta de la barra de accesos rapidos 
+    /**
+     * Abrir la ventana de prestamos cuando se le da clic.
+     * @param evt evento que dispara la funcion.
+     */
+    private void btnPrestamoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrestamoActionPerformed
         abrePrestamo();
-    }//GEN-LAST:event_btnRentaActionPerformed
+    }//GEN-LAST:event_btnPrestamoActionPerformed
     
+    /**
+     * Abrir la ventana de libros cuando se le da clic.
+     * @param evt evento que dispara la funcion.
+     */
     private void btnLibrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLibrosActionPerformed
-        // Accion del boton pelicula de la barra de accesos rapidos 
-        AbreLibros();
+        abreLibros();
     }//GEN-LAST:event_btnLibrosActionPerformed
 
+    /**
+     * Abrir la ventana de clientes cuando se le da clic.
+     * @param evt evento que dispara la funcion.
+     */
     private void btnClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClientesActionPerformed
-       AbreClientes();
+       abreClientes();
     }//GEN-LAST:event_btnClientesActionPerformed
-
-    private void btnReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportesActionPerformed
-        AbreReportes();
-    }//GEN-LAST:event_btnReportesActionPerformed
-
-    private void menuEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuEmpleadoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_menuEmpleadoActionPerformed
   
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToolBar barVent;
     private javax.swing.JToolBar barraDeAcceso;
     private javax.swing.JButton btnClientes;
     private javax.swing.JButton btnLibros;
-    private javax.swing.JButton btnRenta;
+    private javax.swing.JButton btnPrestamo;
     private javax.swing.JButton btnReportes;
     private javax.swing.JDesktopPane desktopPane;
-    private javax.swing.JMenu editMenu;
-    private javax.swing.JMenu fileMenu;
-    private javax.swing.JMenu helpMenu;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel lblEmpleado;
     private javax.swing.JLabel lblSucursal;
     private javax.swing.JMenuItem menuAcercaDe;
-    private javax.swing.JMenuItem menuActor;
-    private javax.swing.JMenuItem menuAyuda;
+    private javax.swing.JMenuItem menuAutores;
+    private javax.swing.JMenu menuAyuda;
     private javax.swing.JMenuBar menuBar;
-    private javax.swing.JMenuItem menuCliente;
-    private javax.swing.JMenuItem menuEmpleado;
-    private javax.swing.JMenuItem menuExit;
-    private javax.swing.JMenuItem menuPelicula;
-    private javax.swing.JMenuItem menuRenta;
+    private javax.swing.JMenuItem menuClientes;
+    private javax.swing.JMenu menuEdit;
+    private javax.swing.JMenuItem menuEmpleados;
+    private javax.swing.JMenuItem menuItemAyuda;
+    private javax.swing.JMenuItem menuItemExit;
+    private javax.swing.JMenuItem menuItemPrestamos;
+    private javax.swing.JMenuItem menuLibros;
+    private javax.swing.JMenu menuPrestamos;
     private javax.swing.JSplitPane sptDown;
     // End of variables declaration//GEN-END:variables
 }
