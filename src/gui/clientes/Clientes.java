@@ -10,9 +10,7 @@ import tools.UtilsTable;
  * Ventana que registra clientes
  * @author Jordi
  */
-public class Clientes extends javax.swing.JInternalFrame {
-    
-    //TODO: implementar editar cliente
+public class Clientes extends javax.swing.JInternalFrame {    
     int clienteId;
     Object[][] clientesLista;
     

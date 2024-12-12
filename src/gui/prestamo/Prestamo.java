@@ -368,9 +368,9 @@ public class Prestamo extends javax.swing.JInternalFrame {
             if(addLibrosPrestamo.tblLibros.getSelectedRow() >= 0) {
                 if(VerificaRepetido((int) addLibrosPrestamo.libro[0])) {
                     UtilsTable.agregarFila(tblLibrosPrestamo, addLibrosPrestamo.libro);                    
-                    DateTimeFormatter date_format = DateTimeFormatter.ofPattern("dd/MM/yyyy");                
-                    String fecha_entrega = date_format.format(LocalDateTime.now().plusDays(3 * tblLibrosPrestamo.getRowCount()));
-                    lblFechaEntrega.setText(fecha_entrega);
+                    DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");                
+                    String fechaEntrega = dateFormat.format(LocalDateTime.now().plusDays(3 * tblLibrosPrestamo.getRowCount()));
+                    lblFechaEntrega.setText(fechaEntrega);
                 }
             }
         }
@@ -388,6 +388,12 @@ public class Prestamo extends javax.swing.JInternalFrame {
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila.","Aviso",2);
         } else {
             UtilsTable.quitarFila(tblLibrosPrestamo.getSelectedRow(), tblLibrosPrestamo);
+            DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");                
+            String fechaEntrega = dateFormat.format(LocalDateTime.now().plusDays(3 * tblLibrosPrestamo.getRowCount()));
+            lblFechaEntrega.setText(fechaEntrega);
+            if(fechaEntrega.equals(lblFechaPrestamo.getText())) {
+                lblFechaEntrega.setText("");
+            }            
         }
     }//GEN-LAST:event_btnDeleteActionPerformed
 

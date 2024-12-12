@@ -1,11 +1,12 @@
 package gui;
 
-import gui.libro.Libros;
-import gui.prestamo.Prestamo;
-import gui.clientes.Clientes;
 import java.awt.Dimension;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
+import javax.swing.JOptionPane;
+import gui.libro.Libros;
+import gui.prestamo.Prestamo;
+import gui.clientes.Clientes;
 import tools.UtilsGUI;
 
 /**
@@ -25,7 +26,9 @@ public class MDIPrincipal extends javax.swing.JFrame {
     Libros librosVentana;    
     Clientes clientesVentana;
     Prestamo prestamoVentana;
-
+        
+    String appVersion = "1.46";
+    
     /**
      * Creates new form MDIPrincipal.
      * @param sucursalId Id de la sucursal a la que pertenece el empleado que inicia sesion.
@@ -86,7 +89,7 @@ public class MDIPrincipal extends javax.swing.JFrame {
     private void setLocation (JInternalFrame frame) {
         Dimension desktopSize = desktopPane.getSize();
         Dimension frameSize = frame.getSize();
-        frame.setLocation((desktopSize.width - frameSize.width)/2, (desktopSize.height- frameSize.height)/2);
+        frame.setLocation((desktopSize.width - frameSize.width) / 2, (desktopSize.height- frameSize.height) / 2);
     }
        
     /**
@@ -139,6 +142,15 @@ public class MDIPrincipal extends javax.swing.JFrame {
             clientesVentana.moveToFront();
         }            
     }
+    
+    /**
+     * Despliega la ventana de clientes.
+     */
+    private void abreAutores() {
+        AddAutores addAutores = new AddAutores(null, true);        
+        addAutores.setLocationRelativeTo(this);
+        addAutores.setVisible(true);           
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -168,7 +180,6 @@ public class MDIPrincipal extends javax.swing.JFrame {
         menuLibros = new javax.swing.JMenuItem();
         menuAutores = new javax.swing.JMenuItem();
         menuClientes = new javax.swing.JMenuItem();
-        menuEmpleados = new javax.swing.JMenuItem();
         menuAyuda = new javax.swing.JMenu();
         menuItemAyuda = new javax.swing.JMenuItem();
         menuAcercaDe = new javax.swing.JMenuItem();
@@ -305,6 +316,11 @@ public class MDIPrincipal extends javax.swing.JFrame {
         menuAutores.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/pen.png"))); // NOI18N
         menuAutores.setMnemonic('y');
         menuAutores.setText("Autores");
+        menuAutores.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuAutoresActionPerformed(evt);
+            }
+        });
         menuEdit.add(menuAutores);
 
         menuClientes.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
@@ -318,12 +334,6 @@ public class MDIPrincipal extends javax.swing.JFrame {
         });
         menuEdit.add(menuClientes);
 
-        menuEmpleados.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        menuEmpleados.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/employee.png"))); // NOI18N
-        menuEmpleados.setMnemonic('d');
-        menuEmpleados.setText("Empleados");
-        menuEdit.add(menuEmpleados);
-
         menuBar.add(menuEdit);
 
         menuAyuda.setMnemonic('h');
@@ -333,11 +343,21 @@ public class MDIPrincipal extends javax.swing.JFrame {
         menuItemAyuda.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         menuItemAyuda.setMnemonic('c');
         menuItemAyuda.setText("Ayuda");
+        menuItemAyuda.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemAyudaActionPerformed(evt);
+            }
+        });
         menuAyuda.add(menuItemAyuda);
 
         menuAcercaDe.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         menuAcercaDe.setMnemonic('a');
         menuAcercaDe.setText("Acerca de...");
+        menuAcercaDe.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuAcercaDeActionPerformed(evt);
+            }
+        });
         menuAyuda.add(menuAcercaDe);
 
         menuBar.add(menuAyuda);
@@ -420,6 +440,26 @@ public class MDIPrincipal extends javax.swing.JFrame {
     private void menuClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuClientesActionPerformed
         abreClientes();
     }//GEN-LAST:event_menuClientesActionPerformed
+
+    /**
+     * Mostrar un mensaje de ayuda para el usuario.
+     * @param evt evento que dispara la funcion.
+     */
+    private void menuItemAyudaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAyudaActionPerformed
+        JOptionPane.showMessageDialog(this, "Seleccione alguno de los iconos en el menu para comenzar a consultar, agregar, editar y eliminar registros", "Aviso", 2);   
+    }//GEN-LAST:event_menuItemAyudaActionPerformed
+
+    /**
+     * Mostrar un mensaje de informacion para el usuario.
+     * @param evt evento que dispara la funcion.
+     */
+    private void menuAcercaDeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuAcercaDeActionPerformed
+        JOptionPane.showMessageDialog(this, "Version: " + appVersion + "\nOS: " + System.getProperty("os.name"), "Aviso", 2);
+    }//GEN-LAST:event_menuAcercaDeActionPerformed
+
+    private void menuAutoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuAutoresActionPerformed
+        abreAutores();
+    }//GEN-LAST:event_menuAutoresActionPerformed
   
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToolBar barVent;
@@ -438,7 +478,6 @@ public class MDIPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem menuClientes;
     private javax.swing.JMenu menuEdit;
-    private javax.swing.JMenuItem menuEmpleados;
     private javax.swing.JMenuItem menuItemAyuda;
     private javax.swing.JMenuItem menuItemExit;
     private javax.swing.JMenuItem menuItemPrestamos;

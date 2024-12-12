@@ -1,9 +1,10 @@
-package gui.libro;
+package gui;
 
 import dataBase.dao.AutorDAO;
 import java.awt.Toolkit;
 import javax.swing.JOptionPane;
 import tools.UtilsTable;
+import gui.libro.AddNewAutor;
 
 /**
  * Ventana que permite agregar autores a un libro
@@ -11,7 +12,6 @@ import tools.UtilsTable;
  */
 public class AddAutores extends javax.swing.JDialog {
     String autorId;
-    int libroId;
     AutorDAO autorDAO;
     
     // Para listar todos los autores 
@@ -25,22 +25,12 @@ public class AddAutores extends javax.swing.JDialog {
      */
     public AddAutores(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
-        this.parent= parent;
+        this.parent = parent;
         setTitle("Autores");
         
         // Inicia los componentes.
         initComponents();
         autorDAO = new AutorDAO();
-        llenaTabla();
-    }
-    
-    /**
-     * Establece el Id del Libro siendo editado.
-     * @param libroId Id del Libro siendo editado. 
-     */
-    public void setLibroId(int libroId) {   
-        this.libroId = libroId;
-        txtFiltro.setText("");
         llenaTabla();
     }
         
@@ -59,9 +49,10 @@ public class AddAutores extends javax.swing.JDialog {
         int[][] cellAlignment = {{0, javax.swing.SwingConstants.LEFT}};
         
         // Tamaño de las celdas.
-        int[][] cellSize = {{0, 0}, {1, 170}};
+        int[][] cellSize = {{0, 0}, {1, 170}, {1, 170}};
        
         UtilsTable.llenaTabla(cellAlignment, cellSize, columnasNombre, tblAutores, autoresLista);
+        UtilsTable.quitarColumna(0, tblAutores);
     }
     
     /**
@@ -73,7 +64,6 @@ public class AddAutores extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        btnGuardar = new javax.swing.JButton();
         pnlTableList = new javax.swing.JPanel();
         scpTableList = new javax.swing.JScrollPane();
         tblAutores = new javax.swing.JTable();
@@ -85,15 +75,6 @@ public class AddAutores extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setIconImage(java.awt.Toolkit.getDefaultToolkit().getImage( getClass().getResource("/img/pen.png")));
-
-        btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/guardar.png"))); // NOI18N
-        btnGuardar.setToolTipText("Guardar");
-        btnGuardar.setFocusable(false);
-        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnGuardarActionPerformed(evt);
-            }
-        });
 
         pnlTableList.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N
         pnlTableList.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -117,7 +98,7 @@ public class AddAutores extends javax.swing.JDialog {
         });
         scpTableList.setViewportView(tblAutores);
 
-        pnlTableList.add(scpTableList, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 180, 170));
+        pnlTableList.add(scpTableList, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 170, 170));
 
         txtFiltro.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtFiltro.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -125,7 +106,7 @@ public class AddAutores extends javax.swing.JDialog {
                 txtFiltroKeyReleased(evt);
             }
         });
-        pnlTableList.add(txtFiltro, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 10, 140, 25));
+        pnlTableList.add(txtFiltro, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 10, 120, 25));
 
         lblFiltro.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblFiltro.setText("Filtrar:");
@@ -164,17 +145,15 @@ public class AddAutores extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pnlTableList, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnNew, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(13, 13, 13)
-                        .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(btnNew, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(34, 34, 34)
+                .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(pnlTableList, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 14, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -184,7 +163,6 @@ public class AddAutores extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnNew, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -194,46 +172,12 @@ public class AddAutores extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     /**
-     * Agrega a la tabla de Autoria al Autor seleccionado para el Libro actual.
-     * @param evt evento que dispara la funcion.
-     */
-    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-
-        // Verifica si se selecciono un elemento de la tabla.
-        if(tblAutores.getSelectedRow() < 0) {
-            
-            // Suena un beep y muestra un mensaje
-            Toolkit.getDefaultToolkit().beep();
-            JOptionPane.showMessageDialog(this, "Seleccione un autor", "Aviso", 2);            
-        } else {      
-            
-            // Toma el id y guarda el Autor en a tabla de Autoria y guarda la Autoria.
-            autorId = autoresLista[tblAutores.getSelectedRow()][0].toString();
-            Object[] autoria = new Object[2];
-            autoria[0] = autorId;
-            autoria[1]= libroId;
-            int result = autorDAO.saveAutoria(autoria);
-            if(result == 0) {
-                
-                // Suena un beep y se muestra un mensaje de error.
-                Toolkit.getDefaultToolkit().beep();
-                JOptionPane.showMessageDialog(this, "Error al guardar la autoria", "Error", 0);                                
-            } else {
-                
-                // Cierra la ventana.
-                txtFiltro.setText("");
-                dispose(); 
-            }               
-        }
-    }//GEN-LAST:event_btnGuardarActionPerformed
-
-    /**
      * Agrega al Autor selecciona a la Autoria al dar doble click en este.
      * @param evt evento que dispara la funcion.
      */
     private void tblAutoresMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblAutoresMouseClicked
         if(evt.getClickCount() == 2) {  
-            btnGuardarActionPerformed(null);   
+            btnEditActionPerformed(null);   
         }
     }//GEN-LAST:event_tblAutoresMouseClicked
 
@@ -244,11 +188,11 @@ public class AddAutores extends javax.swing.JDialog {
     private void btnNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewActionPerformed
         AddNewAutor addNewAutor = new AddNewAutor(parent, true);        
         addNewAutor.setLocationRelativeTo(this);
-        addNewAutor.setVisible(true);
+        addNewAutor.setVisible(true);        
         
         // Cuando cierra la ventana agrega el autor a la tabla y lo selecciona.
         llenaTabla();
-        UtilsTable.mueveTabla(UtilsTable.getRow(addNewAutor.autorId, autoresLista), tblAutores);
+        UtilsTable.mueveTabla(UtilsTable.getRow(addNewAutor.getAutorId(), autoresLista), tblAutores);
     }//GEN-LAST:event_btnNewActionPerformed
 
     /**
@@ -281,7 +225,7 @@ public class AddAutores extends javax.swing.JDialog {
             // Si la respuesta es afirmativa, elimina el registro.
             if(res == 0) {
                 String msj = "";
-                int ret = autorDAO.deleteAutor(tblAutores.getValueAt(tblAutores.getSelectedRow(), 0).toString());
+                int ret = autorDAO.deleteAutor((String) UtilsTable.obtenerValor(tblAutores.getSelectedRow(), 0, tblAutores));
                 if(ret != 1) {
                     msj = "No se pudo eliminar por que tiene registros asignados.";
                     javax.swing.JOptionPane.showMessageDialog(this, msj, "Información", 1);
@@ -304,7 +248,7 @@ public class AddAutores extends javax.swing.JDialog {
             Toolkit.getDefaultToolkit().beep();
             javax.swing.JOptionPane.showMessageDialog(this, "Seleccione una fila", "Información", 1);
         } else {
-            autorId = tblAutores.getValueAt(tblAutores.getSelectedRow(), 0).toString();
+            autorId = (String) UtilsTable.obtenerValor(tblAutores.getSelectedRow(), 0, tblAutores);
             
             // Abre la ventana para editar Autor
             AddNewAutor editAutor = new AddNewAutor(parent, true);                  
@@ -314,14 +258,13 @@ public class AddAutores extends javax.swing.JDialog {
             
             // Cuando cierra la ventana agrega el autor a la tabla y lo selecciona.
             llenaTabla();
-            UtilsTable.mueveTabla(UtilsTable.getRow(editAutor.autorId, autoresLista), tblAutores);
+            UtilsTable.mueveTabla(UtilsTable.getRow(editAutor.getAutorId(), autoresLista), tblAutores);
         }
     }//GEN-LAST:event_btnEditActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnEdit;
-    private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnNew;
     private javax.swing.JLabel lblFiltro;
     private javax.swing.JPanel pnlTableList;

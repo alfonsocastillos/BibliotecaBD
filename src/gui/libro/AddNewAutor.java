@@ -37,6 +37,32 @@ public class AddNewAutor extends javax.swing.JDialog {
             cmbPaises.addItem(pais[1].toString());
         }        
     }
+    
+    /**
+     * Llena los datos del autor a editar.
+     * @param autorId Id del autor siendo editado.
+     */
+    public void setEditId(String autorId) {
+        this.autorId = autorId;
+        
+        // Busca el autor y muestra los datos en los controles.
+        Object[] autorEdit = autorDAO.getAutorById(autorId);
+        txtNombre.setText(autorEdit[1].toString());
+        if(autorEdit[2] != null) {
+            txtApellido.setText(autorEdit[2].toString());
+        }                   
+        if(autorEdit[3] != null) {
+            cmbPaises.setSelectedItem(autorEdit[3].toString()); 
+        }                   
+    }
+    
+    /**
+     * Obtiene el Id del autor siendo creado o editado.
+     * @return Id del autor siendo creado o editado.
+     */
+    public String getAutorId() {
+        return autorId;
+    }
 
     /**
      * Borra los controles.
@@ -69,25 +95,7 @@ public class AddNewAutor extends javax.swing.JDialog {
             llenos = true;
         }
         return llenos;
-    }
-    
-    /**
-     * Llena los datos del autor a editar.
-     * @param autorId Id del autor siendo editado.
-     */
-    public void setEditId(String autorId) {
-        this.autorId = autorId;
-        
-        // Busca el autor y muestra los datos en los controles.
-        Object[] autor_edit = autorDAO.getAutorById(autorId);
-        txtNombre.setText(autor_edit[1].toString());
-        if(autor_edit[2] != null) {
-            txtApellido.setText(autor_edit[2].toString());
-        }                   
-        if(autor_edit[3] != null) {
-            cmbPaises.setSelectedItem(autor_edit[3].toString()); 
-        }                   
-    }
+    }        
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -142,7 +150,7 @@ public class AddNewAutor extends javax.swing.JDialog {
         lblNombre1.setText("Pais:");
         pnlTableList.add(lblNombre1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 140, -1, 25));
 
-        cmbPaises.setFont(new java.awt.Font("C059", 0, 12)); // NOI18N
+        cmbPaises.setFont(new java.awt.Font("Arial", 0, 12));
         pnlTableList.add(cmbPaises, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 140, 150, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
