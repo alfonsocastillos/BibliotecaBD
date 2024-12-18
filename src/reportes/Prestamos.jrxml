@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 6.0.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Prestamos" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c72af964-1a03-4c8b-9dc3-c66b722c204c">
+	<property name="com.jaspersoft.studio.data.sql.tables" value="UFJFU1RBTU8gLDMwMiwxMjUsMmRhMGViMmMtNjRiMC00NzgwLWJlZDYtMzNiYzZhMGIyZDcyO0RF&#xA;VEFMTEVTX1BSRVNUQU1PICwxMTUsOTAsNmM0YjdkMzAtZGVlNi00ZDYxLWFhMDAtMTM3MGYwYmRl&#xA;NTM0O0xJQlJPICwxMTUsMTYwLDQyZWFkZGE1LWM4NDQtNGFjNy1hN2UxLTFjMWM0NzZlNmUzZTs="/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Libros"/>
+	<parameter name="clienteId" class="java.lang.Integer"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT TITULO,
+	FECHA_PRESTAMO,
+	FECHA_ENTREGA,
+	NOMBRE,
+	APELLIDO_PAT,
+	APELLIDO_MAT
+FROM PRESTAMO
+	JOIN DETALLES_PRESTAMO USING(PRESTAMO_ID) 
+	JOIN LIBRO USING(LIBRO_ID) 
+	JOIN CLIENTE USING(CLIENTE_ID)
+WHERE CLIENTE_ID = $P{clienteId} 
+ORDER BY 2 DESC]]>
+	</queryString>
+	<field name="TITULO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="TITULO"/>
+	</field>
+	<field name="FECHA_PRESTAMO" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.label" value="ANIO"/>
+	</field>
+	<field name="FECHA_ENTREGA" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.label" value="IDIOMA"/>
+	</field>
+	<field name="NOMBRE" class="java.lang.String"/>
+	<field name="APELLIDO_PAT" class="java.lang.String"/>
+	<field name="APELLIDO_MAT" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="84" splitType="Stretch">
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement mode="Opaque" x="480" y="0" width="80" height="84" backcolor="#04AECC" uuid="8066851c-844d-4883-aef1-7d2a684892e0"/>
+				<box>
+					<topPen lineWidth="2.75"/>
+					<bottomPen lineWidth="2.75"/>
+					<rightPen lineWidth="2.75"/>
+				</box>
+				<imageExpression><![CDATA["logo.png"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement mode="Opaque" x="0" y="0" width="480" height="84" backcolor="#04AECC" uuid="399d21fa-9481-4a8e-9435-341e13048967"/>
+				<box>
+					<pen lineWidth="2.75"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="26"/>
+				</textElement>
+				<textFieldExpression><![CDATA["PRESTAMOS " + $F{NOMBRE}.toUpperCase() + " " + $F{APELLIDO_PAT}.toUpperCase() + " " + $F{APELLIDO_MAT}.toUpperCase()]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="21" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="160" height="21" uuid="b0db4301-3c7f-4195-965f-c82ce081de48">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="6251fc14-f96d-478d-bf87-974d39866f3f"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Título]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="160" y="0" width="195" height="21" uuid="6af97d92-da7b-42b6-9d2a-47c2d2874123">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="da170d89-334a-41f5-9e02-4b42798a8b4a"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[FECHA PRESTAMO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="355" y="0" width="195" height="21" uuid="930c5205-67e0-45e8-bde3-35ad185c879d">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="31d6bcda-5a80-4c72-a388-d67af0454503"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[FECHA ENTREGA]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="160" height="21" uuid="448781fa-b84f-42c2-8b7b-d520539443d9">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="6251fc14-f96d-478d-bf87-974d39866f3f"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TITULO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="160" y="0" width="195" height="21" uuid="4091c431-2f2a-49ba-b761-2332d8719430">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="da170d89-334a-41f5-9e02-4b42798a8b4a"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FECHA_PRESTAMO}.getDate()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="355" y="0" width="195" height="21" uuid="90501732-bb69-49ff-994b-9892ae1913ff">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="31d6bcda-5a80-4c72-a388-d67af0454503"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FECHA_ENTREGA}.getDate()]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

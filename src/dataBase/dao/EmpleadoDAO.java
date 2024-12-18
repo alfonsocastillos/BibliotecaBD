@@ -21,7 +21,7 @@ public class EmpleadoDAO extends CustomConnection {
         Object[] employee = null;
         try {
             sentenciaSQL = "SELECT EMPLEADO_ID, SUCURSAL_ID, SUCURSAL.NOMBRE, EMPLEADO.NOMBRE, APELLIDO_PAT || ' ' || APELLIDO_MAT FROM EMPLEADO " +
-                "JOIN SUCURSAL USING (SUCURSAL_ID) WHERE USUARIO LIKE ? AND CONTRASENIA LIKE ?";
+                    "JOIN SUCURSAL USING (SUCURSAL_ID) WHERE USUARIO LIKE ? AND CONTRASENIA LIKE ?";
             preparedStatement = connection.prepareStatement(sentenciaSQL);
             preparedStatement.setString(1, usr);
             preparedStatement.setString(2, String.valueOf(psw));

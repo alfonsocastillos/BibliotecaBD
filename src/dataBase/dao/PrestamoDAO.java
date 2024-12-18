@@ -72,7 +72,7 @@ public class PrestamoDAO extends CustomConnection {
                 count = resultSet.getInt(1);
             }
             
-            sentenciaSQL = "SELECT TITULO, FECHA_PRESTAMO, FECHA_ENTREGA FROM PRESTAMO JOIN DETALLES_PRESTAMO USING (PRESTAMO_ID)JOIN LIBRO USING (LIBRO_ID) " +
+            sentenciaSQL = "SELECT TITULO, FECHA_PRESTAMO, FECHA_ENTREGA FROM PRESTAMO JOIN DETALLES_PRESTAMO USING (PRESTAMO_ID) JOIN LIBRO USING (LIBRO_ID) " +
                     "WHERE CLIENTE_ID = ? ORDER BY 2";
             preparedStatement = connection.prepareStatement(sentenciaSQL);
             preparedStatement.setInt(1, clienteId);

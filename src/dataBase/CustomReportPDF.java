@@ -3,7 +3,6 @@ package dataBase;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRParameter;
@@ -21,22 +20,19 @@ import net.sf.jasperreports.engine.util.SimpleFileResolver;
  * Clase que genera el reporte directamente en PDF y lo abre con Acrobat.
  * @author Carlos Cortés Bazán
  */
-public class LibrosReportPDF extends CustomConnection {
+public class CustomReportPDF extends CustomConnection {
    
     /**
      * Genera un reporte de Jasper Reports.
+     * @param reportUrl URL en la que se encuentra el archivo descriptor del reporte.
+     * @param parameters Parametros a utilizar en el reporte.
      */
-    public void generateReport() {
-        
-        // Conecta a la base de datos.
+    public void generateReport(String reportUrl, Map<String, Object> parameters) {
         connect();
         try {
            
            // Lee el archivo de reporte y compila el reporte.
-           JasperReport report = JasperCompileManager.compileReport(getClass().getResource("/reportes/Libros.jrxml").getPath());
-           
-            // Paramatros del reporte, aun que no se le mandan parametros, es necesario para las imagenes que usa el reporte.
-            Map<String, Object> parameters = new HashMap<>();
+           JasperReport report = JasperCompileManager.compileReport(getClass().getResource(reportUrl).getPath());
             
             // Ruta de las imagenes que usa el reporte.
             String reportsPath = getClass().getResource("/reportes").getPath();
@@ -49,10 +45,12 @@ public class LibrosReportPDF extends CustomConnection {
             JasperPrint print = JasperFillManager.fillReport(report, parameters, connection);
             
             // Exporta el reporte con el nombre Archivo.PDF.
-            JasperExportManager.exportReportToPdfFile(print, "ReporteLibros.PDF");
+            String pdfName;
+            pdfName = reportUrl.substring(reportUrl.lastIndexOf("/") + 1, reportUrl.indexOf(".") - 1);
+            JasperExportManager.exportReportToPdfFile(print, pdfName);
             
             // Crea un file con el reporte para poder abrirlo.
-            File path = new File ("ReporteLibros.PDF");
+            File path = new File (pdfName);
             
             // Abre el reporte.
             Desktop.getDesktop().open(path);

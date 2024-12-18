@@ -6,6 +6,8 @@ dist/
 # Ignorar archivos generados automaticamente
 *.class
 *.log
+*.pdf
+*.jasper
 
 # Ignorar bitacoras de crash
 hs_err_pid*

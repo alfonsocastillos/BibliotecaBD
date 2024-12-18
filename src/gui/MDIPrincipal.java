@@ -27,7 +27,7 @@ public class MDIPrincipal extends javax.swing.JFrame {
     Clientes clientesVentana;
     Prestamo prestamoVentana;
         
-    String appVersion = "1.46";
+    String appVersion = "1.47";
     
     /**
      * Creates new form MDIPrincipal.
@@ -167,7 +167,6 @@ public class MDIPrincipal extends javax.swing.JFrame {
         btnPrestamo = new javax.swing.JButton();
         btnLibros = new javax.swing.JButton();
         btnClientes = new javax.swing.JButton();
-        btnReportes = new javax.swing.JButton();
         barVent = new javax.swing.JToolBar();
         sptDown = new javax.swing.JSplitPane();
         lblSucursal = new javax.swing.JLabel();
@@ -209,7 +208,7 @@ public class MDIPrincipal extends javax.swing.JFrame {
             desktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(desktopPaneLayout.createSequentialGroup()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 1111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 2, Short.MAX_VALUE))
+                .addGap(0, 11, Short.MAX_VALUE))
         );
 
         barraDeAcceso.setRollover(true);
@@ -246,13 +245,6 @@ public class MDIPrincipal extends javax.swing.JFrame {
             }
         });
         barraDeAcceso.add(btnClientes);
-
-        btnReportes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/seo-report.png"))); // NOI18N
-        btnReportes.setFocusable(false);
-        btnReportes.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnReportes.setPreferredSize(new java.awt.Dimension(34, 33));
-        btnReportes.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        barraDeAcceso.add(btnReportes);
 
         barVent.setRollover(true);
 
@@ -457,6 +449,10 @@ public class MDIPrincipal extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, "Version: " + appVersion + "\nOS: " + System.getProperty("os.name"), "Aviso", 2);
     }//GEN-LAST:event_menuAcercaDeActionPerformed
 
+    /**
+     * Abre una ventana para agregar, editar y eliminar Autores del catalogo.
+     * @param evt evento que dispara la funcion.
+     */
     private void menuAutoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuAutoresActionPerformed
         abreAutores();
     }//GEN-LAST:event_menuAutoresActionPerformed
@@ -467,7 +463,6 @@ public class MDIPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton btnClientes;
     private javax.swing.JButton btnLibros;
     private javax.swing.JButton btnPrestamo;
-    private javax.swing.JButton btnReportes;
     private javax.swing.JDesktopPane desktopPane;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel lblEmpleado;

@@ -6,8 +6,12 @@ import dataBase.dao.PrestamoDAO;
 import java.awt.Toolkit;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JOptionPane;
 import tools.UtilsTable;
+import gui.VentanaReporte;
+import dataBase.CustomReportPDF;
 
 /**
  * Ventana que registra un prestamo de libros.
@@ -18,7 +22,9 @@ public class Prestamo extends javax.swing.JInternalFrame {
     String empleadoId;
     String clienteNombre;
     String empleadoNombre;
+    String reportUrl = "/reportes/Prestamos.jrxml";
     Object[][] prestamos;
+    Map<String, Object> reportParameters;
     
     // Para consultar los datos de la DB.
     ClienteDAO clienteDAO;    
@@ -151,6 +157,8 @@ public class Prestamo extends javax.swing.JInternalFrame {
         pnlTableListPrestamos = new javax.swing.JPanel();
         scpTableList1 = new javax.swing.JScrollPane();
         tblPrestamos = new javax.swing.JTable();
+        btnReporte = new javax.swing.JButton();
+        btnReportePDF = new javax.swing.JButton();
 
         setClosable(true);
         setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
@@ -277,7 +285,27 @@ public class Prestamo extends javax.swing.JInternalFrame {
         ));
         scpTableList1.setViewportView(tblPrestamos);
 
-        pnlTableListPrestamos.add(scpTableList1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, 710, 210));
+        pnlTableListPrestamos.add(scpTableList1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 710, 170));
+
+        btnReporte.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/reporte.png"))); // NOI18N
+        btnReporte.setToolTipText("Mostrar reporte");
+        btnReporte.setFocusable(false);
+        btnReporte.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReporteActionPerformed(evt);
+            }
+        });
+        pnlTableListPrestamos.add(btnReporte, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 20, 40, 40));
+
+        btnReportePDF.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/pdf-icon.png"))); // NOI18N
+        btnReportePDF.setToolTipText("Mostrar en PDF");
+        btnReportePDF.setFocusable(false);
+        btnReportePDF.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReportePDFActionPerformed(evt);
+            }
+        });
+        pnlTableListPrestamos.add(btnReportePDF, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 20, 40, 40));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -423,11 +451,37 @@ public class Prestamo extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_lblNombreClienteMouseClicked
 
+    private void btnReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteActionPerformed
+        if(clienteId != 0) {
+            reportParameters = new HashMap();
+            reportParameters.put("clienteId", clienteId);
+            VentanaReporte reporteLibros = new VentanaReporte(reportUrl, reportParameters);
+            reporteLibros.setVisible(true);
+        } else {
+            Toolkit.getDefaultToolkit().beep();
+            javax.swing.JOptionPane.showMessageDialog(this, "No se ha seleccionado ningun cliente.", "Aviso", 2);
+        }
+    }//GEN-LAST:event_btnReporteActionPerformed
+
+    private void btnReportePDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportePDFActionPerformed
+        if(clienteId != 0) {
+            reportParameters = new HashMap();
+            reportParameters.put("clienteId", clienteId);
+            CustomReportPDF reporte = new CustomReportPDF();
+            reporte.generateReport(reportUrl, reportParameters);
+        } else {
+            Toolkit.getDefaultToolkit().beep();
+            javax.swing.JOptionPane.showMessageDialog(this, "No se ha seleccionado ningun cliente.", "Aviso", 2);
+        }       
+    }//GEN-LAST:event_btnReportePDFActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnCancela;
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnGuarda;
+    private javax.swing.JButton btnReporte;
+    private javax.swing.JButton btnReportePDF;
     private javax.swing.JLabel lblCliente;
     private javax.swing.JLabel lblEmpleado;
     private javax.swing.JLabel lblEmpleadoIn;

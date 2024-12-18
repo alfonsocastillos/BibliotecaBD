@@ -1,7 +1,6 @@
 package dataBase;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.Map;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRParameter;
@@ -20,26 +19,26 @@ import net.sf.jasperreports.swing.JRViewer;
  * Clase que genera el reporte.
  * @author Carlos Cortés Bazán
  */
-public class LibrosReportView extends CustomConnection {
+public class CustomReportView extends CustomConnection {
     
     /**
      * Crea el visualizador para un reporte de Jasper Reports.
+     * @param reportUrl URL en la que se encuentra el archivo descriptor del reporte.
+     * @param parameters Parametros a utilizar en el reporte.
      * @return JRViewer el visualizador del reporte.
      */
-    public JRViewer getReport() {
+    public JRViewer getReport(String reportUrl, Map<String, Object> parameters) {
         
         // Conecta a la base de datos.
         connect();
         try {
             
             // Lee el archivo de reporte.
-            JasperDesign desing = JRXmlLoader.load(getClass().getResource("/reportes/Libros.jrxml").getPath());
+            JasperDesign desing = JRXmlLoader.load(getClass().getResource(reportUrl).getPath());
             
             // Compila el reporte.
             JasperReport report = JasperCompileManager.compileReport(desing);
             
-            // Paramatros del reporte, aun que no se le mandan parametros, es necesario para las imagenes que usa el reporte.
-            Map<String, Object> parameters = new HashMap<>();
             
             // Ruta de las imagenes que usa el reporte.
             String reportsDirPath = getClass().getResource("/reportes").getPath();

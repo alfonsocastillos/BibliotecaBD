@@ -1,6 +1,7 @@
 package gui.libro;
 
-import dataBase.LibrosReportPDF;
+import gui.VentanaReporte;
+import dataBase.CustomReportPDF;
 import dataBase.dao.AutorDAO;
 import dataBase.dao.GeneroDAO;
 import dataBase.dao.LibroDAO;
@@ -10,6 +11,8 @@ import dataBase.dao.EditorialDAO;
 import java.awt.Toolkit;
 import javax.swing.JOptionPane;
 import tools.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Ventana que administra los libros.
@@ -18,6 +21,8 @@ import tools.*;
 public class Libros extends javax.swing.JInternalFrame {
     boolean editando = false;
     int libroId;
+    String reportUrl = "/reportes/Libros.jrxml";
+    Map<String, Object> reportParameters;
     
     // Daos que traen los datos de la DB.
     GeneroDAO generoDAO;
@@ -820,7 +825,9 @@ public class Libros extends javax.swing.JInternalFrame {
      * @param evt evento que dispara la funcion.
      */
     private void btnReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteActionPerformed
-        VentanaReporteLibros reporteLibros = new VentanaReporteLibros();
+        reportParameters = new HashMap();
+        reportParameters.put("descripcion", '%' + txtFiltro.getText().trim() + '%');
+        VentanaReporte reporteLibros = new VentanaReporte(reportUrl, reportParameters);
         reporteLibros.setVisible(true);
     }//GEN-LAST:event_btnReporteActionPerformed
 
@@ -829,8 +836,10 @@ public class Libros extends javax.swing.JInternalFrame {
      * @param evt evento que dispara la funcion.
      */
     private void btnReportePDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportePDFActionPerformed
-        LibrosReportPDF reporte = new LibrosReportPDF();
-        reporte.generateReport();
+        reportParameters = new HashMap();
+        reportParameters.put("descripcion", '%' + txtFiltro.getText().trim() + '%');
+        CustomReportPDF reporte = new CustomReportPDF();
+        reporte.generateReport(reportUrl, reportParameters);
     }//GEN-LAST:event_btnReportePDFActionPerformed
     
     /**

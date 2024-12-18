@@ -1,10 +1,15 @@
 package gui.clientes;
 import javax.swing.JOptionPane;
+import java.util.HashMap;
+import java.util.Map;
+import java.awt.Toolkit;
 import dataBase.dao.EscolaridadDAO;
 import dataBase.dao.ClienteDAO;
 import dataBase.dao.EstadoDAO;
 import dataBase.dao.PaisDAO;
 import tools.UtilsTable;
+import gui.VentanaReporte;
+import dataBase.CustomReportPDF;
 
 /**
  * Ventana que registra clientes
@@ -12,7 +17,9 @@ import tools.UtilsTable;
  */
 public class Clientes extends javax.swing.JInternalFrame {    
     int clienteId;
-    Object[][] clientesLista;
+    String reportUrl = "/reportes/Clientes.jrxml";
+    Object[][] clientesLista;    
+    Map<String, Object> reportParameters;
     
     // Daos que traen los datos de la DB.
     ClienteDAO clienteDAO;
@@ -245,6 +252,8 @@ public class Clientes extends javax.swing.JInternalFrame {
         jLabel6 = new javax.swing.JLabel();
         lblCantidad = new javax.swing.JLabel();
         btnEdit = new javax.swing.JButton();
+        btnReporte = new javax.swing.JButton();
+        btnReportePDF = new javax.swing.JButton();
 
         pnlTableList9.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Escolaridad", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 16))); // NOI18N
         pnlTableList9.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -262,7 +271,6 @@ public class Clientes extends javax.swing.JInternalFrame {
 
         pnlTableList9.add(pnlTableList11, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 170, 190, 60));
 
-        setClosable(true);
         setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
         setIconifiable(true);
         setMaximizable(true);
@@ -470,7 +478,7 @@ public class Clientes extends javax.swing.JInternalFrame {
                 btnDeleteActionPerformed(evt);
             }
         });
-        pnlTableList.add(btnDelete, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 20, 40, 40));
+        pnlTableList.add(btnDelete, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 20, 40, 40));
 
         btnBorrarFiltro.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/cancelarm.png"))); // NOI18N
         btnBorrarFiltro.setToolTipText("Borrar filtro");
@@ -496,7 +504,27 @@ public class Clientes extends javax.swing.JInternalFrame {
                 btnEditActionPerformed(evt);
             }
         });
-        pnlTableList.add(btnEdit, new org.netbeans.lib.awtextra.AbsoluteConstraints(715, 20, 40, 40));
+        pnlTableList.add(btnEdit, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 20, 40, 40));
+
+        btnReporte.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/reporte.png"))); // NOI18N
+        btnReporte.setToolTipText("Mostrar reporte");
+        btnReporte.setFocusable(false);
+        btnReporte.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReporteActionPerformed(evt);
+            }
+        });
+        pnlTableList.add(btnReporte, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 20, 40, 40));
+
+        btnReportePDF.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Acciones/pdf-icon.png"))); // NOI18N
+        btnReportePDF.setToolTipText("Mostrar en PDF");
+        btnReportePDF.setFocusable(false);
+        btnReportePDF.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReportePDFActionPerformed(evt);
+            }
+        });
+        pnlTableList.add(btnReportePDF, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 20, 40, 40));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -730,6 +758,20 @@ public class Clientes extends javax.swing.JInternalFrame {
         llenaTablaClientes();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
+    private void btnReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteActionPerformed
+        reportParameters = new HashMap();
+        reportParameters.put("filtro", "%" + txtFiltro.getText().trim() + "%");
+        VentanaReporte reporteLibros = new VentanaReporte(reportUrl, reportParameters);
+        reporteLibros.setVisible(true);
+    }//GEN-LAST:event_btnReporteActionPerformed
+
+    private void btnReportePDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportePDFActionPerformed
+        reportParameters = new HashMap();
+        reportParameters.put("filtro", "%" + txtFiltro.getText().trim() + "%");
+        CustomReportPDF reporte = new CustomReportPDF();
+        reporte.generateReport(reportUrl, reportParameters);
+    }//GEN-LAST:event_btnReportePDFActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBorrarFiltro;
     private javax.swing.JButton btnCancelar;
@@ -739,6 +781,8 @@ public class Clientes extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnEditarPaises;
     private javax.swing.JButton btnGuarda;
     private javax.swing.JButton btnRefrescar;
+    private javax.swing.JButton btnReporte;
+    private javax.swing.JButton btnReportePDF;
     private javax.swing.JComboBox<String> cmbEscolaridad;
     private javax.swing.JComboBox<String> cmbEstado;
     private javax.swing.JComboBox<String> cmbPais;

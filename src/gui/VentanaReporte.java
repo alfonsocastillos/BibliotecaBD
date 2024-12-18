@@ -1,29 +1,33 @@
-package gui.libro;
+package gui;
 
-import dataBase.LibrosReportView;
+import dataBase.CustomReportView;
 import java.awt.BorderLayout;
 import java.awt.Toolkit;
+import java.util.Map;
 
 /**
- *  Ventana que muestra reportes.
+ * Ventana que muestra reportes.
  * @author Carlos
  */
-public class VentanaReporteLibros extends javax.swing.JFrame {
+public class VentanaReporte extends javax.swing.JFrame {
 
     /**
      * Constructor
+     * @param reportUrl URL en la que se encuentra el archivo descriptor del reporte.
+     * @param parameters Parametros a utilizar en el reporte.
      */
-    public VentanaReporteLibros() {
+    public VentanaReporte(String reportUrl, Map<String, Object> parameters) {
         initComponents();
-        setLocationRelativeTo(null);	
-        setTitle("Libros");
+        setLocationRelativeTo(null);
+        String windowTitle = reportUrl.substring(reportUrl.lastIndexOf("/") + 1, reportUrl.indexOf(".") - 1);
+        setTitle(windowTitle);
         
         // Configuración para cargar el reporte.
         pnlReporte.setLayout(new BorderLayout());
         
         // Ejecuta el reporte y lo muestra en la ventana.
-        LibrosReportView reporte_libros = new LibrosReportView();    
-        pnlReporte.add(reporte_libros.getReport()); 
+        CustomReportView reporteLibros = new CustomReportView();
+        pnlReporte.add(reporteLibros.getReport(reportUrl, parameters)); 
     }
     
     /**
@@ -39,7 +43,7 @@ public class VentanaReporteLibros extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Generando...");
-        setIconImage(Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("img/peliculas.png")));
+        setIconImage(Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("img/icono.png")));
 
         javax.swing.GroupLayout pnlReporteLayout = new javax.swing.GroupLayout(pnlReporte);
         pnlReporte.setLayout(pnlReporteLayout);
