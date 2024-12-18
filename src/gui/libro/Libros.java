@@ -291,7 +291,6 @@ public class Libros extends javax.swing.JInternalFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
         setIconifiable(true);
         setMaximizable(true);
-        setResizable(true);
         setTitle("Libros");
         setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/img/libros.png"))); // NOI18N
         setName(""); // NOI18N

@@ -274,7 +274,6 @@ public class Clientes extends javax.swing.JInternalFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
         setIconifiable(true);
         setMaximizable(true);
-        setResizable(true);
         setTitle("Clientes");
         setFrameIcon(new javax.swing.ImageIcon(getClass().getResource("/img/user_icon.png"))); // NOI18N
         setName(""); // NOI18N
