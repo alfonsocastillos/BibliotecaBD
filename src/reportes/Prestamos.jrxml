@@ -16,7 +16,7 @@ FROM PRESTAMO
 	JOIN LIBRO USING(LIBRO_ID) 
 	JOIN CLIENTE USING(CLIENTE_ID)
 WHERE CLIENTE_ID = $P{clienteId} 
-ORDER BY 2 DESC]]>
+ORDER BY 2 ASC]]>
 	</queryString>
 	<field name="TITULO" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="TITULO"/>
@@ -146,7 +146,7 @@ ORDER BY 2 DESC]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<paragraph leftIndent="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{FECHA_PRESTAMO}.getDate()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{FECHA_PRESTAMO})]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="355" y="0" width="195" height="21" uuid="90501732-bb69-49ff-994b-9892ae1913ff">
@@ -162,7 +162,7 @@ ORDER BY 2 DESC]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<paragraph leftIndent="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{FECHA_ENTREGA}.getDate()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{FECHA_ENTREGA})]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

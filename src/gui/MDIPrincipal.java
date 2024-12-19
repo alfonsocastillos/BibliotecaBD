@@ -27,7 +27,7 @@ public class MDIPrincipal extends javax.swing.JFrame {
     Clientes clientesVentana;
     Prestamo prestamoVentana;
         
-    String appVersion = "1.47";
+    String appVersion = "1.48";
     
     /**
      * Creates new form MDIPrincipal.

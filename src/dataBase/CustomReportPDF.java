@@ -46,11 +46,11 @@ public class CustomReportPDF extends CustomConnection {
             
             // Exporta el reporte con el nombre Archivo.PDF.
             String pdfName;
-            pdfName = reportUrl.substring(reportUrl.lastIndexOf("/") + 1, reportUrl.indexOf(".") - 1);
+            pdfName = reportUrl.substring(reportUrl.lastIndexOf("/") + 1, reportUrl.indexOf(".") - 1) + ".pdf";
             JasperExportManager.exportReportToPdfFile(print, pdfName);
             
             // Crea un file con el reporte para poder abrirlo.
-            File path = new File (pdfName);
+            File path = new File(pdfName);
             
             // Abre el reporte.
             Desktop.getDesktop().open(path);
