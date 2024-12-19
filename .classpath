@@ -12,6 +12,6 @@
 	<classpathentry kind="lib" path="lib/reports/groovy-all-2.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/reports/iReport.jar"/>
 	<classpathentry kind="lib" path="lib/reports/iText-2.1.7.js2.jar"/>
-	<classpathentry kind="lib" path="lib/reports/jasperreports-7.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/reports/jasperreports-5.6.0.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
